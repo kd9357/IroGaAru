@@ -7,9 +7,7 @@ public class Player : MonoBehaviour {
 
     // Demo Vars -- will get rid of once we decide on platforming physics
     public bool Slide;
-    public bool VariableJump;
 
-    // Note: You can also smooth using Time.deltaTime
     public float Speed;
     public float Jump;
 
@@ -32,15 +30,15 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
 	{
-        float x_mov = Slide ? Input.GetAxis("Horizontal") * Speed : 
+        float x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                               Input.GetAxisRaw("Horizontal") * Speed;
-	    float y_mov = VariableJump ? Input.GetAxis("Jump") * Jump :
-                                     Input.GetAxisRaw("Jump") * Jump;
+        float y_mov = (Input.GetButtonUp("Jump") ? 1 : 0) * Jump;
 
-	    y_mov = _onGround ? y_mov : _rb.velocity.y;
+	    y_mov = _onGround ? y_mov : 0;
 	    x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
 
-	    _rb.velocity = new Vector2(x_mov, y_mov);
+	    _rb.velocity = new Vector2(x_mov, _rb.velocity.y);
+        _rb.AddForce(Vector2.up * y_mov, ForceMode2D.Impulse);
 	}
 
     // Collisions wtih Player
