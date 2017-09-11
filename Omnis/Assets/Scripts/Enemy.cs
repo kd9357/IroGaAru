@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
+    public string AI_Type;
     public int MaxHealth = 1;
     public int TouchDamage = 1;
     public float Speed;
@@ -16,6 +17,8 @@ public class Enemy : MonoBehaviour {
     private Animator _anim;
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
+
+    private bool _recoil;
 
     private int _currentHealth;
 
@@ -32,6 +35,23 @@ public class Enemy : MonoBehaviour {
         _rb = GetComponent<Rigidbody2D>();
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
+        _recoil = false;
+    }
+
+    void FixedUpdate()
+    {
+        if (!_recoil)
+        {
+            switch (AI_Type)
+            {
+                case "Lefty":
+                    _rb.velocity = new Vector2(-Speed, 0);
+                    break;
+                case "Righty":
+                    _rb.velocity = new Vector2(Speed, 0);
+                    break;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -44,6 +64,7 @@ public class Enemy : MonoBehaviour {
         else if(_timer < 0)
         {
             _timer = 0;
+            _recoil = false;
             _currentColor = DefaultColor;
             _sprite.color = _currentColor;
         }
@@ -60,6 +81,8 @@ public class Enemy : MonoBehaviour {
     public void Damage(int damage, Color color, int direction)
     {
         _timer = ComboCooldown;
+        _recoil = true;
+
         _currentHealth -= damage;
         _currentColor = (_currentColor + color) / 2;
         _sprite.color = _currentColor;
@@ -81,6 +104,10 @@ public class Enemy : MonoBehaviour {
             player.Damage(TouchDamage);
             player.Knockback(collision.transform.position.x < transform.position.x);
         }
+
+        // TODO: Make this more dynamic
+        else if (collision.gameObject.CompareTag("Wall"))
+            AI_Type = AI_Type == "Righty" ? "Lefty" : "Righty";
     }
 
     //This is necessary if the player is pushing against the enemy while invincible, and their invincibility wears off

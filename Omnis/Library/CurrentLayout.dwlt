@@ -367,14 +367,14 @@ MonoBehaviour:
     width: 1235
     height: 774
   m_SceneLighting: 1
-  lastFramingTime: 24475.43413049326
+  lastFramingTime: 1088.9877678338892
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.55054146, y: -0.0017222092, z: -0.029296875}
+    m_Target: {x: 1.22, y: -0.78, z: 0}
     speed: 2
-    m_Value: {x: -0.55054146, y: -0.0017222092, z: -0.029296875}
+    m_Value: {x: 1.22, y: -0.78, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -401,9 +401,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 16.520077
+    m_Target: 10.057267
     speed: 2
-    m_Value: 16.520077
+    m_Value: 10.057267
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -491,23 +491,23 @@ MonoBehaviour:
     height: 1046
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: d2260000
-    m_LastClickedID: 9938
-    m_ExpandedIDs: d4fbffff00000000
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: d4fbffff00000000dc2500000626000012260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Background
+      m_OriginalName: Background
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 9908
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
