@@ -71,4 +71,9 @@ public class PlayerAttack : MonoBehaviour {
 
         _anim.SetBool("Attacking", _attacking);
 	}
+
+    public bool IsAttacking()
+    {
+        return _attacking;
+    }
 }

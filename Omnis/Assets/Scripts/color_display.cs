@@ -8,6 +8,8 @@ public class color_display : MonoBehaviour {
     //It may be better to handle weapon switching in GameController instead
 
     public AttackTrigger Weapon;
+    public PlayerAttack PlayerAttack;
+
     public WeaponColor active_color = WeaponColor.red;
     public WeaponColor inactive_left_color = WeaponColor.blue;
     public WeaponColor inactive_right_color = WeaponColor.yellow;
@@ -45,10 +47,13 @@ public class color_display : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        float direction = Input.GetAxisRaw("Mouse ScrollWheel");
-        direction = direction > 0 ? 1 :
-                    direction < 0 ? -1 : 0;
-        CycleColors((int)direction);
+        if (!PlayerAttack.IsAttacking())
+        {
+            float direction = Input.GetAxisRaw("Mouse ScrollWheel");
+            direction = direction > 0 ? 1 :
+                direction < 0 ? -1 : 0;
+            CycleColors((int)direction);
+        }
     }
 
     void OnGUI()
