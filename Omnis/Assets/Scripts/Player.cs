@@ -14,8 +14,8 @@ public class Player : MonoBehaviour {
     public float Jump;
 
     // Recoil parameters
-    public float KnockbackForce;
-    public float KnockbackCooldown;
+    public float KnockbackForce = 20;
+    public float KnockbackCooldown = 0.3f;
 
     private Rigidbody2D _rb;
     private PolygonCollider2D _footCollider;
