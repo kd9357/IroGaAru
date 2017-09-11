@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WeaponColor
+{
+    red, yellow, blue
+};
+
 public class AttackTrigger : MonoBehaviour {
 
     public int Damage = 1;
@@ -10,18 +15,44 @@ public class AttackTrigger : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (!collision.isTrigger && collision.CompareTag("Enemy"))
         if (collision.CompareTag("Enemy"))
         {
-            Color col = GameController.instance.GetColor(_color);
+            Color col = GetColor(_color);
             collision.gameObject.GetComponent<Enemy>().Damage(Damage, col);
+        }
+    }
+
+    #region Color
+
+    public Color GetColor(WeaponColor color)
+    {
+        switch (color)
+        {
+            case WeaponColor.red:
+            {
+                return Color.red;
+            }
+            case WeaponColor.yellow:
+            {
+                return Color.yellow;
+            }
+            case WeaponColor.blue:
+            {
+                return Color.blue;
+            }
+            default:
+            {
+                Debug.LogError("Invalid color: " + color);
+                return Color.white;
+            }
         }
     }
 
     public void SetColor(WeaponColor color)
     {
         _color = color;
-        GetComponent<SpriteRenderer>().color = GameController.instance.GetColor(color);
+        GetComponent<SpriteRenderer>().color = GetColor(color);
     }
 
+    #endregion
 }

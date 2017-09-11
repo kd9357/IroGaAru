@@ -5,51 +5,80 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+    // Invincibility Mode -- For Testing!
+    public bool GodMode = false;
+
     // Demo Vars -- will get rid of once we decide on platforming physics
     public bool Slide;
     public bool StaticJump;
+
+    // Health vars
+    public int MaxHealth;
+    public float InvincibilityCooldown = 3f;
 
     // Movement parameters
     public float Speed;
     public float Jump;
 
     // Recoil parameters
-    public float KnockbackForce = 20;
+    [Tooltip("Force player experiences from enemy")]
+    public float PlayerKnockbackForce = 20;
     public float KnockbackCooldown = 0.3f;
 
+    // Components on player
+    private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
     private PolygonCollider2D _footCollider;
     private Animator _anim;
 
+    // Flags
     private bool _onGround;
     private bool _onWall;
-
     private bool _jumping;
     private bool _jumpCancel;
-
-    private bool _facingRight = true;
-
+    private bool _facingRight;
     private bool _hit;
-    private float _knockbackTimer;
     private bool _knockFromRight;
+    private bool _invincible;
+
+    // Timers
+    private float _knockbackTimer;
+    private float _invinceTimer;
+
+    // Health
+    private int _currentHealth;
+
 
     // Use this for initialization
     void Start ()
-	{
-	    _rb = this.GetComponent<Rigidbody2D>();
-	    _footCollider = this.GetComponent<PolygonCollider2D>();
-        _anim = this.GetComponent<Animator>();
+    {
+        _sprite = GetComponent<SpriteRenderer>();
+	    _rb = GetComponent<Rigidbody2D>();
+	    _footCollider = GetComponent<PolygonCollider2D>();
+        _anim = GetComponent<Animator>();
 
         _onGround = true;
-	    _onWall = false;
-
+        _onWall = false;
+        _jumping = false;
         _jumpCancel = false;
+        _facingRight = true;
+        _hit = false;
+        _knockFromRight = false;
+        _invincible = false;
 
+        _knockbackTimer = 0f;
+        _invinceTimer = 0f;
+
+	    _currentHealth = MaxHealth;
 	}
+
+    #region Updates
 
     // Fixed Update runs once per physics tick
     void FixedUpdate()
     {
+        // MOVEMENT
+        // If knockback over, resume movement
         if(_knockbackTimer <= 0)
         { 
             float x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
@@ -71,8 +100,7 @@ public class Player : MonoBehaviour {
             {
                 if (_jumpCancel && _rb.velocity.y > 0)
                 {
-                    y_mov = Mathf.Lerp(_rb.velocity.y, 0, 0.8f); //possibly use a timer to interpolate, although velocity is already changing over time
-                    //As it is now it's just 20% of the current velocity
+                    y_mov = Mathf.Lerp(_rb.velocity.y, 0, 0.8f);
                 }
             }
 
@@ -85,11 +113,11 @@ public class Player : MonoBehaviour {
             {
                 if(_knockFromRight)
                 {
-                    _rb.AddForce(new Vector2(-KnockbackForce, KnockbackForce), ForceMode2D.Impulse);
+                    _rb.AddForce(new Vector2(-PlayerKnockbackForce, PlayerKnockbackForce), ForceMode2D.Impulse);
                 }
                 else
                 {
-                    _rb.AddForce(new Vector2(KnockbackForce, KnockbackForce), ForceMode2D.Impulse);
+                    _rb.AddForce(new Vector2(PlayerKnockbackForce, PlayerKnockbackForce), ForceMode2D.Impulse);
                 }
                 _hit = false;
             }
@@ -102,16 +130,37 @@ public class Player : MonoBehaviour {
     // Update runs once per frame
     private void Update()
     {
-        //This is a little gacky but I swear it feels more responsive and idk why
+        // JUMPING
+        // HACK: This is a little gacky but I swear it feels more responsive and idk why
         if (Input.GetButtonDown("Jump") && _onGround)
         {
             _jumping = true;
         }
 
-        //_jumping = Input.GetButtonDown("Jump") && _onGround;
-
         _jumpCancel = Input.GetButtonUp("Jump");
+
+        // HEALTH
+        if (_currentHealth <= 0)
+        {
+            //Initiate Game Over
+            //GameController.instance.GameOver();
+
+            //For now just destroy game object (will want to move this to game over function)
+            Destroy(gameObject);
+        }
+
+        if (_invinceTimer > 0)
+        {
+            _invinceTimer -= Time.deltaTime;
+        }
+        else if (!GodMode)
+        {
+            _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 1f);
+            _invincible = false;
+        }
     }
+
+#endregion
 
     void Flip()
     {
@@ -128,6 +177,8 @@ public class Player : MonoBehaviour {
         _hit = true;
         _anim.SetTrigger("Recoil"); //Do i need to send in a timer as well?
     }
+
+    #region Collisions
 
     // Collisions wtih Player
     void OnCollisionEnter2D(Collision2D collision)
@@ -172,4 +223,39 @@ public class Player : MonoBehaviour {
             _onWall = true;
         }
     }
+
+    #endregion
+
+    #region Health
+
+    public int GetCurrentHealth()
+    {
+        return _currentHealth;
+    }
+
+    public void RestoreHealth(int health)
+    {
+        _currentHealth = _currentHealth + health > MaxHealth ? MaxHealth : _currentHealth + health;
+    }
+
+    public void Damage(int damage)
+    {
+        _currentHealth -= damage;
+        _invinceTimer = InvincibilityCooldown;
+        //Knockback animation here or from enemy call?
+        //Need to figure out direction then.
+        //var playerMovement = gameObject.GetComponent<Player>();
+
+        _invincible = true;
+
+        //For now, just half the transparency when hit + invincible
+        _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
+    }
+
+    public bool IsInvincible()
+    {
+        return _invincible;
+    }
+
+    #endregion
 }

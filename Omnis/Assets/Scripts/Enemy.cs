@@ -6,13 +6,11 @@ public class Enemy : MonoBehaviour {
 
     public int MaxHealth = 1;
     public int TouchDamage = 1;
-
     public float Speed;
-
-    public float KnockbackForce;
-
     public Color DefaultColor;
 
+    [Tooltip("Force enemy experiences from player")]
+    public float EnemyKnockbackForce;
     public float ComboCooldown = 0.5f;
 
     private Animator _anim;
@@ -20,7 +18,6 @@ public class Enemy : MonoBehaviour {
     private Rigidbody2D _rb;
 
     private int _currentHealth;
-    //private EnemyColor _color;
 
     private Color _currentColor;
     private float _percentage;
@@ -55,6 +52,8 @@ public class Enemy : MonoBehaviour {
             //set death animation
             _anim.SetTrigger("Death");
             Destroy(gameObject);
+
+            // TODO: Set game over
         }
     }
 
@@ -66,7 +65,7 @@ public class Enemy : MonoBehaviour {
         _sprite.color = _currentColor;
 
         //Set hit animation + stagger?
-        _rb.AddForce(new Vector2(KnockbackForce, 0), ForceMode2D.Impulse);
+        _rb.AddForce(new Vector2(EnemyKnockbackForce * 1000, 0), ForceMode2D.Impulse);
 
     }
 
@@ -75,13 +74,12 @@ public class Enemy : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            var playerHealth = collision.gameObject.GetComponent<PlayerHealthManagement>();
-            if (playerHealth.isInvincinble())
+            var player = collision.gameObject.GetComponent<Player>();
+            if (player.IsInvincible())
                 return;
-            playerHealth.Damage(TouchDamage);
 
-            var playerMovement = collision.gameObject.GetComponent<Player>();
-            playerMovement.Knockback(collision.transform.position.x < transform.position.x);
+            player.Damage(TouchDamage);
+            player.Knockback(collision.transform.position.x < transform.position.x);
         }
     }
 
@@ -90,13 +88,12 @@ public class Enemy : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            var playerHealth = collision.gameObject.GetComponent<PlayerHealthManagement>();
-            if (playerHealth.isInvincinble())
+            var player = collision.gameObject.GetComponent<Player>();
+            if (player.IsInvincible())
                 return;
-            playerHealth.Damage(TouchDamage);
 
-            var playerMovement = collision.gameObject.GetComponent<Player>();
-            playerMovement.Knockback(collision.transform.position.x < transform.position.x);
+            player.Damage(TouchDamage);
+            player.Knockback(collision.transform.position.x < transform.position.x);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class color_display : MonoBehaviour {
 
     //It may be better to handle weapon switching in GameController instead
 
+    public AttackTrigger Weapon;
     public WeaponColor active_color = WeaponColor.red;
     public WeaponColor inactive_left_color = WeaponColor.blue;
     public WeaponColor inactive_right_color = WeaponColor.yellow;
@@ -35,23 +37,18 @@ public class color_display : MonoBehaviour {
 
         //Should really do this programatacially
         colors = new Color[max_colors];
-        colors[0] = GameController.instance.GetColor(active_color);
-        colors[1] = GameController.instance.GetColor(inactive_right_color);
-        colors[2] = GameController.instance.GetColor(inactive_left_color);
+        colors[0] = Weapon.GetColor(active_color);
+        colors[1] = Weapon.GetColor(inactive_right_color);
+        colors[2] = Weapon.GetColor(inactive_left_color);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //May change this to mouse wheel instead?
-        if (Input.GetButtonUp("Fire1"))
-        {
-            CycleLeft();
-        }
-        if (Input.GetButtonUp("Fire2"))
-        {
-            CycleRight();
-        }
+        float direction = Input.GetAxisRaw("Mouse ScrollWheel");
+        direction = direction > 0 ? 1 :
+                    direction < 0 ? -1 : 0;
+        CycleColors((int)direction);
     }
 
     void OnGUI()
@@ -105,25 +102,29 @@ public class color_display : MonoBehaviour {
     }
 
 
-    void CycleLeft()
+    void CycleColors(int direction)
     {
+        if (direction == 0)
+            return;
+
         int temp = (int)active_color;
         int left, right, current;
-        right = temp;
-        current = temp - 1 < 0 ? max_colors - 1 : temp - 1;
-        left = current - 1 < 0 ? max_colors - 1 : current - 1;
-        ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
-    }
 
-    void CycleRight()
-    {
-        int temp = (int)active_color;
-        int left, right, current;
-        left = temp;
-        current = temp + 1 >= max_colors ? 0 : temp + 1;
-        right = current + 1 >= max_colors ? 0 : current + 1;
+        if (direction < 0)
+        {
+            right = temp;
+            current = temp - 1 < 0 ? max_colors - 1 : temp - 1;
+            left = current - 1 < 0 ? max_colors - 1 : current - 1;
+            ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
+        }
+        else if (direction > 0)
+        {
+            left = temp;
+            current = temp + 1 >= max_colors ? 0 : temp + 1;
+            right = current + 1 >= max_colors ? 0 : current + 1;
 
-        ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
+            ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
+        }
     }
 
     void ActivateColor(WeaponColor current, WeaponColor left, WeaponColor right)

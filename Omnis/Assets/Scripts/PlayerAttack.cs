@@ -43,7 +43,7 @@ public class PlayerAttack : MonoBehaviour {
         }
         
 
-		if(Input.GetButtonDown("Attack") && !_attacking)
+		if(Input.GetButtonDown("Fire1") && !_attacking)
         {
             _attacking = true;
             _timer = AttackCooldown;
