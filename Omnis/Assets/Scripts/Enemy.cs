@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    public void Damage(int damage, Color color)
+    public void Damage(int damage, Color color, int direction)
     {
         _timer = ComboCooldown;
         _currentHealth -= damage;
@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour {
         _sprite.color = _currentColor;
 
         //Set hit animation + stagger?
-        _rb.AddForce(new Vector2(EnemyKnockbackForce * 1000, 0), ForceMode2D.Impulse);
+        _rb.AddForce(Vector2.right * direction * EnemyKnockbackForce * _rb.mass, ForceMode2D.Impulse);
 
     }
 

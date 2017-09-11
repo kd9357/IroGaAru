@@ -18,7 +18,8 @@ public class AttackTrigger : MonoBehaviour {
         if (collision.CompareTag("Enemy"))
         {
             Color col = GetColor(_color);
-            collision.gameObject.GetComponent<Enemy>().Damage(Damage, col);
+            int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
+            collision.gameObject.GetComponent<Enemy>().Damage(Damage, col, direction);
         }
     }
 
