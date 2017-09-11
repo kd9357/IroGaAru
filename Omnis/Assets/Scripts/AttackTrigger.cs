@@ -13,7 +13,8 @@ public class AttackTrigger : MonoBehaviour {
         //if (!collision.isTrigger && collision.CompareTag("Enemy"))
         if (collision.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyHealthManagement>().Damage(Damage, _color);
+            Color col = GameController.instance.GetColor(_color);
+            collision.gameObject.GetComponent<Enemy>().Damage(Damage, col);
         }
     }
 

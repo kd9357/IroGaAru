@@ -21,7 +21,9 @@ public class GameController : MonoBehaviour {
     public bool EndGame = false;
     public WeaponColor EquippedColor;
 
-	void Awake () {
+    //private Player player;
+
+    void Awake () {
 		if(instance == null)
         {
             instance = this;
