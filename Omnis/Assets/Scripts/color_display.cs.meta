@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0429c11327c525044a1d34a78f5ed345
+timeCreated: 1505080523
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - active_ring: {fileID: 2800000, guid: f3b9ccebeea10cf489d8beca12f878fa, type: 3}
+  - selected_color: {fileID: 2800000, guid: 7d242a93c717f844585a315767320410, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
