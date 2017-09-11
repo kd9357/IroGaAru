@@ -63,7 +63,6 @@ public class Player : MonoBehaviour {
 
             if(_jumping)
             {
-                Debug.Log("Jump initiated");
                 y_mov = Jump;
                 _jumping = false;
             }
@@ -73,6 +72,7 @@ public class Player : MonoBehaviour {
                 if (_jumpCancel && _rb.velocity.y > 0)
                 {
                     y_mov = Mathf.Lerp(_rb.velocity.y, 0, 0.8f); //possibly use a timer to interpolate, although velocity is already changing over time
+                    //As it is now it's just 20% of the current velocity
                 }
             }
 

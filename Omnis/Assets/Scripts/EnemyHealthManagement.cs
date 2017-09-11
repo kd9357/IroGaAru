@@ -5,18 +5,21 @@ using UnityEngine;
 public class EnemyHealthManagement : MonoBehaviour
 {
 
-    public int MaxHealth = 10;
-    public int TouchDamage = 3;
+    public int MaxHealth = 1;
+    public int TouchDamage = 1;
 
     private Animator _anim;
+    private SpriteRenderer _sprite;
 
     private int _currentHealth;
+    private EnemyColor _color;
 
     //Awake vs start? could initialize animation of enemy,.then deactivate until proximity of player
     //Then in start, set its attributes
     void Awake()
     {
         _anim = GetComponent<Animator>();
+        _sprite = GetComponent<SpriteRenderer>();
     }
 
     // Use this for initialization
@@ -36,9 +39,10 @@ public class EnemyHealthManagement : MonoBehaviour
         }
     }
 
-    public void Damage(int damage)
+    public void Damage(int damage, WeaponColor color)
     {
         _currentHealth -= damage;
+        _sprite.color = GameController.instance.GetColor(color);
         //Set hit animation + stagger?
     }
 

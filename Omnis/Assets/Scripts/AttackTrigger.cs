@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class AttackTrigger : MonoBehaviour {
 
-    public int Damage = 5;
+    public int Damage = 1;
+
+    private WeaponColor _color;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //if (!collision.isTrigger && collision.CompareTag("Enemy"))
         if (collision.CompareTag("Enemy"))
         {
-            collision.SendMessageUpwards("Damage", Damage);
+            collision.gameObject.GetComponent<EnemyHealthManagement>().Damage(Damage, _color);
         }
+    }
+
+    public void SetColor(WeaponColor color)
+    {
+        _color = color;
+        GetComponent<SpriteRenderer>().color = GameController.instance.GetColor(color);
     }
 
 }
