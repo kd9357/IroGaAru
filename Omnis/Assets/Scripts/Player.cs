@@ -1,9 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+
+    // Constants
+    private const int PASS_THROUGH_PLATFORMS = 13;
+    private const int PLAYER_LAYER = 12;
 
     // Invincibility Mode -- For Testing!
     public bool GodMode = false;
@@ -190,11 +195,13 @@ public class Player : MonoBehaviour {
 
         if (collision.otherCollider is PolygonCollider2D)
         {
-            _onGround = true;
-
-//            DEBUGGING
-//            Debug.Log("Collider: " + collision.collider.name);
-//            Debug.Log("Other Collider: " + collision.otherCollider.name);
+//            if (collision.contacts)
+//            {
+//                this.gameObject.layer = PASS_THROUGH_PLATFORMS;
+//                _forcePassingThrough = true;
+//            }
+//            else
+                _onGround = true;
         }
     }
 

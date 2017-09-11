@@ -50,6 +50,9 @@ public class Enemy : MonoBehaviour {
                 case "Righty":
                     _rb.velocity = new Vector2(Speed, 0);
                     break;
+                case "Stand":
+                    _rb.velocity = Vector2.zero;
+                    break;
             }
         }
     }
