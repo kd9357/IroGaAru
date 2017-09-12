@@ -4,8 +4,10 @@ using UnityEngine;
 
 public enum WeaponColor
 {
-    red, yellow, blue
-};
+    Red, 
+    Yellow, 
+    Blue
+}
 
 public class AttackTrigger : MonoBehaviour {
 
@@ -29,15 +31,15 @@ public class AttackTrigger : MonoBehaviour {
     {
         switch (color)
         {
-            case WeaponColor.red:
+            case WeaponColor.Red:
             {
                 return Color.red;
             }
-            case WeaponColor.yellow:
+            case WeaponColor.Yellow:
             {
                 return Color.yellow;
             }
-            case WeaponColor.blue:
+            case WeaponColor.Blue:
             {
                 return Color.blue;
             }

@@ -128,7 +128,11 @@ public class Player : MonoBehaviour {
             }
         }
 
-        _anim.SetFloat("Horizontal Speed", _rb.velocity.x);
+        //_anim.SetFloat("Horizontal Speed", _rb.velocity.x);;
+        if(_rb.velocity.x > 0.25f || _rb.velocity.x < -0.25f)
+            _anim.SetBool("Walking", true);
+        else
+            _anim.SetBool("Walking", false);
         _anim.SetFloat("Vertical Speed", _rb.velocity.y);
     }
 
