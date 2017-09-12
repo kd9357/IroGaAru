@@ -28,9 +28,13 @@ public class Enemy : MonoBehaviour
     public float EnemyKnockbackForce;
     public float ComboCooldown = 0.5f;
 
+    // Audio vars
+    public AudioClip[] EnemySoundEffects;
+
     private Animator _anim;
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
+    private AudioSource _audioSource;
 
     private bool _recoil;
 
@@ -51,6 +55,8 @@ public class Enemy : MonoBehaviour
         _anim = GetComponent<Animator>();
         _sprite = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
+
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
         _recoil = false;
@@ -106,12 +112,10 @@ public class Enemy : MonoBehaviour
             //set death animation
             _anim.SetTrigger("Death");
             Destroy(gameObject);
-
-            // TODO: Set game over
         }
     }
 
-    public void Damage(int damage, Color color, int direction)
+    public void EnemyDamaged(int damage, Color color, int direction)
     {
         ColorTimer = ComboCooldown;
         _recoil = true;
@@ -169,8 +173,12 @@ public class Enemy : MonoBehaviour
             if (player.IsInvincible())
                 return;
 
-            player.Damage(TouchDamage);
+            player.PlayerDamaged(TouchDamage);
             player.Knockback(collision.transform.position.x < transform.position.x);
+
+            // Enemy hit sound
+            _audioSource.clip = EnemySoundEffects[0];
+            _audioSource.Play();
         }
 
         // TODO: Make this more dynamic
@@ -187,8 +195,13 @@ public class Enemy : MonoBehaviour
             if (player.IsInvincible())
                 return;
 
-            player.Damage(TouchDamage);
+            player.PlayerDamaged(TouchDamage);
             player.Knockback(collision.transform.position.x < transform.position.x);
+
+            // Enemy hit sound
+            _audioSource.clip = EnemySoundEffects[0];
+            _audioSource.Play();
+            _audioSource.Play();
         }
     }
 }

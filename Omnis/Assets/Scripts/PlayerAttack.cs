@@ -13,15 +13,19 @@ public class PlayerAttack : MonoBehaviour {
 
     private Animator _anim;
     private AttackTrigger _trigg;
+    private Player _player;
+    private AudioSource _playerAudioSource;
 
     private bool _attacking = false;
     private float _timer;
     private WeaponColor _color;
 
-    private void Awake()
+    private void Start()
     {
         _anim = gameObject.GetComponent<Animator>();
         _trigg = WeaponCollider.gameObject.GetComponent<AttackTrigger>();
+        _player = GetComponent<Player>();
+        _playerAudioSource = GetComponent<AudioSource>();
 
         //For testing
         _weaponSprite = WeaponCollider.gameObject.GetComponent<SpriteRenderer>();
@@ -48,6 +52,10 @@ public class PlayerAttack : MonoBehaviour {
             _attacking = true;
             _timer = AttackCooldown;
             WeaponCollider.enabled = true;
+
+            // Play player attack sound effect
+            _playerAudioSource.clip = _player.PlayerSoundEffects[0];
+            _playerAudioSource.Play();
 
             //For testing
             _weaponSprite.enabled = true;

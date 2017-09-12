@@ -15,13 +15,14 @@ public class AttackTrigger : MonoBehaviour {
 
     private WeaponColor _color;
 
+    // Player attacks enemy
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
             Color col = GetColor(_color);
             int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
-            collision.gameObject.GetComponent<Enemy>().Damage(Damage, col, direction);
+            collision.gameObject.GetComponent<Enemy>().EnemyDamaged(Damage, col, direction);
         }
     }
 

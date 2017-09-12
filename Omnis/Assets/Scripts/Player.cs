@@ -21,20 +21,24 @@ public class Player : MonoBehaviour {
     public int MaxHealth;
     public float InvincibilityCooldown = 3f;
 
-    // Movement parameters
+    // Movement vars
     public float Speed;
     public float Jump;
 
-    // Recoil parameters
+    // Recoil vars
     [Tooltip("Force player experiences from enemy")]
     public float PlayerKnockbackForce = 20;
     public float KnockbackCooldown = 0.3f;
+
+    // Audio vars
+    public AudioClip[] PlayerSoundEffects;
 
     // Components on player
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
     private PolygonCollider2D _footCollider;
     private Animator _anim;
+    private AudioSource _audioSource;
 
     // Flags
     private bool _onGround;
@@ -61,6 +65,7 @@ public class Player : MonoBehaviour {
 	    _rb = GetComponent<Rigidbody2D>();
 	    _footCollider = GetComponent<PolygonCollider2D>();
         _anim = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
 
         _onGround = true;
         _onWall = false;
@@ -152,9 +157,9 @@ public class Player : MonoBehaviour {
         if (_currentHealth <= 0)
         {
             //Initiate Game Over
-            //GameController.instance.GameOver();
+            GameController.instance.GameOver();
 
-            //For now just destroy game object (will want to move this to game over function)
+            transform.DetachChildren();
             Destroy(gameObject);
         }
 
@@ -199,13 +204,7 @@ public class Player : MonoBehaviour {
 
         if (collision.otherCollider is PolygonCollider2D)
         {
-//            if (collision.contacts)
-//            {
-//                this.gameObject.layer = PASS_THROUGH_PLATFORMS;
-//                _forcePassingThrough = true;
-//            }
-//            else
-                _onGround = true;
+            _onGround = true;
         }
     }
 
@@ -249,18 +248,19 @@ public class Player : MonoBehaviour {
         _currentHealth = _currentHealth + health > MaxHealth ? MaxHealth : _currentHealth + health;
     }
 
-    public void Damage(int damage)
+    public void PlayerDamaged(int damage)
     {
         _currentHealth -= damage;
         _invinceTimer = InvincibilityCooldown;
-        //Knockback animation here or from enemy call?
-        //Need to figure out direction then.
-        //var playerMovement = gameObject.GetComponent<Player>();
 
         _invincible = true;
 
         //For now, just half the transparency when hit + invincible
         _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
+
+        // Player hurt sound
+        _audioSource.clip = PlayerSoundEffects[1];
+        _audioSource.Play();
     }
 
     public bool IsInvincible()

@@ -24,6 +24,9 @@ public class GameController : MonoBehaviour {
 	
     public void GameOver()
     {
+        // Only sound available is gameover sound
+        GetComponent<AudioSource>().Play();
+
         EndGame = true;
     }
 }
