@@ -1,9 +1,29 @@
 fileFormatVersion: 2
 guid: 2b174e8536b314f4faa850f7ec061b4b
-timeCreated: 1505227072
+timeCreated: 1505229467
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: yokai1_sprite_0
+    21300002: yokai1_sprite_1
+    21300004: yokai1_sprite_2
+    21300006: yokai1_sprite_3
+    21300008: yokai1_sprite_4
+    21300010: yokai1_sprite_5
+    21300012: yokai1_sprite_6
+    21300014: yokai1_sprite_7
+    21300016: yokai1_sprite_8
+    21300018: yokai1_sprite_9
+    21300020: yokai1_sprite_10
+    21300022: yokai1_sprite_11
+    21300024: yokai1_sprite_12
+    21300026: yokai1_sprite_13
+    21300028: yokai1_sprite_14
+    21300030: yokai1_sprite_15
+    21300032: yokai1_sprite_16
+    21300034: yokai1_sprite_17
+    21300036: yokai1_sprite_18
+    21300038: yokai1_sprite_19
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -34,7 +54,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -58,9 +78,301 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: yokai1_sprite_0
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 1656
+        width: 194
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_1
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 1656
+        width: 196
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_2
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 1660
+        width: 195
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_3
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 1667
+        width: 196
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_4
+      rect:
+        serializedVersion: 2
+        x: 1704
+        y: 1671
+        width: 196
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_5
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 1172
+        width: 196
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_6
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 1170
+        width: 193
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_7
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 1164
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_8
+      rect:
+        serializedVersion: 2
+        x: 1305
+        y: 1160
+        width: 188
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_9
+      rect:
+        serializedVersion: 2
+        x: 1705
+        y: 1156
+        width: 187
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_10
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 655
+        width: 184
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_11
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 652
+        width: 184
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_12
+      rect:
+        serializedVersion: 2
+        x: 905
+        y: 644
+        width: 184
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_13
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 636
+        width: 185
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_14
+      rect:
+        serializedVersion: 2
+        x: 1704
+        y: 631
+        width: 186
+        height: 189
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_15
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 128
+        width: 187
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_16
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 131
+        width: 188
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_17
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 136
+        width: 188
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_18
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 146
+        width: 189
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: yokai1_sprite_19
+      rect:
+        serializedVersion: 2
+        x: 1704
+        y: 152
+        width: 189
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 
