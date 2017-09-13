@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    // Constants
-    private const int PASS_THROUGH_PLATFORMS = 13;
-    private const int PLAYER_LAYER = 12;
-
     // Invincibility Mode -- For Testing!
     public bool GodMode = false;
 
@@ -47,7 +43,7 @@ public class Player : MonoBehaviour {
     private bool _jumpCancel;
     private bool _facingRight;
     private bool _hit;
-    private bool _knockFromRight;
+    private int _knockbackDirection;
     private bool _invincible;
 
     // Timers
@@ -73,7 +69,6 @@ public class Player : MonoBehaviour {
         _jumpCancel = false;
         _facingRight = true;
         _hit = false;
-        _knockFromRight = false;
         _invincible = false;
 
         _knockbackTimer = 0f;
@@ -121,14 +116,7 @@ public class Player : MonoBehaviour {
             _knockbackTimer -= Time.deltaTime;
             if(_hit)
             {
-                if(_knockFromRight)
-                {
-                    _rb.AddForce(new Vector2(-PlayerKnockbackForce, PlayerKnockbackForce), ForceMode2D.Impulse);
-                }
-                else
-                {
-                    _rb.AddForce(new Vector2(PlayerKnockbackForce, PlayerKnockbackForce), ForceMode2D.Impulse);
-                }
+                _rb.AddForce(new Vector2(PlayerKnockbackForce * _knockbackDirection, PlayerKnockbackForce), ForceMode2D.Impulse);
                 _hit = false;
             }
         }
@@ -187,9 +175,8 @@ public class Player : MonoBehaviour {
     public void Knockback(bool fromRight)
     {
         _knockbackTimer = KnockbackCooldown;
-        _knockFromRight = fromRight;
+        _knockbackDirection = fromRight ? -1 : 1;
         _hit = true;
-        _anim.SetTrigger("Recoil"); //Do i need to send in a timer as well?
     }
 
     #region Collisions

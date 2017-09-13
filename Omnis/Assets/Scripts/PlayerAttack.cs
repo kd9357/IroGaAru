@@ -29,12 +29,10 @@ public class PlayerAttack : MonoBehaviour {
 
         //For testing
         _weaponSprite = WeaponCollider.gameObject.GetComponent<SpriteRenderer>();
+        _weaponSprite.enabled = false;
 
         WeaponCollider.enabled = false;
         _timer = 0;
-
-        //For testing
-        _weaponSprite.enabled = false;
     }
 	
 	// Update is called once per frame
@@ -46,7 +44,6 @@ public class PlayerAttack : MonoBehaviour {
             _trigg.SetColor(_color);
         }
         
-
 		if(Input.GetButtonDown("Fire1") && !_attacking)
         {
             _attacking = true;
