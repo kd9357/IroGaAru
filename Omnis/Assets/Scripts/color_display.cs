@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class color_display : MonoBehaviour {
 
-    //It may be better to handle weapon switching in GameController instead
-
     public AttackTrigger Weapon;
     public PlayerAttack PlayerAttack;
 
@@ -35,7 +33,7 @@ public class color_display : MonoBehaviour {
 
     void Start()
     {
-        //Should really do this 
+        //Should really do this programatically
         colors = new Color[max_colors];
         colors[0] = Weapon.GetColor(active_color);
         colors[1] = Weapon.GetColor(inactive_right_color);
