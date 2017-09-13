@@ -14,23 +14,27 @@ public class Enemy : MonoBehaviour
 
     private static List<Color> SpecialColors = new List<Color>
     {
-        new Color(.5f, 0f, .5f, 1f),
-        new Color(1f, .5f, 0f, 1f)
+        new Color(.5f, 0f, .5f),    //Purple
+        new Color(1f, .5f, 0f)    //Orange
     };
 
+    [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
-    public float MaxHealth = 1;
+    public float MaxHealth = 5;
+    [Tooltip("How much damage the enemy deals on contact")]
     public int TouchDamage = 1;
     public float Speed;
     public Color DefaultColor;
 
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
+    [Tooltip("Time before color ailment expires (stun extends this)")]
     public float ComboCooldown = 0.5f;
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
 
+    // Components on enemy
     private Animator _anim;
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
@@ -38,12 +42,10 @@ public class Enemy : MonoBehaviour
 
     private bool _recoil;
 
-    public float _currentHealth;
-
+    private float _currentHealth;
     private Color _currentColor;
-    private float _percentage;
 
-    public float ColorTimer;
+    private float _colorTimer;
 
     private ColorStatus _currentStatus = ColorStatus.None;
     private string _cachedAI_Type;
@@ -84,21 +86,21 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ColorTimer > 0)
+        if (_colorTimer > 0)
         {
-            ColorTimer -= Time.deltaTime;
+            _colorTimer -= Time.deltaTime;
             if (_currentStatus == ColorStatus.DamageOverTime)
             {
-                _currentHealth *= 0.99f; //Every frame reduce enemy health to 90 percent of current health
+                _currentHealth *= 0.99f; //Every frame reduce enemy health by 1% of current health
             }
             else if (_currentStatus == ColorStatus.Stun)
             {
                 AI_Type = "Stand";
             }
         }
-        else if (ColorTimer < 0)
+        else if (_colorTimer < 0)
         {
-            ColorTimer = 0;
+            _colorTimer = 0;
             _recoil = false;
             _currentColor = DefaultColor;
             _sprite.color = _currentColor;
@@ -109,7 +111,6 @@ public class Enemy : MonoBehaviour
         }
         if (_currentHealth <= 0)
         {
-            //set death animation
             _anim.SetTrigger("Death");
             Destroy(gameObject);
         }
@@ -117,7 +118,7 @@ public class Enemy : MonoBehaviour
 
     public void EnemyDamaged(int damage, Color color, int direction)
     {
-        ColorTimer = ComboCooldown;
+        _colorTimer = ComboCooldown;
         _recoil = true;
 
         _currentHealth -= damage;
@@ -127,39 +128,43 @@ public class Enemy : MonoBehaviour
         _currentColor = (_currentColor + color) / 2;
 
         // Determine if any special effects
-        // Purple
-        Vector3 sc = new Vector3(SpecialColors[0].r, SpecialColors[0].g, SpecialColors[0].b);
+
+        //Our current model of determining the proximity of a color is incredibly limited
+        //The most accurate model is using CIELAB coordinates and Delta E, but is an expensive calculation
+        //There's a cheaper YUV comparison but I couldn't get it working quickly
+        //HSV comparison of hues is reasonable, but requires just as much fine tweaking as RGB
+
+        //The problems mostly stem from the fact that we're using RBY over RGB and CMY colors
+        //Cyan = (0, 1, 1), Magenta = (1, 0, 1), Yellow = (1, 1, 0), 
+        //so it would be trivial to average towards those colors and find a percentage of them
+
         Vector3 cc = new Vector3(_currentColor.r, _currentColor.g, _currentColor.b);
-
-        float distance = Vector3.Distance(sc, cc);
-        if (distance < .4f)
+        int i;
+        float threshold = 0.4f;    
+        for(i = 0; i < SpecialColors.Count; i++)
         {
-            Debug.Log("Similar to Purple");
-            _currentStatus = ColorStatus.Stun;
-            _cachedAI_Type = AI_Type;
-            ColorTimer += 1;
-        }
-        else
-        {
-            // Orange
-            sc = new Vector3(SpecialColors[1].r, SpecialColors[1].g, SpecialColors[1].b);
-            distance = Vector3.Distance(sc, cc);
-            if (distance < .2f)
+            Vector3 sc = new Vector3(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
+            float distance = Vector3.Distance(sc, cc);
+            if (i != 0) 
+                threshold = 0.34f; //gack
+            if (distance < threshold)
             {
-                Debug.Log("Similar to Orange");
-                _currentStatus = ColorStatus.DamageOverTime;
+                Debug.Log("Applying " + (ColorStatus)(i));
+                if (_currentStatus == ColorStatus.Stun)  // even more gack
+                {
+                    _cachedAI_Type = AI_Type;
+                    _colorTimer += 1;
+                }
+                break;
             }
-            else
-            {
-                _currentStatus = ColorStatus.None;
-            }
+
         }
+        _currentStatus = (ColorStatus)(i);
 
-
+        if(_currentStatus == ColorStatus.None)
+            Debug.Log("Status reset to NONE");
 
         _sprite.color = _currentColor;
-
-        //Set hit animation + stagger?
         _rb.AddForce(Vector2.right * direction * EnemyKnockbackForce * _rb.mass, ForceMode2D.Impulse);
 
     }
@@ -200,7 +205,6 @@ public class Enemy : MonoBehaviour
 
             // Enemy hit sound
             _audioSource.clip = EnemySoundEffects[0];
-            _audioSource.Play();
             _audioSource.Play();
         }
     }

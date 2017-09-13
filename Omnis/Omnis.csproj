@@ -89,12 +89,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Scripts\EnemyHealthManagement.cs" />
-    <Compile Include="Assets\Scripts\EnemyMovement.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
-    <Compile Include="Assets\Scripts\PlayerHealthManagement.cs" />
     <Compile Include="Assets\Scripts\color_display.cs" />
     <Compile Include="Assets\Scripts\hp_display.cs" />
   </ItemGroup>
