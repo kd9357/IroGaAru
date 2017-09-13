@@ -146,7 +146,9 @@ public class Player : MonoBehaviour {
             //Initiate Game Over
             GameController.instance.GameOver();
 
+            Destroy(gameObject.transform.GetChild(1));
             transform.DetachChildren();
+
             Destroy(gameObject);
         }
 
