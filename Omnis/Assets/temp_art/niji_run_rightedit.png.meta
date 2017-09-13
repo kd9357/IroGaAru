@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 25cecd347c743d5478e5a0ca6ee83547
 timeCreated: 1505272758
+=======
+guid: 0aa053e1bdb9af34689cfc3e81b3f4f3
+timeCreated: 1505283066
+>>>>>>> john-2
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}

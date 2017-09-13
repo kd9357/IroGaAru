@@ -126,14 +126,13 @@ public class Player : MonoBehaviour {
             _anim.SetBool("Walking", true);
         else
             _anim.SetBool("Walking", false);
-        _anim.SetFloat("Vertical Speed", _rb.velocity.y);
+        _anim.SetBool("OnGround", _onGround);
     }
 
     // Update runs once per frame
     private void Update()
     {
         // JUMPING
-        // HACK: This is a little gacky but I swear it feels more responsive and idk why
         if (Input.GetButtonDown("Jump") && _onGround)
         {
             _jumping = true;
