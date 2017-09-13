@@ -64,6 +64,8 @@ public class Enemy : MonoBehaviour
         _recoil = false;
     }
 
+#region Updates
+
     void FixedUpdate()
     {
         if (!_recoil)
@@ -115,6 +117,8 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+#endregion
 
     public void EnemyDamaged(int damage, Color color, int direction)
     {
@@ -169,6 +173,7 @@ public class Enemy : MonoBehaviour
 
     }
 
+    #region Collisions
     // Hurt player on contact
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -208,4 +213,6 @@ public class Enemy : MonoBehaviour
             _audioSource.Play();
         }
     }
+
+#endregion
 }
