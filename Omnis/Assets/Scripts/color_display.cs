@@ -14,10 +14,12 @@ public class color_display : MonoBehaviour {
     public WeaponColor inactive_left_color = WeaponColor.Blue;
     public WeaponColor inactive_right_color = WeaponColor.Yellow;
     public int max_colors = 3;
-    public int start_x;
-    public int start_y;
-    public int adjust_x;
-    public int adjust_y;
+    public int start_x = 32;
+    public int start_y = 160;
+    public int active_adjust_x = 5;
+    public int active_adjust_y = 5;
+    public int inactive_adjust_x = 15;
+    public int inactive_adjust_y = 1;
     public Color[] colors;
 
     public Texture active_ring;
@@ -25,19 +27,15 @@ public class color_display : MonoBehaviour {
     public Texture2D selected_color;
     public Texture2D left_color;
     public Texture2D right_color;
+
+    private WeaponColor previous_color;
     private Texture2D shift_texture;
     private Texture2D shift_texture_left;
     private Texture2D shift_texture_right;
 
     void Start()
     {
-        //I don't know why but can't default these values
-        start_x = 32;
-        start_y = 160;
-        adjust_x = 5;
-        adjust_y = 5;
-
-        //Should really do this programatacially
+        //Should really do this 
         colors = new Color[max_colors];
         colors[0] = Weapon.GetColor(active_color);
         colors[1] = Weapon.GetColor(inactive_right_color);
@@ -49,26 +47,34 @@ public class color_display : MonoBehaviour {
     {
         if (!PlayerAttack.IsAttacking())
         {
-            if (Input.GetButtonDown("CycleLeft"))
-            {
-                CycleColors(1);
-            }
-            else if (Input.GetButtonDown("CycleRight"))
+            float direction = Input.GetAxisRaw("Mouse ScrollWheel"); 
+            direction = direction > 0 ? 1 :
+                direction < 0 ? -1 : 0;
+            CycleColors((int)direction);
+
+            if(Input.GetButtonUp("Left Bumper"))
             {
                 CycleColors(-1);
             }
-            
+            if (Input.GetButtonUp("Right Bumper"))
+            {
+                CycleColors(1);
+            }
         }
     }
 
     void OnGUI()
     {
-        SetColor();
-        GUI.DrawTexture(new Rect(start_x + adjust_x, start_y + adjust_y, 32, 32), selected_color);
-        GUI.DrawTexture(new Rect(start_x - 15 + 1, start_y + 1, 10, 10), left_color);
-        GUI.DrawTexture(new Rect(start_x + 35 + 1, start_y + 1, 10, 10), right_color);
+        if(previous_color != active_color)
+        { SetColor(); }
+        previous_color = active_color;
+        GUI.DrawTexture(new Rect(start_x + active_adjust_x, start_y + active_adjust_y, 32, 32), selected_color);
+        GUI.DrawTexture(new Rect(start_x - inactive_adjust_x, start_y + inactive_adjust_y, 10, 10), left_color);
+        GUI.DrawTexture(new Rect(start_x - inactive_adjust_x + 50 , start_y + inactive_adjust_y, 10, 10), right_color);
+        //50 pixels is the distance between left and right circles.
+
         GUI.DrawTexture(new Rect(start_x, start_y, 39, 39), active_ring);
-        GUI.DrawTexture(new Rect(start_x - 15, start_y, 62, 12), side_ring);
+        GUI.DrawTexture(new Rect(start_x - inactive_adjust_x, start_y, 62, 12), side_ring);
     }
 
     void SetColor()
