@@ -297,19 +297,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Prefabs
+    - Assets/temp_art
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/temp_art
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Amadeus\Documents\GitHub\capstone\Omnis
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 50260000
-    m_LastClickedID: 9808
-    m_ExpandedIDs: 00000000d624000000ca9a3bffffff7f
+    m_SelectedIDs: fc250000
+    m_LastClickedID: 9724
+    m_ExpandedIDs: 00000000ce24000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -337,7 +337,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d6240000
+    m_ExpandedIDs: 00000000ce240000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -418,7 +418,7 @@ MonoBehaviour:
     y: 92
     width: 387
     height: 926
-  m_ScrollPosition: {x: 0, y: 811.9551}
+  m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 160
@@ -452,24 +452,24 @@ MonoBehaviour:
     width: 390
     height: 552
   m_TreeViewState:
-    scrollPos: {x: 0, y: 32}
-    m_SelectedIDs: 66faffff
-    m_LastClickedID: -1434
-    m_ExpandedIDs: 92faffffb4faffffb6faffff7afbffffcefbffff00000000f4260000102700001c27000032270000a4270000c6270000d6270000
+    scrollPos: {x: 0, y: 345}
+    m_SelectedIDs: 26b7f8ff
+    m_LastClickedID: -477402
+    m_ExpandedIDs: 7a9afaff2eadfaff9eb7faff187efdff38faffff7cfaffffa6faffffa8faffff6afbffffbefbffff000000000a270000162700002c270000c0270000ce270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Large Bridge
-      m_OriginalName: Large Bridge
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -12160
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
@@ -505,14 +505,14 @@ MonoBehaviour:
     width: 1135
     height: 552
   m_SceneLighting: 1
-  lastFramingTime: 49.41961504887327
+  lastFramingTime: 3352.8843029727327
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 180.30632, y: 1.6101944, z: -0.46875}
+    m_Target: {x: 202.37692, y: -6.7791595, z: 0}
     speed: 2
-    m_Value: {x: 180.30632, y: 1.6101944, z: -0.46875}
+    m_Value: {x: 202.37692, y: -6.7791595, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -539,9 +539,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 25.368511
+    m_Target: 78.03906
     speed: 2
-    m_Value: 25.368511
+    m_Value: 78.03906
   m_Ortho:
     m_Target: 1
     speed: 2
