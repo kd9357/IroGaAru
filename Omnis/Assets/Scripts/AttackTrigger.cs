@@ -4,8 +4,10 @@ using UnityEngine;
 
 public enum WeaponColor
 {
-    red, yellow, blue
-};
+    Red, 
+    Yellow, 
+    Blue
+}
 
 public class AttackTrigger : MonoBehaviour {
 
@@ -13,13 +15,14 @@ public class AttackTrigger : MonoBehaviour {
 
     private WeaponColor _color;
 
+    // Player attacks enemy
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
             Color col = GetColor(_color);
             int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
-            collision.gameObject.GetComponent<Enemy>().Damage(Damage, col, direction);
+            collision.gameObject.GetComponent<Enemy>().EnemyDamaged(Damage, col, direction);
         }
     }
 
@@ -29,15 +32,15 @@ public class AttackTrigger : MonoBehaviour {
     {
         switch (color)
         {
-            case WeaponColor.red:
+            case WeaponColor.Red:
             {
                 return Color.red;
             }
-            case WeaponColor.yellow:
+            case WeaponColor.Yellow:
             {
                 return Color.yellow;
             }
-            case WeaponColor.blue:
+            case WeaponColor.Blue:
             {
                 return Color.blue;
             }

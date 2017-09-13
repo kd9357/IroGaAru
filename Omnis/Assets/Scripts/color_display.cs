@@ -10,9 +10,9 @@ public class color_display : MonoBehaviour {
     public AttackTrigger Weapon;
     public PlayerAttack PlayerAttack;
 
-    public WeaponColor active_color = WeaponColor.red;
-    public WeaponColor inactive_left_color = WeaponColor.blue;
-    public WeaponColor inactive_right_color = WeaponColor.yellow;
+    public WeaponColor active_color = WeaponColor.Red;
+    public WeaponColor inactive_left_color = WeaponColor.Blue;
+    public WeaponColor inactive_right_color = WeaponColor.Yellow;
     public int max_colors = 3;
     public int start_x = 32;
     public int start_y = 160;
