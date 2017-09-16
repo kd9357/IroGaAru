@@ -6,7 +6,7 @@ public enum ColorStatus
 {
     Stun,
     DamageOverTime,
-    GreenEffect,
+    WindRecoil,     //There must be a better name than this
     None
 }
 
@@ -21,6 +21,10 @@ public class Enemy : MonoBehaviour
         
     };
 
+    //For testing purposes
+    [Tooltip("Check to display enemy stats")]
+    public bool DebugMode = false;
+
     [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
     public float MaxHealth = 5;
@@ -31,10 +35,10 @@ public class Enemy : MonoBehaviour
 
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
-    [Tooltip("Time before enemy returns to default color")]
-    public float ComboCooldown = 5f;
     [Tooltip("Time before enemy can recover from recoil")]
     public float RecoilCooldown = 0.5f;
+    [Tooltip("Time before enemy returns to default color")]
+    public float ColorCooldown = 5f;
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
@@ -48,12 +52,14 @@ public class Enemy : MonoBehaviour
     private float _currentHealth;
     private Color _currentColor;
     private float _currentSpeed;
+    private float _currentKnockbackForce;
     private float _recoilTimer;
 
     private float _colorTimer;
 
     private ColorStatus _currentStatus = ColorStatus.None;
 
+    private TextMesh _textMesh;
 
     // Use this for initialization
     void Start()
@@ -66,10 +72,14 @@ public class Enemy : MonoBehaviour
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
         _currentSpeed = Speed;
+        _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
+
+        //For testing purposes
+        _textMesh = gameObject.GetComponentInChildren<TextMesh>();
     }
 
-#region Updates
+    #region Updates
 
     void FixedUpdate()
     {
@@ -104,6 +114,7 @@ public class Enemy : MonoBehaviour
             if (_currentStatus == ColorStatus.DamageOverTime)
             {
                 _currentHealth *= 0.99f; //Every frame reduce enemy health by 1% of current health
+                //TODO: Refine this code to be better balanced
             }
         }
         else if (_colorTimer < 0)
@@ -112,6 +123,7 @@ public class Enemy : MonoBehaviour
             _currentColor = DefaultColor;
             _sprite.color = _currentColor;
             _currentSpeed = Speed;
+            _currentKnockbackForce = EnemyKnockbackForce;
             _currentStatus = ColorStatus.None;
         }
 
@@ -121,13 +133,31 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("Death");
             Destroy(gameObject);
         }
+
+        if (DebugMode)
+        {
+            //Debug stuff
+            string message = "";
+            message += "HP: " + _currentHealth + "/" + MaxHealth + "\n";
+            message += "AI: " + AI_Type + "\n";
+            message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
+            message += "Status: " + _currentStatus + "\n";
+            message += "Color Timer: " + _colorTimer;
+            _textMesh.text = message;
+        }
+        else
+        {
+            _textMesh.text = "";
+        }
     }
 
     #endregion
 
     public void EnemyDamaged(int damage, Color color, int direction)
     {
-        _colorTimer = ComboCooldown;
+        //Only set the timer on first hit
+        if(_colorTimer != ColorCooldown)
+            _colorTimer = ColorCooldown;
         _recoilTimer = RecoilCooldown;
         _currentHealth -= damage;
 
@@ -158,19 +188,22 @@ public class Enemy : MonoBehaviour
             _currentStatus = (ColorStatus)(i);
             if (_currentStatus != ColorStatus.None)
             {
-                if (_currentStatus == ColorStatus.Stun)  // even more gack
-                {
+                //When special color first applied, reset timer
+                _colorTimer = ColorCooldown;
+                if (_currentStatus == ColorStatus.Stun)
                     _currentSpeed = 0;
-                }
-                else if (_currentStatus == ColorStatus.GreenEffect)
+                else if (_currentStatus == ColorStatus.WindRecoil)
                 {
+                    _currentKnockbackForce *= 2;    //For now, double knockback effect when green
+                    //May change this to a one time hit
+                    //Don't mess with mass since we want the boss to be variably affected due to his increased mass
                     _currentColor = Color.green;
                 }
             }
         }
 
         _sprite.color = _currentColor;
-        _rb.AddForce(Vector2.right * direction * EnemyKnockbackForce * _rb.mass, ForceMode2D.Impulse);
+        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
     #region Collisions
