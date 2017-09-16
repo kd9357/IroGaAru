@@ -45,12 +45,16 @@ public class color_display : MonoBehaviour {
     {
         if (!PlayerAttack.IsAttacking())
         {
-            float direction = Input.GetAxisRaw("Mouse ScrollWheel"); 
-            direction = direction > 0 ? 1 :
-                direction < 0 ? -1 : 0;
-            CycleColors((int)direction);
+#if (UNITY_ANDROID || UNITY_IPHONE)
+            CycleColors(MobileUI.Instance.GetSwitchColor() ? 1 : 0);
+#else
+            // Not easy to use mousewheel
+//            float direction = Input.GetAxisRaw("Mouse ScrollWheel");
+//            direction = direction > 0 ? 1 :
+//                direction < 0 ? -1 : 0;
+//            CycleColors((int)direction);
 
-            if(Input.GetButtonUp("Left Bumper"))
+            if (Input.GetButtonUp("Left Bumper"))
             {
                 CycleColors(-1);
             }
@@ -58,6 +62,7 @@ public class color_display : MonoBehaviour {
             {
                 CycleColors(1);
             }
+#endif
         }
     }
 
