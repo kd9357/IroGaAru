@@ -15,10 +15,10 @@ public class MobileUI : MonoBehaviour {
     public static bool Attack;
     public static bool Jump;
 
-    // If not on phone,
-    void Awake()
+    // If not on phone, destory
+    void Start()
     {
-#if (UNITY_ANDOIRD || UNITY_IPHONE)
+#if (UNITY_ANDROID || UNITY_IPHONE)
         ++_refCount;
         if (_refCount > 1) {
             DestroyImmediate(this.gameObject);

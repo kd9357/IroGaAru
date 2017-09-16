@@ -46,6 +46,7 @@ public class color_display : MonoBehaviour {
         if (!PlayerAttack.IsAttacking())
         {
 #if (UNITY_ANDROID || UNITY_IPHONE)
+
             CycleColors(MobileUI.Instance.GetSwitchColor() ? 1 : 0);
 #else
             // Not easy to use mousewheel
@@ -121,7 +122,7 @@ public class color_display : MonoBehaviour {
     }
 
 
-    void CycleColors(int direction)
+    public void CycleColors(int direction)
     {
         if (direction == 0)
             return;

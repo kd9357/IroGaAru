@@ -92,12 +92,13 @@ public class Player : MonoBehaviour {
             float x_mov, y_mov;
 #if (UNITY_ANDROID || UNITY_IPHONE)
             x_mov = MobileUI.Instance.GetLeft() && MobileUI.Instance.GetRight() ? 0 :
-                    MobileUI.Instance.GetLeft() ? -Speed : Speed;
+                    MobileUI.Instance.GetLeft() ? -Speed :
+                    MobileUI.Instance.GetRight() ? Speed : 0;
 #else
             x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                 Input.GetAxisRaw("Horizontal") * Speed;
-            y_mov = _rb.velocity.y;
 #endif
+            y_mov = _rb.velocity.y;
             x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
 
             if ((x_mov > 0 && !_facingRight) || (x_mov < 0 && _facingRight))
@@ -143,7 +144,9 @@ public class Player : MonoBehaviour {
 #if (UNITY_ANDROID || UNITY_IPHONE)
         if (MobileUI.Instance.GetJump() && _onGround)
             _jumping = true;
-        _jumpCancel = MobileUI.Instance.GetJump();
+
+        // TODO: Figure out how to properly set this
+//        _jumpCancel = !MobileUI.Instance.GetJump();
 #else
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
