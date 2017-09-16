@@ -88,11 +88,17 @@ public class Player : MonoBehaviour {
         // MOVEMENT
         // If knockback over, resume movement
         if(_knockbackTimer <= 0)
-        { 
-            float x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
-                                  Input.GetAxisRaw("Horizontal") * Speed;
-            float y_mov = _rb.velocity.y;
-
+        {
+            float x_mov, y_mov;
+#if (UNITY_ANDROID || UNITY_IPHONE)
+            x_mov = MobileUI.Instance.GetLeft() && MobileUI.Instance.GetRight() ? 0 :
+                    MobileUI.Instance.GetLeft() ? -Speed :
+                    MobileUI.Instance.GetRight() ? Speed : 0;
+#else
+            x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
+                Input.GetAxisRaw("Horizontal") * Speed;
+#endif
+            y_mov = _rb.velocity.y;
             x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
 
             if ((x_mov > 0 && !_facingRight) || (x_mov < 0 && _facingRight))
@@ -135,6 +141,13 @@ public class Player : MonoBehaviour {
     // Update runs once per frame
     private void Update()
     {
+#if (UNITY_ANDROID || UNITY_IPHONE)
+        if (MobileUI.Instance.GetJump() && _onGround)
+            _jumping = true;
+
+        // TODO: Figure out how to properly set this
+//        _jumpCancel = !MobileUI.Instance.GetJump();
+#else
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
         {
@@ -142,6 +155,7 @@ public class Player : MonoBehaviour {
         }
 
         _jumpCancel = Input.GetButtonUp("Jump");
+#endif
 
         // HEALTH
         if (_currentHealth <= 0)

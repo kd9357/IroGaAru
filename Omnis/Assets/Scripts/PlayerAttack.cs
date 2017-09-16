@@ -43,8 +43,15 @@ public class PlayerAttack : MonoBehaviour {
             _color = GameController.instance.EquippedColor;
             _trigg.SetColor(_color);
         }
+
+	    bool doAttack = false;
+#if (UNITY_ANDROID || UNITY_IPHONE)
+        doAttack = MobileUI.Instance.GetAttack() && !_attacking;
+#else
+	    doAttack = Input.GetButtonDown("Fire1") && !_attacking;
+#endif
         
-		if(Input.GetButtonDown("Fire1") && !_attacking)
+		if(doAttack)
         {
             _attacking = true;
             _timer = AttackCooldown;
