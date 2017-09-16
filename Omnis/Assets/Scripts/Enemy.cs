@@ -6,6 +6,7 @@ public enum ColorStatus
 {
     Stun,
     DamageOverTime,
+    WindRecoil,     //There must be a better name than this
     None
 }
 
@@ -14,9 +15,15 @@ public class Enemy : MonoBehaviour
 
     private static List<Color> SpecialColors = new List<Color>
     {
-        new Color(.5f, 0f, .5f),    //Purple
-        new Color(1f, .5f, 0f)    //Orange
+        new Color(.5f, 0f, .5f),        //Purple
+        new Color(1f, .5f, 0f),         //Orange
+        new Color(0.5f, 0.5f, 0.5f)     //Fake green
+        
     };
+
+    //For testing purposes
+    [Tooltip("Check to display enemy stats")]
+    public bool DebugMode = false;
 
     [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
@@ -28,8 +35,10 @@ public class Enemy : MonoBehaviour
 
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
-    [Tooltip("Time before color ailment expires (stun extends this)")]
-    public float ComboCooldown = 0.5f;
+    [Tooltip("Time before enemy can recover from recoil")]
+    public float RecoilCooldown = 0.5f;
+    [Tooltip("Time before enemy returns to default color")]
+    public float ColorCooldown = 5f;
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
@@ -40,16 +49,17 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rb;
     private AudioSource _audioSource;
 
-    private bool _recoil;
-
     private float _currentHealth;
     private Color _currentColor;
+    private float _currentSpeed;
+    private float _currentKnockbackForce;
+    private float _recoilTimer;
 
     private float _colorTimer;
 
     private ColorStatus _currentStatus = ColorStatus.None;
-    private string _cachedAI_Type;
 
+    private TextMesh _textMesh;
 
     // Use this for initialization
     void Start()
@@ -61,22 +71,27 @@ public class Enemy : MonoBehaviour
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
-        _recoil = false;
+        _currentSpeed = Speed;
+        _currentKnockbackForce = EnemyKnockbackForce;
+        _recoilTimer = 0;
+
+        //For testing purposes
+        _textMesh = gameObject.GetComponentInChildren<TextMesh>();
     }
 
-#region Updates
+    #region Updates
 
     void FixedUpdate()
     {
-        if (!_recoil)
+        if (_recoilTimer <= 0)
         {
             switch (AI_Type)
             {
                 case "Lefty":
-                    _rb.velocity = new Vector2(-Speed, 0);
+                    _rb.velocity = new Vector2(-_currentSpeed, 0);
                     break;
                 case "Righty":
-                    _rb.velocity = new Vector2(Speed, 0);
+                    _rb.velocity = new Vector2(_currentSpeed, 0);
                     break;
                 case "Stand":
                     _rb.velocity = Vector2.zero;
@@ -88,89 +103,107 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Update stagger/knockback time
+        if(_recoilTimer > 0)
+            _recoilTimer-= Time.deltaTime;
+
+        //Update status ailment time
         if (_colorTimer > 0)
         {
             _colorTimer -= Time.deltaTime;
             if (_currentStatus == ColorStatus.DamageOverTime)
             {
                 _currentHealth *= 0.99f; //Every frame reduce enemy health by 1% of current health
-            }
-            else if (_currentStatus == ColorStatus.Stun)
-            {
-                AI_Type = "Stand";
+                //TODO: Refine this code to be better balanced
             }
         }
         else if (_colorTimer < 0)
         {
             _colorTimer = 0;
-            _recoil = false;
             _currentColor = DefaultColor;
             _sprite.color = _currentColor;
-            if (_currentStatus == ColorStatus.Stun)
-                AI_Type = _cachedAI_Type;
+            _currentSpeed = Speed;
+            _currentKnockbackForce = EnemyKnockbackForce;
             _currentStatus = ColorStatus.None;
-
         }
+
+        //Update health status
         if (_currentHealth <= 0)
         {
             _anim.SetTrigger("Death");
             Destroy(gameObject);
         }
+
+        if (DebugMode)
+        {
+            //Debug stuff
+            string message = "";
+            message += "HP: " + _currentHealth + "/" + MaxHealth + "\n";
+            message += "AI: " + AI_Type + "\n";
+            message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
+            message += "Status: " + _currentStatus + "\n";
+            message += "Color Timer: " + _colorTimer;
+            _textMesh.text = message;
+        }
+        else
+        {
+            _textMesh.text = "";
+        }
     }
 
-#endregion
+    #endregion
 
     public void EnemyDamaged(int damage, Color color, int direction)
     {
-        _colorTimer = ComboCooldown;
-        _recoil = true;
-
+        //Only set the timer on first hit
+        if(_colorTimer != ColorCooldown)
+            _colorTimer = ColorCooldown;
+        _recoilTimer = RecoilCooldown;
         _currentHealth -= damage;
 
-        // GAME JAM HACK: Needs to be refined for game -- right now, can't make green
-        // just by averaging
-        _currentColor = (_currentColor + color) / 2;
-
-        // Determine if any special effects
-
-        //Our current model of determining the proximity of a color is incredibly limited
-        //The most accurate model is using CIELAB coordinates and Delta E, but is an expensive calculation
-        //There's a cheaper YUV comparison but I couldn't get it working quickly
-        //HSV comparison of hues is reasonable, but requires just as much fine tweaking as RGB
-
-        //The problems mostly stem from the fact that we're using RBY over RGB and CMY colors
-        //Cyan = (0, 1, 1), Magenta = (1, 0, 1), Yellow = (1, 1, 0), 
-        //so it would be trivial to average towards those colors and find a percentage of them
-
-        Vector3 cc = new Vector3(_currentColor.r, _currentColor.g, _currentColor.b);
-        int i;
-        float threshold = 0.4f;    
-        for(i = 0; i < SpecialColors.Count; i++)
+        //Only allow color mixing when not under some ailment
+        if (_currentStatus == ColorStatus.None)
         {
-            Vector3 sc = new Vector3(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
-            float distance = Vector3.Distance(sc, cc);
-            if (i != 0) 
-                threshold = 0.34f; //gack
-            if (distance < threshold)
+            _currentColor = (_currentColor + color) / 2;
+
+            // Now determine other special effects
+            Vector3 cc = new Vector3(_currentColor.r, _currentColor.g, _currentColor.b);
+            Vector3 sc = Vector3.zero;
+
+            int i;
+            float threshold = 0.4f; //For purple
+            for (i = 0; i < SpecialColors.Count; i++)
             {
-                Debug.Log("Applying " + (ColorStatus)(i));
-                if (_currentStatus == ColorStatus.Stun)  // even more gack
+                sc.Set(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
+                float distance = Vector3.Distance(sc, cc);
+                if (i != 0) 
+                    threshold = 0.34f; //gack, change threshold for orange and green
+                if (distance < threshold)
                 {
-                    _cachedAI_Type = AI_Type;
-                    _colorTimer += 1;
+                    Debug.Log("Applying " + (ColorStatus)(i));
+                    break;
                 }
-                break;
+
             }
-
+            _currentStatus = (ColorStatus)(i);
+            if (_currentStatus != ColorStatus.None)
+            {
+                //When special color first applied, reset timer
+                _colorTimer = ColorCooldown;
+                if (_currentStatus == ColorStatus.Stun)
+                    _currentSpeed = 0;
+                else if (_currentStatus == ColorStatus.WindRecoil)
+                {
+                    _currentKnockbackForce *= 2;    //For now, double knockback effect when green
+                    //May change this to a one time hit
+                    //Don't mess with mass since we want the boss to be variably affected due to his increased mass
+                    _currentColor = Color.green;
+                }
+            }
         }
-        _currentStatus = (ColorStatus)(i);
-
-        if(_currentStatus == ColorStatus.None)
-            Debug.Log("Status reset to NONE");
 
         _sprite.color = _currentColor;
-        _rb.AddForce(Vector2.right * direction * EnemyKnockbackForce * _rb.mass, ForceMode2D.Impulse);
-
+        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
     #region Collisions
