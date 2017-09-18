@@ -21,10 +21,5 @@ public class hp_display : MonoBehaviour {
 	
 	// OnGUI called to draw GUI objects.
 	void OnGUI () {
-		GUI.DrawTexture(new Rect(start_x, start_y, 21, 77), hp_back); //Draw background of the bar.
-	    int player_health = player.GetCurrentHealth();
-        for (int i = 0; i < player_health; i++) { 
-			GUI.DrawTexture(new Rect(start_x,start_y + (7-i)*9, 21, 14), hp_array[i]); //Draw current HP.
-		}
 	}
 }
