@@ -54,7 +54,6 @@ public class Enemy : MonoBehaviour
     private float _currentSpeed;
     private float _currentKnockbackForce;
     private float _recoilTimer;
-
     private float _colorTimer;
 
     private ColorStatus _currentStatus = ColorStatus.None;
@@ -111,11 +110,6 @@ public class Enemy : MonoBehaviour
         if (_colorTimer > 0)
         {
             _colorTimer -= Time.deltaTime;
-            if (_currentStatus == ColorStatus.DamageOverTime)
-            {
-                _currentHealth *= 0.99f; //Every frame reduce enemy health by 1% of current health
-                //TODO: Refine this code to be better balanced
-            }
         }
         else if (_colorTimer < 0)
         {
@@ -138,11 +132,11 @@ public class Enemy : MonoBehaviour
         {
             //Debug stuff
             string message = "";
-            message += "HP: " + _currentHealth + "/" + MaxHealth + "\n";
+            message += "HP: " + _currentHealth.ToString("F2") + "/" + MaxHealth + "\n";
             message += "AI: " + AI_Type + "\n";
             message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
             message += "Status: " + _currentStatus + "\n";
-            message += "Color Timer: " + _colorTimer;
+            message += "Color Timer: " + _colorTimer.ToString("F2");
             _textMesh.text = message;
         }
         else
@@ -153,6 +147,7 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
+    #region Helper Methods
     public void EnemyDamaged(int damage, Color color, int direction)
     {
         //Only set the timer on first hit
@@ -187,24 +182,46 @@ public class Enemy : MonoBehaviour
             }
             _currentStatus = (ColorStatus)(i);
             if (_currentStatus != ColorStatus.None)
-            {
-                //When special color first applied, reset timer
-                _colorTimer = ColorCooldown;
-                if (_currentStatus == ColorStatus.Stun)
-                    _currentSpeed = 0;
-                else if (_currentStatus == ColorStatus.WindRecoil)
-                {
-                    _currentKnockbackForce *= 2;    //For now, double knockback effect when green
-                    //May change this to a one time hit
-                    //Don't mess with mass since we want the boss to be variably affected due to his increased mass
-                    _currentColor = Color.green;
-                }
-            }
+                ApplyAilment();
         }
 
         _sprite.color = _currentColor;
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
+
+    protected void ApplyAilment()
+    {
+        //When special color first applied, reset timer
+        _colorTimer = ColorCooldown;
+        switch(_currentStatus)
+        {
+            case ColorStatus.Stun:
+                _currentSpeed = 0;
+                return;
+            case ColorStatus.WindRecoil:
+                _currentKnockbackForce *= 2;
+                //For now, double knockback effect when green
+                //May change this to a one time hit
+                //Don't mess with mass since we want the boss to be variably affected due to his increased mass
+                _currentColor = Color.green;
+                return;
+            case ColorStatus.DamageOverTime:
+                StartCoroutine(DamageOverTime());
+                return;
+        }
+    }
+
+    //Reduce the enemy's health by 10% of currentHealth every second
+    IEnumerator DamageOverTime()
+    {
+        while(_currentStatus == ColorStatus.DamageOverTime)
+        {
+            _currentHealth *= 0.90f;
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    #endregion
 
     #region Collisions
     // Hurt player on contact
