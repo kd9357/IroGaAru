@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -21,12 +22,22 @@ public class GameController : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
-	
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
     public void GameOver()
     {
         // Only sound available is gameover sound
         GetComponent<AudioSource>().Play();
 
         EndGame = true;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
