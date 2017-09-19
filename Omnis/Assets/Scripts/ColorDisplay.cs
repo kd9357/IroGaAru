@@ -33,8 +33,11 @@ public class ColorDisplay : MonoBehaviour {
         if (!PlayerAttack.IsAttacking())
         {
 #if (UNITY_ANDROID || UNITY_IPHONE)
-
-            CycleColors(MobileUI.Instance.GetSwitchColor() ? 1 : 0);
+            if (MobileUI.Instance.GetSwitchColor())
+            {
+                CycleColors(1);
+                MobileUI.Instance.SetSwitchColor(false);
+            }
 #else
             // Not easy to use mousewheel
 //            float direction = Input.GetAxisRaw("Mouse ScrollWheel");
