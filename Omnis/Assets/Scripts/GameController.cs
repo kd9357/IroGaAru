@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour {
         GetComponent<AudioSource>().Play();
 
         EndGame = true;
+
+        // TODO: Make a real restart menu
+        LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void QuitGame()

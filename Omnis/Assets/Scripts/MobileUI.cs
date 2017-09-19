@@ -26,6 +26,7 @@ public class MobileUI : MonoBehaviour {
         }
 
         Instance = this;
+
         DontDestroyOnLoad(this.gameObject);
 #else
         Destroy(this.gameObject);

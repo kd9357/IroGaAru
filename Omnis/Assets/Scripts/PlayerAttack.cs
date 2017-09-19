@@ -90,6 +90,9 @@ public class PlayerAttack : MonoBehaviour {
 
             //For testing
             _weaponSprite.enabled = true;
+
+            // Reset gamepad attack flag
+            MobileUI.Instance.SetAttack(false);
         }
 
         if(_attacking)

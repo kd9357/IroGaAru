@@ -143,10 +143,14 @@ public class Player : MonoBehaviour {
     {
 #if (UNITY_ANDROID || UNITY_IPHONE)
         if (MobileUI.Instance.GetJump() && _onGround)
+        {
             _jumping = true;
 
-        // TODO: Figure out how to properly set this
-//        _jumpCancel = !MobileUI.Instance.GetJump();
+            // Reset gamepad attack flag
+            MobileUI.Instance.SetJump(false);
+        }
+
+        _jumpCancel = MobileUI.Instance.GetJump();
 #else
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
@@ -160,13 +164,15 @@ public class Player : MonoBehaviour {
         // HEALTH
         if (_currentHealth <= 0)
         {
-            //Initiate Game Over
+            // HACK TO RESTART GAME QUICKLY
+            // There is a bug where if you hold left or right while it reload,
+            // you'll start going that direction until you press the direction again
             GameController.instance.GameOver();
 
-            Destroy(gameObject.transform.GetChild(1));
-            transform.DetachChildren();
-
-            Destroy(gameObject);
+//            Destroy(gameObject.transform.GetChild(1));
+//            transform.DetachChildren();
+//
+//            Destroy(gameObject);
         }
 
         if (_invinceTimer > 0)

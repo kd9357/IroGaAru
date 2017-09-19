@@ -18,7 +18,8 @@ public class AttackTrigger : MonoBehaviour {
     // Player attacks enemy
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collision with " + collision.tag);
+        // DEBUGGING
+        // Debug.Log("Collision with " + collision.tag);
         if (collision.CompareTag("Enemy"))
         {
             Color col = GetColor(_color);
