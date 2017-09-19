@@ -82,6 +82,9 @@ public class PlayerAttack : MonoBehaviour {
         }
 
         _anim.SetBool("Attacking", _attacking);
+
+        //Most likely we will not be handling weapon animations separately, but for now:
+        WeaponCollider.gameObject.GetComponent<Animator>().SetBool("Attacking", _attacking);
 	}
 
     public bool IsAttacking()
