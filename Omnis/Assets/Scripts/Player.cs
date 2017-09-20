@@ -203,6 +203,7 @@ public class Player : MonoBehaviour {
         _knockbackDirection = fromRight ? -1 : 1;
         _hit = true;
     }
+    //Maybe allow enemy to determine knockback distance
     #endregion
 
     #region Collisions

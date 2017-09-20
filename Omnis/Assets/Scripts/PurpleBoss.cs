@@ -18,6 +18,7 @@ public class PurpleBoss : Enemy {
     protected float _actionTimer;
     private int _phaseNum;
     private float _defaultMass;
+    private Vector3 _defaultScale;
     private float _attackCooldown = 0.3f;
     private float _attackTimer;
 
@@ -42,6 +43,7 @@ public class PurpleBoss : Enemy {
 
         _phaseNum = 0;
         _defaultMass = _rb.mass;
+        _defaultScale = transform.localScale;
         _attackTimer = 0;
 
         _slapBox = gameObject.GetComponent<BoxCollider2D>();
@@ -60,6 +62,8 @@ public class PurpleBoss : Enemy {
             || (Player.transform.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
+        //Should probably do this stuff in update instead
+        //Update attack times
         if (_attackTimer < 0)
         {
             _slapBox.enabled = false;
@@ -68,6 +72,7 @@ public class PurpleBoss : Enemy {
         else
             _attackTimer -= Time.deltaTime;
 
+        //Update behavior times
         if (_recoilTimer <= 0)
         {
             if (_actionTimer > 0)
@@ -77,9 +82,22 @@ public class PurpleBoss : Enemy {
             if (_actionTimer <= 0)
             {
                 //Move to player
-                //If in range, attack
-                SlapAttack();
+                //Need to account for distance increase from size
+                if (Vector3.Distance(transform.position, Player.transform.position) > 2)
+                {
+                    if (_facingRight)
+                        _rb.velocity = new Vector2(Speed, _rb.velocity.y);
+                    else
+                        _rb.velocity = new Vector2(-Speed, _rb.velocity.y);
+                }
+                //Once in range, attack
+                else
+                    SlapAttack();
             }
+        }
+        else
+        {
+            _recoilTimer -= Time.deltaTime;
         }
     }
     #endregion
@@ -150,8 +168,48 @@ public class PurpleBoss : Enemy {
                 return;
             case ColorStatus.DamageOverTime:
                 //Instead of damage, shrink to some minimum value
-                //StartCoroutine();
+                StartCoroutine(ShrinkOverTime());
                 return;
+        }
+    }
+
+    IEnumerator ShrinkOverTime()
+    {
+        float timer = 0;
+        float startMass = _rb.mass;
+        Vector3 startScale = transform.localScale;
+
+        while (_currentStatus == ColorStatus.DamageOverTime)
+        {
+            float proportionCompleted = timer / ColorCooldown;
+            _rb.mass = Mathf.Lerp(startMass, _defaultMass, proportionCompleted);
+            //Need to account for flip while shrinking
+            if((startScale.x > 0 && _facingRight) || (startScale.x < 0 && !_facingRight))
+                startScale.x *= -1;
+            //Shrinking doesn't change location, so each time this calls the boss drops a bit
+            //Basically it looks really shaky
+            transform.localScale = Vector3.Lerp(startScale, _defaultScale, proportionCompleted);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    IEnumerator GrowOverTime()
+    {
+        float timer = 0;
+        float endMass = _defaultMass * 10;
+        Vector3 endScale = new Vector3(transform.localScale.x * 2, transform.localScale.y * 2, 1);
+        //For now, just grow to twice size, 10 times mass for 5 seconds
+        while (timer < 5f)
+        {
+            float proportionCompleted = timer / 5f;
+            _rb.mass = Mathf.Lerp(_defaultMass, endMass, proportionCompleted);
+            //Need to account for flip while shrinking
+            if ((endScale.x > 0 && _facingRight) || (endScale.x < 0 && !_facingRight))
+                endScale.x *= -1;
+            transform.localScale = Vector3.Lerp(_defaultScale, endScale, proportionCompleted);
+            timer += Time.deltaTime;
+            yield return null;
         }
     }
 
@@ -161,6 +219,11 @@ public class PurpleBoss : Enemy {
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+        _defaultScale.x *= -1;
+
+        //Delay Enemy's actions
+        if(_actionTimer != 0)
+            _actionTimer = ActionCooldown / 2;
     }
     #endregion
 
@@ -170,22 +233,30 @@ public class PurpleBoss : Enemy {
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         //Check if enter water
-        if(collision.gameObject.CompareTag("Hazard"))
+        if(collision.gameObject.CompareTag("Hazard") && _recoilTimer == 0)
         {
             _currentHealth--;
             _phaseNum++;
             _recoilTimer = RecoilCooldown;
+            //Need to jump back into arena, scale size
+            StartCoroutine(GrowOverTime());
         }
     }
 
+    //Right now just override enemy's method
     protected override void OnCollisionStay2D(Collision2D collision)
     {
-        
+        return;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Slap connected with " + collision.tag);
+        Debug.Log("Collided with " + collision.tag);
+        if(collision.CompareTag("Player"))
+        {
+            int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
+            collision.gameObject.GetComponent<Player>().Knockback(!_facingRight);
+        }
     }
     #endregion
 
