@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
     // Components on player
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
-    private PolygonCollider2D _footCollider;
+    //private PolygonCollider2D _footCollider;
     private Animator _anim;
     private AudioSource _audioSource;
 
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour {
     {
         _sprite = GetComponent<SpriteRenderer>();
 	    _rb = GetComponent<Rigidbody2D>();
-	    _footCollider = GetComponent<PolygonCollider2D>();
+	    //_footCollider = GetComponent<PolygonCollider2D>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
 
@@ -143,10 +143,14 @@ public class Player : MonoBehaviour {
     {
 #if (UNITY_ANDROID || UNITY_IPHONE)
         if (MobileUI.Instance.GetJump() && _onGround)
+        {
             _jumping = true;
 
-        // TODO: Figure out how to properly set this
-//        _jumpCancel = !MobileUI.Instance.GetJump();
+            // Reset gamepad attack flag
+            MobileUI.Instance.SetJump(false);
+        }
+
+        _jumpCancel = MobileUI.Instance.GetJump();
 #else
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
@@ -160,13 +164,15 @@ public class Player : MonoBehaviour {
         // HEALTH
         if (_currentHealth <= 0)
         {
-            //Initiate Game Over
+            // HACK TO RESTART GAME QUICKLY
+            // There is a bug where if you hold left or right while it reload,
+            // you'll start going that direction until you press the direction again
             GameController.instance.GameOver();
 
-            Destroy(gameObject.transform.GetChild(1));
-            transform.DetachChildren();
-
-            Destroy(gameObject);
+//            Destroy(gameObject.transform.GetChild(1));
+//            transform.DetachChildren();
+//
+//            Destroy(gameObject);
         }
 
         if (_invinceTimer > 0)
@@ -180,8 +186,9 @@ public class Player : MonoBehaviour {
         }
     }
 
-#endregion
+    #endregion
 
+    #region Helper Methods
     void Flip()
     {
         _facingRight = !_facingRight;
@@ -196,6 +203,8 @@ public class Player : MonoBehaviour {
         _knockbackDirection = fromRight ? -1 : 1;
         _hit = true;
     }
+    //Maybe allow enemy to determine knockback distance
+    #endregion
 
     #region Collisions
 

@@ -85,14 +85,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
+    <Compile Include="Assets\Scripts\ColorDisplay.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\HPDisplay.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\MobileUI.cs" />
+    <Compile Include="Assets\Scripts\OLD COLOR DISPLAY.cs" />
+    <Compile Include="Assets\Scripts\OLD HP DISPLAY.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
-    <Compile Include="Assets\Scripts\color_display.cs" />
-    <Compile Include="Assets\Scripts\hp_display.cs" />
+    <Compile Include="Assets\Scripts\PurpleBoss.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
