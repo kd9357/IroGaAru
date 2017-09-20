@@ -102,7 +102,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    protected void Update()
+    void Update()
     {
         //Update stagger/knockback time
         if(_recoilTimer > 0)
