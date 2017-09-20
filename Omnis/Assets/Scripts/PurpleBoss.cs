@@ -62,7 +62,42 @@ public class PurpleBoss : Enemy {
             || (Player.transform.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
-        //Should probably do this stuff in update instead
+        //Update behavior times
+        if (_recoilTimer <= 0)
+        {
+            if (_actionTimer > 0)
+            {
+                _actionTimer -= Time.deltaTime;
+            }
+            else if (_actionTimer < 0)
+            {
+                _actionTimer = -1;  //Ensure this statement continues to play each frame until action has ended
+                //Move to player
+                //Need to account for changing size
+                if (Vector3.Distance(transform.position, Player.transform.position) > 1.5)
+                {
+                    if (_facingRight)
+                        _rb.velocity = new Vector2(Speed, _rb.velocity.y);
+                    else
+                        _rb.velocity = new Vector2(-Speed, _rb.velocity.y);
+                }
+                //Once in range, attack
+                else
+                {
+                    _actionTimer = 0;
+                    _anim.SetTrigger("Attack");
+                    //SlapAttack();
+                }
+            }
+        }
+    }
+
+    void Update()
+    {
+        //Update stagger/knockback time
+        if (_recoilTimer > 0)
+            _recoilTimer -= Time.deltaTime;
+
         //Update attack times
         if (_attackTimer < 0)
         {
@@ -72,32 +107,43 @@ public class PurpleBoss : Enemy {
         else
             _attackTimer -= Time.deltaTime;
 
-        //Update behavior times
-        if (_recoilTimer <= 0)
+        //Update status ailment time
+        if (_colorTimer > 0)
         {
-            if (_actionTimer > 0)
-            {
-                _actionTimer -= Time.deltaTime;
-            }
-            if (_actionTimer <= 0)
-            {
-                //Move to player
-                //Need to account for distance increase from size
-                if (Vector3.Distance(transform.position, Player.transform.position) > 2)
-                {
-                    if (_facingRight)
-                        _rb.velocity = new Vector2(Speed, _rb.velocity.y);
-                    else
-                        _rb.velocity = new Vector2(-Speed, _rb.velocity.y);
-                }
-                //Once in range, attack
-                else
-                    SlapAttack();
-            }
+            _colorTimer -= Time.deltaTime;
+        }
+        else if (_colorTimer < 0)
+        {
+            _colorTimer = 0;
+            _currentColor = DefaultColor;
+            _sprite.color = _currentColor;
+            _currentSpeed = Speed;
+            _currentKnockbackForce = EnemyKnockbackForce;
+            _currentStatus = ColorStatus.None;
+        }
+
+        //Update health status
+        if (_currentHealth <= 0)
+        {
+            //For now just destroy object
+            _anim.SetTrigger("Death");
+            Destroy(gameObject);
+        }
+
+        if (DebugMode)
+        {
+            //Debug stuff
+            string message = "";
+            message += "HP: " + _currentHealth.ToString("F2") + "/" + MaxHealth + "\n";
+            message += "AI: " + AI_Type + "\n";
+            message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
+            message += "Status: " + _currentStatus + "\n";
+            message += "Color Timer: " + _colorTimer.ToString("F2");
+            _textMesh.text = message;
         }
         else
         {
-            _recoilTimer -= Time.deltaTime;
+            _textMesh.text = "";
         }
     }
     #endregion
@@ -106,7 +152,6 @@ public class PurpleBoss : Enemy {
 
     private void SlapAttack()
     {
-        
         //Enable hurtbox
         _slapBox.enabled = true;
         _attackTimer = _attackCooldown;
@@ -194,13 +239,31 @@ public class PurpleBoss : Enemy {
         }
     }
 
+    //When shocked, jump back to middle of arena and grow in size
+    IEnumerator StartNextPhase()
+    {
+        //Should change color to purple?
+        _anim.SetTrigger("Shocked");
+        yield return new WaitForSeconds(1.5f);
+        //Reset status
+        _currentStatus = ColorStatus.None;
+        _currentColor = DefaultColor;
+        _sprite.color = _currentColor;
+        //Need to jump back into arena
+        //For now just move directly above
+        transform.position = new Vector3(10, 40, 0);
+        //scale size
+        StartCoroutine(GrowOverTime());
+    }
+
     IEnumerator GrowOverTime()
     {
+        _anim.SetBool("Growing", true);
         float timer = 0;
         float endMass = _defaultMass * 10;
         Vector3 endScale = new Vector3(transform.localScale.x * 2, transform.localScale.y * 2, 1);
-        //For now, just grow to twice size, 10 times mass for 5 seconds
-        while (timer < 5f)
+        //For now, just grow to twice size, 10 times mass over 5 seconds
+        while (timer < 3f)
         {
             float proportionCompleted = timer / 5f;
             _rb.mass = Mathf.Lerp(_defaultMass, endMass, proportionCompleted);
@@ -211,6 +274,7 @@ public class PurpleBoss : Enemy {
             timer += Time.deltaTime;
             yield return null;
         }
+        _anim.SetBool("Growing", false);
     }
 
     void Flip()
@@ -233,13 +297,12 @@ public class PurpleBoss : Enemy {
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         //Check if enter water
-        if(collision.gameObject.CompareTag("Hazard") && _recoilTimer == 0)
+        if(collision.gameObject.CompareTag("Hazard") && _recoilTimer <= 0)
         {
             _currentHealth--;
             _phaseNum++;
             _recoilTimer = RecoilCooldown;
-            //Need to jump back into arena, scale size
-            StartCoroutine(GrowOverTime());
+            StartCoroutine(StartNextPhase());
         }
     }
 
@@ -249,6 +312,7 @@ public class PurpleBoss : Enemy {
         return;
     }
 
+    //Slap connected
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Collided with " + collision.tag);
