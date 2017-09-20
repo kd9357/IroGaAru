@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
     // Components on player
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
-    private PolygonCollider2D _footCollider;
+    //private PolygonCollider2D _footCollider;
     private Animator _anim;
     private AudioSource _audioSource;
 
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour {
     {
         _sprite = GetComponent<SpriteRenderer>();
 	    _rb = GetComponent<Rigidbody2D>();
-	    _footCollider = GetComponent<PolygonCollider2D>();
+	    //_footCollider = GetComponent<PolygonCollider2D>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
 
@@ -186,8 +186,9 @@ public class Player : MonoBehaviour {
         }
     }
 
-#endregion
+    #endregion
 
+    #region Helper Methods
     void Flip()
     {
         _facingRight = !_facingRight;
@@ -202,6 +203,8 @@ public class Player : MonoBehaviour {
         _knockbackDirection = fromRight ? -1 : 1;
         _hit = true;
     }
+    //Maybe allow enemy to determine knockback distance
+    #endregion
 
     #region Collisions
 
