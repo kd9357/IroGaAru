@@ -13,7 +13,7 @@ public enum ColorStatus
 public class Enemy : MonoBehaviour
 {
 
-    private static List<Color> SpecialColors = new List<Color>
+    protected static List<Color> SpecialColors = new List<Color>
     {
         new Color(.5f, 0f, .5f),        //Purple
         new Color(1f, .5f, 0f),         //Orange
@@ -30,8 +30,8 @@ public class Enemy : MonoBehaviour
     public float MaxHealth = 5;
     [Tooltip("How much damage the enemy deals on contact")]
     public int TouchDamage = 1;
-    public float Speed;
     public Color DefaultColor;
+    public float Speed;
 
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
@@ -44,24 +44,26 @@ public class Enemy : MonoBehaviour
     public AudioClip[] EnemySoundEffects;
 
     // Components on enemy
-    private Animator _anim;
-    private SpriteRenderer _sprite;
-    private Rigidbody2D _rb;
-    private AudioSource _audioSource;
+    protected Animator _anim;
+    protected SpriteRenderer _sprite;
+    protected Rigidbody2D _rb;
+    protected AudioSource _audioSource;
 
-    private float _currentHealth;
-    private Color _currentColor;
-    private float _currentSpeed;
-    private float _currentKnockbackForce;
-    private float _recoilTimer;
-    private float _colorTimer;
+    // Combat Variables
+    protected float _currentHealth;
+    protected Color _currentColor;
+    protected float _currentSpeed;
+    protected float _currentKnockbackForce;
+    protected float _recoilTimer;
+    protected float _colorTimer;
 
-    private ColorStatus _currentStatus = ColorStatus.None;
+    protected ColorStatus _currentStatus = ColorStatus.None;
 
-    private TextMesh _textMesh;
+    // Debugging variables
+    protected TextMesh _textMesh;
 
     // Use this for initialization
-    void Start()
+    protected virtual void Start()
     {
         _anim = GetComponent<Animator>();
         _sprite = GetComponent<SpriteRenderer>();
@@ -100,7 +102,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         //Update stagger/knockback time
         if(_recoilTimer > 0)
@@ -148,10 +150,10 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Helper Methods
-    public void EnemyDamaged(int damage, Color color, int direction)
+    public virtual void EnemyDamaged(int damage, Color color, int direction)
     {
         //Only set the timer on first hit
-        if(_colorTimer != ColorCooldown)
+        if(_colorTimer == 0)
             _colorTimer = ColorCooldown;
         _recoilTimer = RecoilCooldown;
         _currentHealth -= damage;
@@ -189,9 +191,10 @@ public class Enemy : MonoBehaviour
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
-    protected void ApplyAilment()
+    protected virtual void ApplyAilment()
     {
         //When special color first applied, reset timer
+        //Eventually add some special effects, flash screen or something to indicate change
         _colorTimer = ColorCooldown;
         switch(_currentStatus)
         {
@@ -212,7 +215,7 @@ public class Enemy : MonoBehaviour
     }
 
     //Reduce the enemy's health by 10% of currentHealth every second
-    IEnumerator DamageOverTime()
+    protected virtual IEnumerator DamageOverTime()
     {
         while(_currentStatus == ColorStatus.DamageOverTime)
         {
@@ -225,7 +228,7 @@ public class Enemy : MonoBehaviour
 
     #region Collisions
     // Hurt player on contact
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -247,7 +250,7 @@ public class Enemy : MonoBehaviour
     }
 
     //This is necessary if the player is pushing against the enemy while invincible, and their invincibility wears off
-    private void OnCollisionStay2D(Collision2D collision)
+    protected virtual void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
