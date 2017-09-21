@@ -21,6 +21,10 @@ public class GameController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+
+#if (UNITY_ANDROID || UNITY_IPHONE)
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+#endif
 	}
 
     public void LoadScene(string sceneName)
