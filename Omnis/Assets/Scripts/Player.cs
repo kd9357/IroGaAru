@@ -7,7 +7,10 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
+
+    #region Public Attributes
 
     // Invincibility Mode -- For Testing!
     public bool GodMode = false;
@@ -31,6 +34,10 @@ public class Player : MonoBehaviour {
 
     // Audio vars
     public AudioClip[] PlayerSoundEffects;
+
+    #endregion
+
+    #region Private Attributes
 
     // Components on player
     private SpriteRenderer _sprite;
@@ -56,7 +63,9 @@ public class Player : MonoBehaviour {
     // Health
     private int _currentHealth;
 
+    #endregion
 
+    #region Initialization
     // Use this for initialization
     void Start ()
     {
@@ -79,6 +88,8 @@ public class Player : MonoBehaviour {
 
 	    _currentHealth = MaxHealth;
 	}
+
+    #endregion
 
     #region Updates
 
@@ -164,15 +175,7 @@ public class Player : MonoBehaviour {
         // HEALTH
         if (_currentHealth <= 0)
         {
-            // HACK TO RESTART GAME QUICKLY
-            // There is a bug where if you hold left or right while it reload,
-            // you'll start going that direction until you press the direction again
-            GameController.instance.GameOver();
-
-//            Destroy(gameObject.transform.GetChild(1));
-//            transform.DetachChildren();
-//
-//            Destroy(gameObject);
+            Die();
         }
 
         if (_invinceTimer > 0)
@@ -211,27 +214,21 @@ public class Player : MonoBehaviour {
     // Collisions wtih Player
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Wall")
-        {
-            _onWall = true;
-        }
-
         if (collision.otherCollider is PolygonCollider2D)
         {
             _onGround = true;
         }
-    }
 
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.otherCollider is PolygonCollider2D)
+        switch (collision.collider.tag)
         {
-            _onGround = false;
-        }
-
-        if (collision.collider.tag == "Wall")
-        {
-            _onWall = false;
+            case "Wall":
+                _onWall = true;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
         }
     }
 
@@ -242,9 +239,36 @@ public class Player : MonoBehaviour {
             _onGround = true;
         }
 
-        if (collision.collider.tag == "Wall")
+        switch (collision.collider.tag)
         {
-            _onWall = true;
+            case "Wall":
+                _onWall = true;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.otherCollider is PolygonCollider2D)
+        {
+            _onGround = false;
+        }
+
+        switch (collision.collider.tag)
+        {
+            case "Wall":
+                _onWall = false;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
         }
     }
 
@@ -280,6 +304,18 @@ public class Player : MonoBehaviour {
     public bool IsInvincible()
     {
         return _invincible;
+    }
+
+    public void Die()
+    {
+        // HACK TO RESTART GAME QUICKLY
+        // There is a bug where if you hold left or right while it reload,
+        // you'll start going that direction until you press the direction again
+        GameController.instance.GameOver();
+
+        // Destroy(gameObject.transform.GetChild(1));
+        // transform.DetachChildren();
+        // Destroy(gameObject);
     }
 
     #endregion

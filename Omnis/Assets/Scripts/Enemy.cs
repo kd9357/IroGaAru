@@ -126,8 +126,7 @@ public class Enemy : MonoBehaviour
         //Update health status
         if (_currentHealth <= 0)
         {
-            _anim.SetTrigger("Death");
-            Destroy(gameObject);
+            Die();
         }
 
         if (DebugMode)
@@ -224,46 +223,66 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    protected virtual void Die()
+    {
+        _anim.SetTrigger("Death");
+        Destroy(gameObject);
+    }
+
     #endregion
 
     #region Collisions
     // Hurt player on contact
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        switch (collision.collider.tag)
         {
-            var player = collision.gameObject.GetComponent<Player>();
-            if (player.IsInvincible())
-                return;
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player.IsInvincible())
+                    return;
 
-            player.PlayerDamaged(TouchDamage);
-            player.Knockback(collision.transform.position.x < transform.position.x);
+                player.PlayerDamaged(TouchDamage);
+                player.Knockback(collision.transform.position.x < transform.position.x);
 
-            // Enemy hit sound
-            _audioSource.clip = EnemySoundEffects[0];
-            _audioSource.Play();
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
+            case "Wall":
+                // TODO: Make this more dynamic
+                AI_Type = AI_Type == "Righty" ? "Lefty" : "Righty";
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
         }
-
-        // TODO: Make this more dynamic
-        else if (collision.gameObject.CompareTag("Wall"))
-            AI_Type = AI_Type == "Righty" ? "Lefty" : "Righty";
     }
 
     //This is necessary if the player is pushing against the enemy while invincible, and their invincibility wears off
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        switch (collision.collider.tag)
         {
-            var player = collision.gameObject.GetComponent<Player>();
-            if (player.IsInvincible())
-                return;
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player.IsInvincible())
+                    return;
 
-            player.PlayerDamaged(TouchDamage);
-            player.Knockback(collision.transform.position.x < transform.position.x);
+                player.PlayerDamaged(TouchDamage);
+                player.Knockback(collision.transform.position.x < transform.position.x);
 
-            // Enemy hit sound
-            _audioSource.clip = EnemySoundEffects[0];
-            _audioSource.Play();
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
         }
     }
 
