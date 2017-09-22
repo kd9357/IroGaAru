@@ -176,6 +176,9 @@ public class Enemy : MonoBehaviour
         //Update stagger/knockback time
         if (_recoilTimer > 0)
             _recoilTimer -= Time.deltaTime;
+        else
+            _anim.SetBool("Recoil", false);
+
         //Update status ailment time
         if (_colorTimer > 0)
             _colorTimer -= Time.deltaTime;  //What happens if colorTimer somehow becomes exactly 0?
@@ -206,6 +209,7 @@ public class Enemy : MonoBehaviour
         if(_colorTimer == 0)
             _colorTimer = ColorCooldown;
         _recoilTimer = RecoilCooldown;
+        _anim.SetBool("Recoil", true);
         _currentHealth -= damage;
 
         SetColor(color);
@@ -252,6 +256,8 @@ public class Enemy : MonoBehaviour
         {
             case ColorStatus.Stun:
                 _currentSpeed = 0;
+                _recoilTimer = ColorCooldown;
+                _anim.SetBool("Recoil", true);
                 return;
             case ColorStatus.WindRecoil:
                 _currentKnockbackForce *= 2;    //For now, just double on normal enemies

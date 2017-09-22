@@ -31,7 +31,6 @@ public class Oni : Enemy {
                     case "Move":
                         if (InRange())
                         {
-                            Debug.Log("In Range");
                             Attack();
                         }
                         else
