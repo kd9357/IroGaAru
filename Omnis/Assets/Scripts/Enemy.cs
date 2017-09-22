@@ -12,7 +12,6 @@ public enum ColorStatus
 
 public class Enemy : MonoBehaviour
 {
-
     protected static List<Color> SpecialColors = new List<Color>
     {
         new Color(.5f, 0f, .5f),        //Purple
@@ -21,9 +20,13 @@ public class Enemy : MonoBehaviour
         
     };
 
+    #region Public Attributes
     //For testing purposes
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
+
+    [Tooltip("To determine where the player is in relation to the enemy")]
+    public Transform Target;
 
     [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
@@ -33,15 +36,23 @@ public class Enemy : MonoBehaviour
     public Color DefaultColor;
     public float Speed;
 
+    [Tooltip("Greater values mean enemy will attack when player is further away")]
+    public float AttackRange;
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
-    [Tooltip("Time before enemy can recover from recoil")]
+    [Tooltip("Time before enemy can recover from being damaged")]
     public float RecoilCooldown = 0.5f;
     [Tooltip("Time before enemy returns to default color")]
     public float ColorCooldown = 5f;
+    [Tooltip("Time before enemy takes another action")]
+    public float ActionCooldown = 5f;
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
+
+    #endregion
+
+    #region Protected Attributes
 
     // Components on enemy
     protected Animator _anim;
@@ -52,17 +63,23 @@ public class Enemy : MonoBehaviour
     // Combat Variables
     protected float _currentHealth;
     protected Color _currentColor;
-    protected float _currentSpeed;
-    protected float _currentKnockbackForce;
     protected float _recoilTimer;
     protected float _colorTimer;
-
+    protected float _actionTimer;
     protected ColorStatus _currentStatus = ColorStatus.None;
+
+    // Movement and Orientation
+    protected float _currentSpeed;
+    protected float _currentKnockbackForce;
+    protected bool _facingRight;
 
     // Debugging variables
     protected TextMesh _textMesh;
 
+    #endregion
+
     // Use this for initialization
+    //Maybe have a helper method specifically for unique components?
     protected virtual void Start()
     {
         _anim = GetComponent<Animator>();
@@ -72,9 +89,11 @@ public class Enemy : MonoBehaviour
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
+        _sprite.color = _currentColor;
         _currentSpeed = Speed;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
+        _actionTimer = ActionCooldown;  //May set this only when player in range
 
         //For testing purposes
         _textMesh = gameObject.GetComponentInChildren<TextMesh>();
@@ -84,8 +103,14 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        //This unfortunately flips the debug text as well
+        if ((Target.transform.position.x - transform.position.x > 0 && !_facingRight)
+            || (Target.transform.position.x - transform.position.x < 0 && _facingRight))
+            Flip();
+
         if (_recoilTimer <= 0)
         {
+            //Leave AI_Type alone for now, replace later
             switch (AI_Type)
             {
                 case "Lefty":
@@ -97,32 +122,25 @@ public class Enemy : MonoBehaviour
                 case "Stand":
                     _rb.velocity = Vector2.zero;
                     break;
+                default:
+                    //Nothing specified in AI_Type, default to move to player
+                    if (_actionTimer > 0)
+                        _actionTimer -= Time.deltaTime;
+                    else if (InRange())
+                        Attack();
+                    else
+                        MoveToPlayer();
+                    break;
             }
         }
     }
 
     // Update is called once per frame
-    void Update()
+    //Turn this protected so that children can just update individual functions
+    protected void Update()
     {
-        //Update stagger/knockback time
-        if(_recoilTimer > 0)
-            _recoilTimer-= Time.deltaTime;
-
-        //Update status ailment time
-        if (_colorTimer > 0)
-        {
-            _colorTimer -= Time.deltaTime;
-        }
-        else if (_colorTimer < 0)
-        {
-            _colorTimer = 0;
-            _currentColor = DefaultColor;
-            _sprite.color = _currentColor;
-            _currentSpeed = Speed;
-            _currentKnockbackForce = EnemyKnockbackForce;
-            _currentStatus = ColorStatus.None;
-        }
-
+        UpdateTimers();
+        ResetColorStatus();
         //Update health status
         if (_currentHealth <= 0)
         {
@@ -137,7 +155,9 @@ public class Enemy : MonoBehaviour
             message += "AI: " + AI_Type + "\n";
             message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
             message += "Status: " + _currentStatus + "\n";
-            message += "Color Timer: " + _colorTimer.ToString("F2");
+            message += "Color Timer: " + _colorTimer.ToString("F2") + "\n";
+            message += "Action Timer: " + _actionTimer.ToString("F2") + "\n";
+            message += "Recoil Timer: " + _recoilTimer.ToString("F2") + "\n";
             _textMesh.text = message;
         }
         else
@@ -149,6 +169,37 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Helper Methods
+    
+    #region Bookkeeping methods
+    public virtual void UpdateTimers()
+    {
+        //Update stagger/knockback time
+        if (_recoilTimer > 0)
+            _recoilTimer -= Time.deltaTime;
+        //Update status ailment time
+        if (_colorTimer > 0)
+            _colorTimer -= Time.deltaTime;  //What happens if colorTimer somehow becomes exactly 0?
+        else if (_colorTimer < 0)
+            ResetColorStatus();
+    }
+    
+    public virtual void ResetColorStatus()
+    {
+        if(_colorTimer < 0)
+        {
+            _colorTimer = 0;
+            _currentColor = DefaultColor;
+            _sprite.color = _currentColor;
+            //Reset ailments
+            _currentSpeed = Speed;
+            _currentKnockbackForce = EnemyKnockbackForce;
+            _currentStatus = ColorStatus.None;
+        }
+    }
+    #endregion
+
+    #region Enemy Health and Combat Status methods
+    // When the enemy gets hit by something
     public virtual void EnemyDamaged(int damage, Color color, int direction)
     {
         //Only set the timer on first hit
@@ -157,7 +208,14 @@ public class Enemy : MonoBehaviour
         _recoilTimer = RecoilCooldown;
         _currentHealth -= damage;
 
-        //Only allow color mixing when not under some ailment
+        SetColor(color);
+        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
+    }
+
+    //Combine colors and determine if status changed
+    protected virtual void SetColor(Color color)
+    {
+        //Only allow color mixing when NOT under some ailment
         if (_currentStatus == ColorStatus.None)
         {
             _currentColor = (_currentColor + color) / 2;
@@ -172,28 +230,23 @@ public class Enemy : MonoBehaviour
             {
                 sc.Set(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
                 float distance = Vector3.Distance(sc, cc);
-                if (i != 0) 
+                if (i != 0)
                     threshold = 0.34f; //gack, change threshold for orange and green
                 if (distance < threshold)
-                {
-                    Debug.Log("Applying " + (ColorStatus)(i));
                     break;
-                }
-
             }
             _currentStatus = (ColorStatus)(i);
             if (_currentStatus != ColorStatus.None)
                 ApplyAilment();
-        }
 
-        _sprite.color = _currentColor;
-        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
+            _sprite.color = _currentColor;
+        }
     }
 
     protected virtual void ApplyAilment()
     {
         //When special color first applied, reset timer
-        //Eventually add some special effects, flash screen or something to indicate change
+        //TOOD: add some special effects, flas + sound effect or something to indicate change
         _colorTimer = ColorCooldown;
         switch(_currentStatus)
         {
@@ -201,10 +254,7 @@ public class Enemy : MonoBehaviour
                 _currentSpeed = 0;
                 return;
             case ColorStatus.WindRecoil:
-                _currentKnockbackForce *= 2;
-                //For now, double knockback effect when green
-                //May change this to a one time hit
-                //Don't mess with mass since we want the boss to be variably affected due to his increased mass
+                _currentKnockbackForce *= 2;    //For now, just double on normal enemies
                 _currentColor = Color.green;
                 return;
             case ColorStatus.DamageOverTime:
@@ -213,7 +263,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //Reduce the enemy's health by 10% of currentHealth every second
+    //Reduce the enemy's health by 10% of currentHealth every second (Maxhealth instead?)
     protected virtual IEnumerator DamageOverTime()
     {
         while(_currentStatus == ColorStatus.DamageOverTime)
@@ -225,9 +275,47 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die()
     {
-        _anim.SetTrigger("Death");
+        _anim.SetTrigger("Death");  //TODO: May instead trigger death animation, and on last frame call Die()
         Destroy(gameObject);
     }
+    #endregion
+    
+    #region Movement & AI methods
+    //Reorient enemy to face player
+    protected virtual void Flip()
+    {
+        //Only flip when not stunned (looks better)
+        if (_currentStatus != ColorStatus.Stun)
+        {
+            _facingRight = !_facingRight;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+            //Delay Enemy's actions
+            if (_actionTimer != 0)
+                _actionTimer = ActionCooldown / 2;
+        }
+    }
+
+    //Determines if distance between player and enemy is within AttackRange
+    protected virtual bool InRange()
+    {
+        return Vector3.Distance(transform.position, Target.transform.position) < AttackRange;
+    }
+
+    //Move in the direction of the player
+    protected virtual void MoveToPlayer()
+    {
+        _rb.velocity = _facingRight ? new Vector2(_currentSpeed, _rb.velocity.y)
+                                    : new Vector2(-_currentSpeed, _rb.velocity.y);
+    }
+
+    protected virtual void Attack()
+    {
+        _actionTimer = ActionCooldown;
+        _anim.SetTrigger("Attack");
+    }
+    #endregion
 
     #endregion
 

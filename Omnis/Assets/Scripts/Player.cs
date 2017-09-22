@@ -24,8 +24,8 @@ public class Player : MonoBehaviour
     public float InvincibilityCooldown = 3f;
 
     // Movement vars
-    public float Speed;
-    public float Jump;
+    public float Speed; //originally was 20
+    public float Jump;  //originally was 55 at 20 gravity
 
     // Recoil vars
     [Tooltip("Force player experiences from enemy")]
