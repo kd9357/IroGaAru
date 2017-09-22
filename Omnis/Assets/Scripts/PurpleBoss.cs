@@ -53,7 +53,7 @@ public class PurpleBoss : Enemy {
             else if (InRange()) //Need to account for changing size
                 Attack();
             else
-                MoveToPlayer();
+                MoveForward();
         }
     }
 

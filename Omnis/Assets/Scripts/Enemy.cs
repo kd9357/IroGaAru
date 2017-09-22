@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
     public bool DebugMode = false;
 
     [Tooltip("To determine where the player is in relation to the enemy")]
-    public Transform Target;
+    public Transform Target;    //Maybe just use gameobject.findwithtag instead of having it as a public var
 
     [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
@@ -104,8 +104,8 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
-        if ((Target.transform.position.x - transform.position.x > 0 && !_facingRight)
-            || (Target.transform.position.x - transform.position.x < 0 && _facingRight))
+        if ((Target.position.x - transform.position.x > 0 && !_facingRight)
+            || (Target.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
         if (_recoilTimer <= 0)
@@ -129,7 +129,7 @@ public class Enemy : MonoBehaviour
                     else if (InRange())
                         Attack();
                     else
-                        MoveToPlayer();
+                        MoveForward();
                     break;
             }
         }
@@ -171,7 +171,7 @@ public class Enemy : MonoBehaviour
     #region Helper Methods
     
     #region Bookkeeping methods
-    public virtual void UpdateTimers()
+    protected virtual void UpdateTimers()
     {
         //Update stagger/knockback time
         if (_recoilTimer > 0)
@@ -186,7 +186,7 @@ public class Enemy : MonoBehaviour
             ResetColorStatus();
     }
     
-    public virtual void ResetColorStatus()
+    protected virtual void ResetColorStatus()
     {
         if(_colorTimer < 0)
         {
@@ -250,7 +250,7 @@ public class Enemy : MonoBehaviour
     protected virtual void ApplyAilment()
     {
         //When special color first applied, reset timer
-        //TOOD: add some special effects, flas + sound effect or something to indicate change
+        //TODO: add some special effects, flash + sound effect or something to indicate change
         _colorTimer = ColorCooldown;
         switch(_currentStatus)
         {
@@ -306,11 +306,11 @@ public class Enemy : MonoBehaviour
     //Determines if distance between player and enemy is within AttackRange
     protected virtual bool InRange()
     {
-        return Vector3.Distance(transform.position, Target.transform.position) < AttackRange;
+        return Vector3.Distance(transform.position, Target.position) < AttackRange;
     }
 
-    //Move in the direction of the player
-    protected virtual void MoveToPlayer()
+    //Move in the direction the enemy is facing
+    protected virtual void MoveForward()
     {
         _rb.velocity = _facingRight ? new Vector2(_currentSpeed, _rb.velocity.y)
                                     : new Vector2(-_currentSpeed, _rb.velocity.y);
