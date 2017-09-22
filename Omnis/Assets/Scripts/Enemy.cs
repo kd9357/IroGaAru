@@ -12,7 +12,6 @@ public enum ColorStatus
 
 public class Enemy : MonoBehaviour
 {
-
     protected static List<Color> SpecialColors = new List<Color>
     {
         new Color(.5f, 0f, .5f),        //Purple
@@ -21,6 +20,7 @@ public class Enemy : MonoBehaviour
         
     };
 
+    #region Public Attributes
     //For testing purposes
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
     public Color DefaultColor;
     public float Speed;
 
-    [Tooltip("Greater values indicate larger attack ranges")]
+    [Tooltip("Greater values mean enemy will attack when player is further away")]
     public float AttackRange;
     [Tooltip("Force enemy experiences from player")]
     public float EnemyKnockbackForce;
@@ -49,6 +49,10 @@ public class Enemy : MonoBehaviour
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
+
+    #endregion
+
+    #region Protected Attributes
 
     // Components on enemy
     protected Animator _anim;
@@ -72,7 +76,10 @@ public class Enemy : MonoBehaviour
     // Debugging variables
     protected TextMesh _textMesh;
 
+    #endregion
+
     // Use this for initialization
+    //Maybe have a helper method specifically for unique components?
     protected virtual void Start()
     {
         _anim = GetComponent<Animator>();
@@ -82,10 +89,11 @@ public class Enemy : MonoBehaviour
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
+        _sprite.color = _currentColor;
         _currentSpeed = Speed;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
-        _actionTimer = 0;
+        _actionTimer = ActionCooldown;  //May set this only when player in range
 
         //For testing purposes
         _textMesh = gameObject.GetComponentInChildren<TextMesh>();
@@ -147,7 +155,9 @@ public class Enemy : MonoBehaviour
             message += "AI: " + AI_Type + "\n";
             message += "Color: (" + _currentColor.r + ", " + _currentColor.g + ", " + _currentColor.b + ")\n";
             message += "Status: " + _currentStatus + "\n";
-            message += "Color Timer: " + _colorTimer.ToString("F2");
+            message += "Color Timer: " + _colorTimer.ToString("F2") + "\n";
+            message += "Action Timer: " + _actionTimer.ToString("F2") + "\n";
+            message += "Recoil Timer: " + _recoilTimer.ToString("F2") + "\n";
             _textMesh.text = message;
         }
         else
@@ -297,7 +307,7 @@ public class Enemy : MonoBehaviour
     protected virtual void MoveToPlayer()
     {
         _rb.velocity = _facingRight ? new Vector2(_currentSpeed, _rb.velocity.y)
-                                            : new Vector2(-_currentSpeed, _rb.velocity.y);
+                                    : new Vector2(-_currentSpeed, _rb.velocity.y);
     }
 
     protected virtual void Attack()
@@ -306,6 +316,7 @@ public class Enemy : MonoBehaviour
         _anim.SetTrigger("Attack");
     }
     #endregion
+
     #endregion
 
     #region Collisions

@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\MobileUI.cs" />
     <Compile Include="Assets\Scripts\OLD COLOR DISPLAY.cs" />
     <Compile Include="Assets\Scripts\OLD HP DISPLAY.cs" />
+    <Compile Include="Assets\Scripts\Oni.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\PurpleBoss.cs" />

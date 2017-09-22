@@ -39,7 +39,6 @@ public class PurpleBoss : Enemy {
     }
 
     #region Updates
-    //Will want to use this kind of AI on generic enemies
     private void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
@@ -194,18 +193,6 @@ public class PurpleBoss : Enemy {
         _anim.SetBool("Growing", false);
     }
 
-    void Flip()
-    {
-        _facingRight = !_facingRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-        _defaultScale.x *= -1;
-
-        //Delay Enemy's actions
-        if(_actionTimer != 0)
-            _actionTimer = ActionCooldown / 2;
-    }
     #endregion
 
     #region Collisions
@@ -235,7 +222,6 @@ public class PurpleBoss : Enemy {
         Debug.Log("Collided with " + collision.tag);
         if(collision.CompareTag("Player"))
         {
-            int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
             collision.gameObject.GetComponent<Player>().Knockback(!_facingRight);
         }
     }
