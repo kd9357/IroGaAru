@@ -35,7 +35,7 @@ public class Oni : Enemy {
                         }
                         else
                         {
-                            MoveToPlayer();
+                            MoveForward();
                         }
                         break;
                 }
