@@ -9,8 +9,6 @@ public class FlyingEnemy : Enemy {
     private float _k;
     private float _distanceX;
 
-    private bool _attacking = false;
-
     void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
@@ -44,7 +42,6 @@ public class FlyingEnemy : Enemy {
                 {
                     SetParabolaEquation();
                     _attacking = true;
-                    //_anim.SetTrigger("Attack");
                 }
             }
 
@@ -91,19 +88,6 @@ public class FlyingEnemy : Enemy {
     #endregion
 
     #region Overrides
-    //Reorient enemy to face player
-    protected override void Flip()
-    {
-        //Only flip when not stunned (looks better)
-        //For flying enemies, only flip when not attacking
-        if (_currentStatus != ColorStatus.Stun && !_attacking)
-        {
-            _facingRight = !_facingRight;
-            Vector3 scale = transform.localScale;
-            scale.x *= -1;
-            transform.localScale = scale;
-        }
-    }
 
     //Determines Enemy is in zone above player
     protected override bool InRange()
@@ -129,11 +113,13 @@ public class FlyingEnemy : Enemy {
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
+    //TODO: add sound effect if using
     protected override void ApplyAilment()
     {
         //When special color first applied, reset timer
-        //TODO: add some special effects, flash + sound effect or something to indicate change
         _colorTimer = ColorCooldown;
+        if (!_colorParticleEffects[(int)_currentStatus].isPlaying)
+            _colorParticleEffects[(int)_currentStatus].Play();
         switch (_currentStatus)
         {
             case ColorStatus.Stun:
@@ -167,6 +153,11 @@ public class FlyingEnemy : Enemy {
             _rb.gravityScale = 0;
             gameObject.GetComponent<Collider2D>().isTrigger = true;
             _currentStatus = ColorStatus.None;
+            foreach (ParticleSystem ps in _colorParticleEffects)
+            {
+                if (ps.isPlaying)
+                    ps.Stop();
+            }
         }
     }
 

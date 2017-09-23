@@ -69,6 +69,7 @@ public class Enemy : MonoBehaviour
     protected float _recoilTimer;
     protected float _colorTimer;
     protected float _actionTimer;
+    protected bool _attacking;
     protected ColorStatus _currentStatus = ColorStatus.None;
 
     // Movement and Orientation
@@ -96,6 +97,7 @@ public class Enemy : MonoBehaviour
         _currentSpeed = Speed;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
+        _attacking = false;
         _actionTimer = ActionCooldown;  //May set this only when player in range
 
         //For testing purposes
@@ -131,7 +133,7 @@ public class Enemy : MonoBehaviour
                     //Nothing specified in AI_Type, default to move to player
                     if (_actionTimer > 0)
                         _actionTimer -= Time.deltaTime;
-                    else if (InRange())
+                    else if (InRange() && !_attacking)
                         Attack();
                     else
                         MoveForward();
@@ -257,30 +259,26 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //TODO: add sound effect if using
     protected virtual void ApplyAilment()
     {
         //When special color first applied, reset timer
-        //TODO: add some special effects, flash + sound effect or something to indicate change
         _colorTimer = ColorCooldown;
-        switch(_currentStatus)
+        if (!_colorParticleEffects[(int)_currentStatus].isPlaying)
+            _colorParticleEffects[(int)_currentStatus].Play();
+        switch (_currentStatus)
         {
             case ColorStatus.Stun:
                 _currentSpeed = 0;
                 _recoilTimer = ColorCooldown;
                 _anim.SetBool("Recoil", true);
-                if(!_colorParticleEffects[0].isPlaying)
-                    _colorParticleEffects[0].Play();
                 return;
             case ColorStatus.WindRecoil:
                 _currentKnockbackForce *= 2;    //For now, just double on normal enemies
                 _currentColor = Color.green;
-                if (!_colorParticleEffects[1].isPlaying)
-                    _colorParticleEffects[1].Play();
                 return;
             case ColorStatus.DamageOverTime:
                 StartCoroutine(DamageOverTime());
-                if (!_colorParticleEffects[2].isPlaying)
-                    _colorParticleEffects[2].Play();
                 return;
         }
     }
@@ -295,6 +293,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Trigger the attack animation if using and lock direction
+    protected virtual void Attack()
+    {
+        _attacking = true;
+        _anim.SetTrigger("Attack");
+    }
+
+    //Called at animation's end and resets status
+    protected virtual void EndAttack()
+    {
+        _attacking = false;
+        _actionTimer = ActionCooldown;
+    }
+
     protected virtual void Die()
     {
         _anim.SetTrigger("Death");  //TODO: May instead trigger death animation, and on last frame call Die()
@@ -306,8 +318,8 @@ public class Enemy : MonoBehaviour
     //Reorient enemy to face player
     protected virtual void Flip()
     {
-        //Only flip when not stunned (looks better)
-        if (_currentStatus != ColorStatus.Stun)
+        //Only flip when not stunned (looks better) && not attacking
+        if (_currentStatus != ColorStatus.Stun && !_attacking)
         {
             _facingRight = !_facingRight;
             Vector3 scale = transform.localScale;
@@ -332,11 +344,6 @@ public class Enemy : MonoBehaviour
                                     : new Vector2(-_currentSpeed, _rb.velocity.y);
     }
 
-    protected virtual void Attack()
-    {
-        _actionTimer = ActionCooldown;
-        _anim.SetTrigger("Attack");
-    }
     #endregion
 
     #endregion
