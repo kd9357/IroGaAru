@@ -49,18 +49,20 @@
      <Compile Include="Assets\Scripts\AttackTrigger.cs" />
      <Compile Include="Assets\Scripts\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\ColorDisplay.cs" />
+     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
+     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\HPDisplay.cs" />
      <Compile Include="Assets\Scripts\Item.cs" />
      <Compile Include="Assets\Scripts\MobileUI.cs" />
      <Compile Include="Assets\Scripts\OLD COLOR DISPLAY.cs" />
      <Compile Include="Assets\Scripts\OLD HP DISPLAY.cs" />
+     <Compile Include="Assets\Scripts\Oni.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerAttack.cs" />
      <Compile Include="Assets\Scripts\PurpleBoss.cs" />
-     <Compile Include="Assets\Scripts\SmoothCamera2D.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>I:/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

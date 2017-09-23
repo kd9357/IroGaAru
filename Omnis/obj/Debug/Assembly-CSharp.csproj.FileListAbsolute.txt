@@ -31,3 +31,35 @@ C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis\Temp\bin\Debug\UnityEngin
 C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis\obj\Debug\Assembly-CSharp.dll
 C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis\obj\Debug\Assembly-CSharp.pdb
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Assembly-CSharp.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Assembly-CSharp.pdb
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\nunit.framework.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEditor.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.Analytics.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.HoloLens.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.Networking.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.TestRunner.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.UI.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.VR.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Mono.Cecil.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Unity.SerializationLogic.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Unity.DataContract.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Unity.UNetWeaver.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Unity.CecilTools.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEditor.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.UI.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.Networking.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.TestRunner.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\nunit.framework.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.Analytics.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.HoloLens.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\Temp\bin\Debug\UnityEngine.VR.xml
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\obj\Debug\Assembly-CSharp.dll
+I:\Users\Sonata\Documents\Omnis\capstone\Omnis\obj\Debug\Assembly-CSharp.pdb
