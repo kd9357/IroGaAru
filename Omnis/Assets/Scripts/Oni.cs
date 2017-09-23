@@ -24,16 +24,17 @@ public class Oni : Enemy {
                 switch (AI_Type)
                 {
                     case "Stand":
-                        if (InRange())
+                        if (InRange() && !_attacking)
                             Attack();
                         _rb.velocity = Vector2.zero;
                         break;
                     case "Move":
-                        if (InRange())
+                        if (InRange() && !_attacking)
                         {
+                            _rb.velocity = Vector2.zero;
                             Attack();
                         }
-                        else
+                        else if(!_attacking)
                         {
                             MoveForward();
                         }

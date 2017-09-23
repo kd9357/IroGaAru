@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PurpleBoss : Enemy {
+    //TODO: need to do a lot of fixes to account for scaling + flipping
 
     //Components
     private BoxCollider2D _slapBox;
@@ -22,20 +23,25 @@ public class PurpleBoss : Enemy {
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
+        _sprite.color = _currentColor;
         _currentSpeed = Speed;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
-        _actionTimer = ActionCooldown;  //Maybe set this zero until enemy is ready
+        _attacking = false;
+        _actionTimer = ActionCooldown;  //May set this only when player in range
 
+        //For testing purposes
+        _textMesh = gameObject.GetComponentInChildren<TextMesh>();
+
+        _colorParticleEffects = gameObject.GetComponentsInChildren<ParticleSystem>();
+
+        //Unique to boss
         _phaseNum = 0;
         _defaultMass = _rb.mass;
         _defaultScale = transform.localScale;
 
         _slapBox = gameObject.GetComponent<BoxCollider2D>();
         _slapBox.enabled = false;
-
-        //For testing purposes
-        _textMesh = gameObject.GetComponentInChildren<TextMesh>();
     }
 
     #region Updates
@@ -50,9 +56,12 @@ public class PurpleBoss : Enemy {
         {
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
-            else if (InRange()) //Need to account for changing size
+            else if (InRange() && !_attacking) //Need to account for changing size
+            {
+                _rb.velocity = Vector2.zero;
                 Attack();
-            else
+            }
+            else if(!_attacking)
                 MoveForward();
         }
     }
@@ -66,9 +75,10 @@ public class PurpleBoss : Enemy {
         _slapBox.enabled = true;
     }
 
-    private void DisableHurtbox()
+    protected override void EndAttack()
     {
         _slapBox.enabled = false;
+        _attacking = false;
         _actionTimer = ActionCooldown;
     }
 
@@ -77,6 +87,7 @@ public class PurpleBoss : Enemy {
         //Only set the timer on first hit
         if (_colorTimer == 0)
             _colorTimer = ColorCooldown;
+        //Unique to boss: do not decrease health or be staggered
 
         SetColor(color);
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
@@ -96,7 +107,7 @@ public class PurpleBoss : Enemy {
 
             int i;
             float threshold = 0.34f;
-            //Ignore i = 0, purple
+            //Unique to boss: Ignore i = 0, purple
             for (i = 1; i < SpecialColors.Count; i++)
             {
                 sc.Set(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
@@ -112,11 +123,13 @@ public class PurpleBoss : Enemy {
         }
     }
 
-    //Ignore purple effect
+    //Unique to boss: Ignore purple effect
     protected override void ApplyAilment()
     {
         //When special color first applied, reset timer
         _colorTimer = ColorCooldown;
+        if (!_colorParticleEffects[(int)_currentStatus].isPlaying)
+            _colorParticleEffects[(int)_currentStatus].Play();
         switch (_currentStatus)
         {
             case ColorStatus.WindRecoil:
@@ -134,17 +147,19 @@ public class PurpleBoss : Enemy {
         }
     }
 
+    //Maybe find a better method than using coroutines
+    #region Coroutines
     IEnumerator ShrinkOverTime()
     {
         float timer = 0;
         float startMass = _rb.mass;
         Vector3 startScale = transform.localScale;
 
-        while (_currentStatus == ColorStatus.DamageOverTime)
+        while (_currentStatus == ColorStatus.DamageOverTime && startMass != _defaultMass) //TODO: Fix _facingRight scale bug when jumping over during shrinking
         {
             float proportionCompleted = timer / ColorCooldown;
             _rb.mass = Mathf.Lerp(startMass, _defaultMass, proportionCompleted);
-            //Need to account for flip while shrinking
+            //Need to account for flip while shrinking (not good enough)
             if((startScale.x > 0 && _facingRight) || (startScale.x < 0 && !_facingRight))
                 startScale.x *= -1;
             //Shrinking doesn't change location, so each time this calls the boss drops a bit
@@ -159,16 +174,18 @@ public class PurpleBoss : Enemy {
     IEnumerator StartNextPhase()
     {
         //Should change color to purple?
-        _anim.SetTrigger("Shocked");
-        yield return new WaitForSeconds(1.5f);
+        _anim.SetBool("Recoil", true);
+        yield return new WaitForSeconds(1.5f);  //Wait 1.5 seconds until jumping back (should make public or something)
+        _anim.SetBool("Recoil", false);
         //Reset status
         _currentStatus = ColorStatus.None;
         _currentColor = DefaultColor;
         _sprite.color = _currentColor;
-        //Need to jump back into arena
+        //TODO: Need to jump back into arena
         //For now just move directly above
         transform.position = new Vector3(10, 40, 0);
         //scale size
+        yield return new WaitForSeconds(1.5f); //Wait 1.5 seconds until grow
         StartCoroutine(GrowOverTime());
     }
 
@@ -192,6 +209,7 @@ public class PurpleBoss : Enemy {
         }
         _anim.SetBool("Growing", false);
     }
+    #endregion
 
     #endregion
 
@@ -219,7 +237,6 @@ public class PurpleBoss : Enemy {
     //Slap connected
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collided with " + collision.tag);
         if(collision.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Player>().Knockback(!_facingRight);
