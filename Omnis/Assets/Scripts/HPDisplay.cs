@@ -34,7 +34,6 @@ public class HPDisplay : MonoBehaviour {
         {
             for (int i = previous_hp; i < player_health; i++)
             {
-                print(i);
                 DamageBlocks a = hp_array[i].GetComponent<DamageBlocks>();
                 a.Reset();
                 hp_array[i].transform.gameObject.SetActive(true);
@@ -46,12 +45,17 @@ public class HPDisplay : MonoBehaviour {
             {
                 if (player_health <= danger_number)
                 {
-                    hp_array[i].color = new Color(1,0,0);
+                    hp_array[i].color = new Color(1,0,0, hp_array[i].color.a);
+                    DamageBlocks a = hp_array[i].GetComponent<DamageBlocks>();
+                    a.UpdateDangerColor(hp_array[i].color);
                 }
                 else
                 {
-                    hp_array[i].color = new Color(1,1,1);
+                    hp_array[i].color = new Color(1,1,1, hp_array[i].color.a);
+                    DamageBlocks a = hp_array[i].GetComponent<DamageBlocks>();
+                    a.UpdateDangerColor(hp_array[i].color);
                 }
+               
             }
             
 		}

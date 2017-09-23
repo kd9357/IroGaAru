@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DamageBlocks : MonoBehaviour {
 
@@ -12,11 +13,15 @@ public class DamageBlocks : MonoBehaviour {
     public float timeout;
     private float throw_timer = 0.0f;
     private RectTransform tf;
+    private Color c;
     private Vector3 init_position;
     private Quaternion init_rotation;
+    private Image img;
 	// Use this for initialization
 	void Start () {
         tf = GetComponent<RectTransform>();
+        img = GetComponent<Image>();
+        c = img.color;
         init_position = tf.localPosition;
         init_rotation = tf.localRotation;
 	}
@@ -30,12 +35,11 @@ public class DamageBlocks : MonoBehaviour {
             tf.localPosition = tf.localPosition + v* throw_timer + 0.5f * g * throw_timer* throw_timer;
             throw_timer += speed;
             tf.Rotate(Vector3.back * throw_timer);
+            c.a = ((1.0f - throw_timer/(timeout/2)));
+            img.color = c;
             if(throw_timer > timeout)
             {
-                is_moving = false;
-                throw_timer = 0.0f;
-                tf.localPosition = init_position;
-                tf.localRotation = init_rotation;
+                Reset();
                 this.transform.gameObject.SetActive(false);
             }
         }
@@ -46,9 +50,14 @@ public class DamageBlocks : MonoBehaviour {
         throw_timer = 1;
         is_moving = true;
     }
-
+    public void UpdateDangerColor(Color danger)
+    {
+        c = danger;
+    }
     public void Reset()
     {
+        c.a = 1.0f;
+        img.color = c;
         is_moving = false;
         throw_timer = 0.0f;
         tf.localPosition = init_position;
