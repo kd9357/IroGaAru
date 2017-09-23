@@ -50,6 +50,9 @@ public class Enemy : MonoBehaviour
     // Audio vars
     public AudioClip[] EnemySoundEffects;
 
+    //Assuming 0: Purple, 1: Orange, 2: Green
+    protected ParticleSystem[] _colorParticleEffects;
+
     #endregion
 
     #region Protected Attributes
@@ -97,6 +100,8 @@ public class Enemy : MonoBehaviour
 
         //For testing purposes
         _textMesh = gameObject.GetComponentInChildren<TextMesh>();
+
+        _colorParticleEffects = gameObject.GetComponentsInChildren<ParticleSystem>();
     }
 
     #region Updates
@@ -197,6 +202,11 @@ public class Enemy : MonoBehaviour
             _currentSpeed = Speed;
             _currentKnockbackForce = EnemyKnockbackForce;
             _currentStatus = ColorStatus.None;
+            foreach(ParticleSystem ps in _colorParticleEffects)
+            {
+                if (ps.isPlaying)
+                    ps.Stop();
+            }
         }
     }
     #endregion
@@ -258,13 +268,19 @@ public class Enemy : MonoBehaviour
                 _currentSpeed = 0;
                 _recoilTimer = ColorCooldown;
                 _anim.SetBool("Recoil", true);
+                if(!_colorParticleEffects[0].isPlaying)
+                    _colorParticleEffects[0].Play();
                 return;
             case ColorStatus.WindRecoil:
                 _currentKnockbackForce *= 2;    //For now, just double on normal enemies
                 _currentColor = Color.green;
+                if (!_colorParticleEffects[1].isPlaying)
+                    _colorParticleEffects[1].Play();
                 return;
             case ColorStatus.DamageOverTime:
                 StartCoroutine(DamageOverTime());
+                if (!_colorParticleEffects[2].isPlaying)
+                    _colorParticleEffects[2].Play();
                 return;
         }
     }
