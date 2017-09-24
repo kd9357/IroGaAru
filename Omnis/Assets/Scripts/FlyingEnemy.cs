@@ -24,7 +24,7 @@ public class FlyingEnemy : Enemy {
             {
                 float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
                 float yMov = 0;
-                //Zone above player with 2-3 units
+                //Zone above player with 2-3 units (TODO: make public)
                 if (transform.position.y < Target.position.y + 2f)
                     yMov = _currentSpeed;
                 else if (transform.position.y > Target.position.y + 3f)
@@ -92,8 +92,9 @@ public class FlyingEnemy : Enemy {
     //Determines Enemy is in zone above player
     protected override bool InRange()
     {
+        //Shouldn't hardcode values but oh well
         bool xInRange = Mathf.Abs(Target.position.x - transform.position.x) < AttackRange;
-        bool yInRange = Mathf.Abs((Target.position.y + 2f) - transform.position.y) < AttackRange / 2;
+        bool yInRange = Mathf.Abs((Target.position.y + 3f) - transform.position.y) < AttackRange / 4;
         return xInRange && yInRange;
     }
 
