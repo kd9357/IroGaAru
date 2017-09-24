@@ -12,8 +12,8 @@ public class FlyingEnemy : Enemy {
     void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
-        if ((Target.position.x - transform.position.x > 0 && !_facingRight)
-            || (Target.position.x - transform.position.x < 0 && _facingRight))
+        if ((_target.position.x - transform.position.x > 0 && !_facingRight)
+            || (_target.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
         if (_recoilTimer <= 0)
@@ -25,9 +25,9 @@ public class FlyingEnemy : Enemy {
                 float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
                 float yMov = 0;
                 //Zone above player with 2-3 units (TODO: make public)
-                if (transform.position.y < Target.position.y + 2f)
+                if (transform.position.y < _target.position.y + 2f)
                     yMov = _currentSpeed;
-                else if (transform.position.y > Target.position.y + 3f)
+                else if (transform.position.y > _target.position.y + 3f)
                     yMov = -_currentSpeed;
                 _rb.velocity = new Vector2(xMov, yMov);
             }
@@ -67,8 +67,8 @@ public class FlyingEnemy : Enemy {
         // y = a(x - h)^2 + k
         //where (h,k) is vertex, (x,y) is enemy current position
         // a = (y-k) / (x-h)^2
-        _h = Target.position.x;
-        _k = Target.position.y;
+        _h = _target.position.x;
+        _k = _target.position.y;
 
         _distanceX = Mathf.Abs(transform.position.x - _h);
 
@@ -93,8 +93,8 @@ public class FlyingEnemy : Enemy {
     protected override bool InRange()
     {
         //Shouldn't hardcode values but oh well
-        bool xInRange = Mathf.Abs(Target.position.x - transform.position.x) < AttackRange;
-        bool yInRange = Mathf.Abs((Target.position.y + 3f) - transform.position.y) < AttackRange / 4;
+        bool xInRange = Mathf.Abs(_target.position.x - transform.position.x) < AttackRange;
+        bool yInRange = Mathf.Abs((_target.position.y + 3f) - transform.position.y) < AttackRange / 4;
         return xInRange && yInRange;
     }
 

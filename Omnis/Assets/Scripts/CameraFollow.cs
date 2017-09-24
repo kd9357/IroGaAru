@@ -21,37 +21,40 @@ public class CameraFollow : MonoBehaviour {
     [Tooltip("The maximum x and y coordinates the camera can have")]
     public Vector2 MaxXY;
 
-    private Transform _player;
+    private Transform _target;
+
+    //Used for changing target
+    private bool _deadZone;
 
     void Awake () {
-        _player = GameObject.FindGameObjectWithTag("Player").transform; 
+        _target = GameObject.FindGameObjectWithTag("Player").transform; 
 	}
 	
     bool CheckXMargin()
     {
-        return Mathf.Abs(transform.position.x - _player.position.x) > XMargin;
+        return Mathf.Abs(transform.position.x - _target.position.x) > XMargin;
     }
 
     bool CheckYMargin()
     {
-        return Mathf.Abs(transform.position.y - _player.position.y) > YMargin;
+        return Mathf.Abs(transform.position.y - _target.position.y) > YMargin;
     }
 
     void FixedUpdate () {
-        TrackPlayer();
+        TrackTarget();
 	}
 
-    void TrackPlayer()
+    void TrackTarget()
     {
         // By default the target x and y coordinates of the camera are it's current x and y coordinates
         float targetX = transform.position.x;
         float targetY = transform.position.y;
 
         //Check if outside deadzone
-        if (CheckXMargin())
-            targetX = Mathf.Lerp(transform.position.x, _player.position.x, XSmooth * Time.deltaTime);
-        if (CheckYMargin())
-            targetY = Mathf.Lerp(transform.position.y, _player.position.y, YSmooth * Time.deltaTime);
+        if (!_deadZone || CheckXMargin())
+            targetX = Mathf.Lerp(transform.position.x, _target.position.x, XSmooth * Time.deltaTime);
+        if (!_deadZone || CheckYMargin())
+            targetY = Mathf.Lerp(transform.position.y, _target.position.y, YSmooth * Time.deltaTime);
 
         //Clamp to Min & MaxXY
         if(CameraBounded)
@@ -61,5 +64,11 @@ public class CameraFollow : MonoBehaviour {
         }
 
         transform.position = new Vector3(targetX, targetY, transform.position.z);
+    }
+
+    public void SetTarget(Transform newTarget, bool useDeadZone)
+    {
+        _target = newTarget;
+        _deadZone = useDeadZone;
     }
 }
