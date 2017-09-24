@@ -2,71 +2,136 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Modified from https://www.youtube.com/watch?v=Vrld13ypX_I
+
 public class FightZone : MonoBehaviour {
-    
-    //TODO: just use a separate spawner script
 
-    //If in the future different criteria other than destroy all used, must update
-    [Tooltip("The list of enemies or objects to be destroyed before moving on")]
-    public List<GameObject> Challenges;
-    [Tooltip("The list enemy or object that will spawn after a wave")]
-    public GameObject ReserveChallenge;
-    [Tooltip("The total number of waves of enemies to be destroyed")]
-    public int Waves = 1;
+    public enum SpawnState { SPAWNING, WAITING, COUNTING };
 
-    private Camera _camera;
+    [System.Serializable]
+    public class Wave
+    {
+        [Tooltip("The identifier for this wave")]
+        public string Name;
+        [Tooltip("The challenge to be spawned in this wave")]
+        public GameObject Challenge;
+        [Tooltip("The number of the above challenges to be spawned in this wave")]
+        public int Count;
+        [Tooltip("The rate at which a new challenge will be spawned, until Count has been reached")]
+        public float SpawnRate;
+    }
+
+    [Tooltip("Each unique round that occurs after initial challenges destroyed")]
+    public Wave[] Waves;
+    [Tooltip("The amount of time, after a wave has been completed, before the next wave begins")]
+    public float TimeBetweenWaves = 3f;
+
+    //If in the future different criteria other than destroy all is used, must update
+    [Tooltip("The initial challenges that must be destroyed before the next wave triggers (If empty starts wave 0 immediately)")]
+    public List<GameObject> ChallengeList;
+    [Tooltip("The list of spawn points enemies will randomly spawn out of (If empty enemies will spawn from fightzone position)")]
+    public Transform[] SpawnPoints;
+
     private Transform _target;
     private Transform _player;
-    private Transform _spawnPoint;
 
-    private int _currentWave = 0;
+    private int _nextWave = -1;
+    private float _waveCountdown;
+    private SpawnState _state = SpawnState.WAITING;
 
-	// Use this for initialization
-	void Start () {
-        _camera = Camera.main;
+    // Use this for initialization
+    void Start () {
         _target = transform.Find("Camera Center");
         _player = GameObject.FindGameObjectWithTag("Player").transform;
-        _spawnPoint = transform.Find("Spawn Point");
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (WaveCompleted())
-        {
-            //Move on to next wave
-            if(_currentWave < Waves)
-            {
-                //Clear out list
-                Challenges.Clear();
-                //Spawn more enemies
-                Challenges.Add(Instantiate(ReserveChallenge, _spawnPoint.position, Quaternion.identity));
-                Debug.Log("Added challenge, count: " + Challenges.Count);
-                _currentWave++;
-            }
-            else
-                UnlockZone();
-        }
-            
-	}
 
-    void UnlockZone()
+    // Update is called once per frame
+    void Update() {
+        if (_state == SpawnState.WAITING)
+        {
+            //Check if enemies are dead
+            if (WaveCompleted())
+                StartNewWave();
+            else
+                return;
+        }
+
+        if(_waveCountdown <= 0)
+        {
+            if(_state != SpawnState.SPAWNING)
+                StartCoroutine(SpawnWave(Waves[_nextWave]));
+        }
+        else
+            _waveCountdown -= Time.deltaTime;
+    }
+
+    void StartNewWave()
     {
-        _camera.GetComponent<CameraFollow>().SetTarget(_player, true);
-        Destroy(gameObject);
+        if(_nextWave + 1 > Waves.Length - 1)
+            UnlockZone();
+        else
+        {
+            _state = SpawnState.COUNTING;
+            ChallengeList.Clear();
+            _waveCountdown = TimeBetweenWaves;
+            _nextWave++;
+        }
     }
 
     bool WaveCompleted()
     {
-        foreach(GameObject go in Challenges)
+        foreach (GameObject challenge in ChallengeList)
         {
-            if (go != null)
+            if (challenge != null)
                 return false;
         }
         return true;
     }
 
+    //Begin wave, spawning a challenge at a defined SpawnRate
+    IEnumerator SpawnWave(Wave wave)
+    {
+        _state = SpawnState.SPAWNING;
+        for(int i = 0; i < wave.Count; i++)
+        {
+            SpawnChallenge(wave.Challenge);
+            //Add to challenge list
+            yield return new WaitForSeconds(1f / wave.SpawnRate);
+        }
+        _state = SpawnState.WAITING;
+        yield break;
+    }
+
+    //Instantiate a challenge game object either at a spawn point or default position
+    void SpawnChallenge(GameObject challenge)
+    {
+        //Default to center of trigger fight zone
+        Transform spawnPos = transform;
+        //If we have spawn points set up, randomly choose one of them
+        if(SpawnPoints.Length > 0)
+            spawnPos = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+        ChallengeList.Add(Instantiate(challenge, spawnPos.position, spawnPos.rotation));
+    }
+
+    //All waves completed, unlock camera and destroy self
+    void UnlockZone()
+    {
+        Camera.main.GetComponent<CameraFollow>().SetTarget(_player, true);
+        Destroy(gameObject);
+    }
+
+    #region Collisions
+
+    //When player enters zone, lock camera and begin wave process
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        _camera.GetComponent<CameraFollow>().SetTarget(_target, false);
+        if(collision.CompareTag("Player"))
+        {
+            Camera.main.GetComponent<CameraFollow>().SetTarget(_target, false);
+            if(_waveCountdown <= 0)
+                _waveCountdown = TimeBetweenWaves;
+        }
     }
+
+    #endregion
 }
