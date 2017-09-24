@@ -25,8 +25,8 @@ public class Enemy : MonoBehaviour
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
 
-    [Tooltip("To determine where the player is in relation to the enemy")]
-    public Transform Target;    //Maybe just use gameobject.findwithtag instead of having it as a public var
+    //[Tooltip("To determine where the player is in relation to the enemy")]
+    //public Transform Target;    //Maybe just use gameobject.findwithtag instead of having it as a public var
 
     [Tooltip("Type in the movement behavior of the enemy")]
     public string AI_Type;
@@ -73,6 +73,7 @@ public class Enemy : MonoBehaviour
     protected ColorStatus _currentStatus = ColorStatus.None;
 
     // Movement and Orientation
+    protected Transform _target;
     protected float _currentSpeed;
     protected float _currentKnockbackForce;
     protected bool _facingRight;
@@ -90,6 +91,7 @@ public class Enemy : MonoBehaviour
         _sprite = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
+        _target = GameObject.FindGameObjectWithTag("Player").transform;
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
@@ -111,8 +113,8 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
-        if ((Target.position.x - transform.position.x > 0 && !_facingRight)
-            || (Target.position.x - transform.position.x < 0 && _facingRight))
+        if ((_target.position.x - transform.position.x > 0 && !_facingRight)
+            || (_target.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
         if (_recoilTimer <= 0)
@@ -334,7 +336,7 @@ public class Enemy : MonoBehaviour
     //Determines if distance between player and enemy is within AttackRange
     protected virtual bool InRange()
     {
-        return Vector3.Distance(transform.position, Target.position) < AttackRange;
+        return Vector3.Distance(transform.position, _target.position) < AttackRange;
     }
 
     //Move in the direction the enemy is facing

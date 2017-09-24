@@ -90,8 +90,10 @@
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
+    <Compile Include="Assets\Scripts\DamageBlocks.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
+    <Compile Include="Assets\Scripts\FightZone.cs" />
     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\HPDisplay.cs" />

@@ -8,23 +8,30 @@ public class ColorDisplay : MonoBehaviour {
 
     public AttackTrigger Weapon;
     public PlayerAttack PlayerAttack;
-    public int max_colors;
-    public WeaponColor active_color = WeaponColor.Red;
-    public WeaponColor inactive_left_color = WeaponColor.Blue;
-    public WeaponColor inactive_right_color = WeaponColor.Yellow;
-    public Color[] colors;
-    public Image active_image;
-    public Image left_inactive_image;
-    public Image right_inactive_image;
+    public WeaponColor red_color = WeaponColor.Red;
+    public WeaponColor yellow_color = WeaponColor.Yellow;
+    public WeaponColor blue_color = WeaponColor.Blue;
+    public Image red_image;
+    public Image yellow_image;
+    public Image blue_image;
+    public Image ring;
 
 
     void Start()
     {
         //Should really do this programatically
-        colors = new Color[max_colors];
-        colors[0] = Weapon.GetColor(active_color);
-        colors[1] = Weapon.GetColor(inactive_right_color);
-        colors[2] = Weapon.GetColor(inactive_left_color);
+        if(GameController.instance.EquippedColor == red_color)
+        {
+            CycleColors(0);
+        }
+        if (GameController.instance.EquippedColor == yellow_color)
+        {
+            CycleColors(1);
+        }
+        if (GameController.instance.EquippedColor == blue_color)
+        {
+            CycleColors(2);
+        }
     }
 
     // Update is called once per frame
@@ -45,13 +52,17 @@ public class ColorDisplay : MonoBehaviour {
 //                direction < 0 ? -1 : 0;
 //            CycleColors((int)direction);
 
-            if (Input.GetButtonUp("Left Bumper"))
+            if (Input.GetButtonUp("Red"))
             {
-                CycleColors(-1);
+                CycleColors(0);
             }
-            if (Input.GetButtonUp("Right Bumper"))
+            if (Input.GetButtonUp("Yellow"))
             {
                 CycleColors(1);
+            }
+            if (Input.GetButtonUp("Blue"))
+            {
+                CycleColors(2);
             }
 #endif
         }
@@ -59,47 +70,33 @@ public class ColorDisplay : MonoBehaviour {
 
     void OnGUI()
     {
-        active_image.color = colors[0];
-        right_inactive_image.color = colors[1];
-        left_inactive_image.color = colors[2];
+
     }
 
 
     public void CycleColors(int direction)
     {
-        if (direction == 0)
-            return;
-
-        int temp = (int)active_color;
-        int left, right, current;
-
-        if (direction < 0)
+        switch (direction)
         {
-            right = temp;
-            current = temp - 1 < 0 ? max_colors - 1 : temp - 1;
-            left = current - 1 < 0 ? max_colors - 1 : current - 1;
-            ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
+            case 0:     ring.rectTransform.localPosition = new Vector3(-40,-42,0);
+                        red_image.rectTransform.localScale = new Vector3(1, 1, 0);
+                        yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        GameController.instance.EquippedColor = red_color;
+                        break;
+            case 1:     ring.rectTransform.localPosition = new Vector3(0, -42, 0);
+                        red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        yellow_image.rectTransform.localScale = new Vector3(1, 1, 0);
+                        blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        GameController.instance.EquippedColor = yellow_color;
+                        break;
+            case 2:     ring.rectTransform.localPosition = new Vector3(40, -42, 0);
+                        red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        blue_image.rectTransform.localScale = new Vector3(1, 1, 0);
+                        GameController.instance.EquippedColor = blue_color;
+                        break;
         }
-        else if (direction > 0)
-        {
-            left = temp;
-            current = temp + 1 >= max_colors ? 0 : temp + 1;
-            right = current + 1 >= max_colors ? 0 : current + 1;
-
-            ActivateColor((WeaponColor)current, (WeaponColor)left, (WeaponColor)right);
-        }
-    }
-
-    void ActivateColor(WeaponColor current, WeaponColor left, WeaponColor right)
-    {
-        active_color = current;
-        inactive_left_color = left;
-        inactive_right_color = right;
-        colors[0] = Weapon.GetColor(active_color);
-        colors[1] = Weapon.GetColor(inactive_right_color);
-        colors[2] = Weapon.GetColor(inactive_left_color);
-        //Set static var here
-        GameController.instance.EquippedColor = active_color;
     }
 
 }

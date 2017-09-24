@@ -48,8 +48,8 @@ public class PurpleBoss : Enemy {
     private void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
-        if ((Target.transform.position.x - transform.position.x > 0 && !_facingRight)
-            || (Target.transform.position.x - transform.position.x < 0 && _facingRight))
+        if ((_target.transform.position.x - transform.position.x > 0 && !_facingRight)
+            || (_target.transform.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
         if (_recoilTimer <= 0)
