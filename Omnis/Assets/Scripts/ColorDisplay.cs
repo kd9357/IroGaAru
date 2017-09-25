@@ -16,6 +16,7 @@ public class ColorDisplay : MonoBehaviour {
     public Image blue_image;
     public Image ring;
 
+    private int _direction = 0;
 
     void Start()
     {
@@ -42,7 +43,10 @@ public class ColorDisplay : MonoBehaviour {
 #if (UNITY_ANDROID || UNITY_IPHONE)
             if (MobileUI.Instance.GetSwitchColor())
             {
-                CycleColors(1);
+                _direction++;
+                if(_direction > 2)
+                    _direction = 0;
+                CycleColors(_direction);
                 MobileUI.Instance.SetSwitchColor(false);
             }
 #else

@@ -87,6 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ActivateTextAtLine.cs" />
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
@@ -105,6 +106,11 @@
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\PurpleBoss.cs" />
+    <Compile Include="Assets\Scripts\TextManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Text\Test.txt" />
+    <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

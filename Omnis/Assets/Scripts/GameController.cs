@@ -18,6 +18,9 @@ public class GameController : MonoBehaviour
     private Image gameoverPanel;
     private Text gameoverText;
 
+    public bool _paused;
+    private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
+
     void Awake()
     {
         if (instance == null)
@@ -28,6 +31,8 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _paused = false;
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
         Screen.orientation = ScreenOrientation.LandscapeLeft;
@@ -57,6 +62,7 @@ public class GameController : MonoBehaviour
             Debug.LogError("Cannot find game over panel");
             return;
         }
+
         gameoverPanel = panel.gameObject.GetComponent<Image>();
         gameoverText = text.gameObject.GetComponent<Text>();
 
@@ -64,6 +70,19 @@ public class GameController : MonoBehaviour
         gameoverText.canvasRenderer.SetAlpha(0f);
 
         gameoverCanvas.SetActive(false);
+
+        //for pause screen
+        canvas = transform.Find("Pause Canvas");
+        if (canvas == null)
+        {
+            Debug.LogError("Cannot find pause canvas");
+            return;
+        }
+        pauseCanvas = canvas.gameObject;
+
+        pauseCanvas.SetActive(false);
+
+
     }
 
     void Update()
@@ -75,6 +94,26 @@ public class GameController : MonoBehaviour
                 LoadScene(START_SCREEN);
             }  
         }
+        
+        if(Input.GetButtonDown("Cancel"))
+        {
+            //Eventually setup a pause screen
+            TogglePause();
+        }
+    }
+
+    public void PauseGame(bool pause)
+    {
+        _paused = pause;
+        Time.timeScale = _paused ? 0 : 1;
+    }
+
+    //Used just for pressing esc at the moment
+    private void TogglePause()
+    {
+        _paused = !_paused;
+        Time.timeScale = _paused ? 0 : 1;
+        pauseCanvas.SetActive(_paused);
     }
 
     public void LoadScene(string sceneName)
