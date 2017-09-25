@@ -102,17 +102,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-    //In the event we need to pause outside of controller (ie dialogue), have these public methods
-    public void PauseGame()
+    public void PauseGame(bool pause)
     {
-        _paused = true;
-        Time.timeScale = 0;
-    }
-
-    public void UnpauseGame()
-    {
-        _paused = false;
-        Time.timeScale = 1;
+        _paused = pause;
+        Time.timeScale = _paused ? 0 : 1;
     }
 
     //Used just for pressing esc at the moment
