@@ -24,7 +24,7 @@ public class FightZone : MonoBehaviour {
     {
         [Tooltip("Drag a prefab for the folder here")]
         public GameObject SpawnObject;
-        [Tooltip("Drag an existing spawn point here")]
+        [Tooltip("Drag an existing spawn point here (if empty will spawn at FightTrigger's postion)")]
         public Transform SpawnPoint;
     }
 
@@ -47,13 +47,24 @@ public class FightZone : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _target = transform.Find("Camera Center");
+        if(_target == null)
+        {
+            Debug.Log("Camera lock for fight zone not found");
+            return;
+        }
         _player = GameObject.FindGameObjectWithTag("Player").transform;
+        if(_player == null)
+        {
+            Debug.Log("Player does not exist");
+            return;
+        }
     }
 
     // Update is called once per frame
     void Update() {
         if (_state == SpawnState.INACTIVE)
             return;
+
         if (_state == SpawnState.WAITING)
         {
             //Check if enemies are dead
@@ -116,6 +127,11 @@ public class FightZone : MonoBehaviour {
     //Create the object given the SpawnDetails, defaulting to the center of the fightzone transform
     void SpawnChallenge(SpawnDetails nextObject)
     {
+        if(nextObject.SpawnObject == null)
+        {
+            Debug.Log("Please specify a prefab to spawn");
+            return;
+        }
         //Default to center of trigger fight zone
         Transform spawnPosition = nextObject.SpawnPoint != null ? nextObject.SpawnPoint : transform;
         ChallengeList.Add(Instantiate(nextObject.SpawnObject, spawnPosition.position, spawnPosition.rotation));
@@ -134,9 +150,12 @@ public class FightZone : MonoBehaviour {
         if(collision.CompareTag("Player"))
         {
             Camera.main.GetComponent<CameraFollow>().SetTarget(_target, false);
-            _state = SpawnState.WAITING;
-            if(_waveCountdown <= 0)
+            //Only do this on first enter
+            if (_state == SpawnState.INACTIVE)
+            {
                 _waveCountdown = TimeBetweenWaves;
+                _state = SpawnState.WAITING;
+            }
         }
     }
 

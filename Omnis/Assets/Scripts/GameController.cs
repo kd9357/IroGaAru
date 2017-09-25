@@ -18,6 +18,11 @@ public class GameController : MonoBehaviour
     private Image gameoverPanel;
     private Text gameoverText;
 
+    public bool _paused;
+    private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
+    private Image pausePanel;
+    private Text pauseText;
+
     void Awake()
     {
         if (instance == null)
@@ -28,6 +33,8 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _paused = false;
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
         Screen.orientation = ScreenOrientation.LandscapeLeft;
@@ -57,6 +64,7 @@ public class GameController : MonoBehaviour
             Debug.LogError("Cannot find game over panel");
             return;
         }
+
         gameoverPanel = panel.gameObject.GetComponent<Image>();
         gameoverText = text.gameObject.GetComponent<Text>();
 
@@ -64,6 +72,34 @@ public class GameController : MonoBehaviour
         gameoverText.canvasRenderer.SetAlpha(0f);
 
         gameoverCanvas.SetActive(false);
+
+        //for pause screen
+        canvas = transform.Find("Pause Canvas");
+        if (canvas == null)
+        {
+            Debug.LogError("Cannot find pause canvas");
+            return;
+        }
+        pauseCanvas = canvas.gameObject;
+
+        panel = gameoverCanvas.transform.Find("Pause Panel");
+        if (panel == null)
+        {
+            Debug.LogError("Cannot find pause panel");
+            return;
+        }
+        text = panel.transform.Find("Pause Text");
+        if (text == null)
+        {
+            Debug.Log("Cannot find pause text");
+            return;
+        }
+        pausePanel = panel.gameObject.GetComponent<Image>();
+        pauseText = text.gameObject.GetComponent<Text>();
+
+        pauseCanvas.SetActive(false);
+
+
     }
 
     void Update()
@@ -75,6 +111,33 @@ public class GameController : MonoBehaviour
                 LoadScene(START_SCREEN);
             }  
         }
+        
+        if(Input.GetButtonDown("Cancel"))
+        {
+            //Eventually setup a pause screen
+            TogglePause();
+        }
+    }
+
+    //In the event we need to pause outside of controller (ie dialogue), have these public methods
+    public void PauseGame()
+    {
+        _paused = true;
+        Time.timeScale = 0;
+    }
+
+    public void UnpauseGame()
+    {
+        _paused = false;
+        Time.timeScale = 1;
+    }
+
+    //Used just for pressing esc at the moment
+    private void TogglePause()
+    {
+        _paused = !_paused;
+        Time.timeScale = _paused ? 0 : 1;
+        pauseCanvas.SetActive(_paused);
     }
 
     public void LoadScene(string sceneName)
