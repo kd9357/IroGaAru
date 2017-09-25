@@ -20,8 +20,6 @@ public class GameController : MonoBehaviour
 
     public bool _paused;
     private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
-    private Image pausePanel;
-    private Text pauseText;
 
     void Awake()
     {
@@ -81,21 +79,6 @@ public class GameController : MonoBehaviour
             return;
         }
         pauseCanvas = canvas.gameObject;
-
-        panel = gameoverCanvas.transform.Find("Pause Panel");
-        if (panel == null)
-        {
-            Debug.LogError("Cannot find pause panel");
-            return;
-        }
-        text = panel.transform.Find("Pause Text");
-        if (text == null)
-        {
-            Debug.Log("Cannot find pause text");
-            return;
-        }
-        pausePanel = panel.gameObject.GetComponent<Image>();
-        pauseText = text.gameObject.GetComponent<Text>();
 
         pauseCanvas.SetActive(false);
 
