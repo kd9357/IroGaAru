@@ -66,7 +66,7 @@ public class PlayerAttack : MonoBehaviour {
 #if (UNITY_ANDROID || UNITY_IPHONE)
         doAttack = MobileUI.Instance.GetAttack() && !_attacking;
 #else
-	    doAttack = Input.GetButtonDown("Fire1") && !_attacking;
+	    doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
 #endif
         
 		if(doAttack)
