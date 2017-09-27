@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class FlyingEnemy : Enemy {
 
+    [Tooltip("The minimum distance above the player flying dude will try to reach (0: player center)")]
+    public float MinDistanceAbovePlayer;
+    [Tooltip("The maximum distance above the player flying dude will try to reach (0: player center)")]
+    public float MaxDistanceAbovePlayer;
     private float _a;
     private float _h;
     private float _k;
@@ -11,26 +15,17 @@ public class FlyingEnemy : Enemy {
 
     void FixedUpdate()
     {
-        //This unfortunately flips the debug text as well
-        if ((_target.position.x - transform.position.x > 0 && !_facingRight)
-            || (_target.position.x - transform.position.x < 0 && _facingRight))
-            Flip();
-
-        if (_recoilTimer <= 0)
+        if (_active && _recoilTimer <= 0)
         {
+            //This unfortunately flips the debug text as well
+            if ((_target.position.x - transform.position.x > 0 && !_facingRight)
+                || (_target.position.x - transform.position.x < 0 && _facingRight))
+                Flip();
+
             //Constantly move towards player until in range
             //Should use lerp for more smooth stop
-            if(!InRange())
-            {
-                float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
-                float yMov = 0;
-                //Zone above player with 2-3 units (TODO: make public)
-                if (transform.position.y < _target.position.y + 2f)
-                    yMov = _currentSpeed;
-                else if (transform.position.y > _target.position.y + 3f)
-                    yMov = -_currentSpeed;
-                _rb.velocity = new Vector2(xMov, yMov);
-            }
+            if (!InRange())
+                MoveTowardsPlayer();
             else
                 _rb.velocity = Vector2.zero;
 
@@ -45,7 +40,7 @@ public class FlyingEnemy : Enemy {
                 }
             }
 
-            if(_attacking)
+            if (_attacking)
             {
                 MoveInArc();
                 //when traveled length of parabola && outside of range stop
@@ -85,6 +80,18 @@ public class FlyingEnemy : Enemy {
         transform.position = new Vector2(xPos, yPos);
     }
 
+    //Move to the zone above the player
+    protected void MoveTowardsPlayer()
+    {
+        float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
+        float yMov = 0;
+        //Zone above player with 2-3 units (TODO: make public)
+        if (transform.position.y < _target.position.y + MinDistanceAbovePlayer)
+            yMov = _currentSpeed;
+        else if (transform.position.y > _target.position.y + MaxDistanceAbovePlayer)
+            yMov = -_currentSpeed;
+        _rb.velocity = new Vector2(xMov, yMov);
+    }
     #endregion
 
     #region Overrides
@@ -132,7 +139,7 @@ public class FlyingEnemy : Enemy {
                 gameObject.GetComponent<Collider2D>().isTrigger = false;
                 return;
             case ColorStatus.WindRecoil:
-                _currentKnockbackForce *= 2;    //For now, just double on normal enemies
+                _currentKnockbackForce = WindKnockbackForce;
                 _currentColor = Color.green;
                 return;
             case ColorStatus.DamageOverTime:
@@ -168,7 +175,7 @@ public class FlyingEnemy : Enemy {
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
             var player = collision.gameObject.GetComponent<Player>();
             if (player.IsInvincible())

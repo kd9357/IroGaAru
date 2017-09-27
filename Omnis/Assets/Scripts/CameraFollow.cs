@@ -14,6 +14,10 @@ public class CameraFollow : MonoBehaviour {
     public float XSmooth = 8f;
     [Tooltip("How smoothly the camera catches up with it's target movement in the y axis (larger values = less smooth)")]
     public float YSmooth = 8f;
+    [Tooltip("The offset horizontal to the player the camera will center on")]
+    public float XCenterOffset;
+    [Tooltip("The offset vertical to the player the camera will center on")]
+    public float YCenterOffset;
     [Tooltip("Check if Camera has minimum and maximum range")]
     public bool CameraBounded = false;
     [Tooltip("The minimum x and y coordinates the camera can have")]
@@ -24,10 +28,11 @@ public class CameraFollow : MonoBehaviour {
     private Transform _target;
 
     //Used for changing target
-    private bool _deadZone;
+    private bool _playerLocked;
 
     void Awake () {
-        _target = GameObject.FindGameObjectWithTag("Player").transform; 
+        _target = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerLocked = true;
 	}
 	
     bool CheckXMargin()
@@ -50,11 +55,20 @@ public class CameraFollow : MonoBehaviour {
         float targetX = transform.position.x;
         float targetY = transform.position.y;
 
-        //Check if outside deadzone
-        if (!_deadZone || CheckXMargin())
+        //If locked to player, use deadzone + offset
+        if(_playerLocked)
+        {
+            if(CheckXMargin())
+                targetX = Mathf.Lerp(transform.position.x, _target.position.x + XCenterOffset, XSmooth * Time.deltaTime);
+            if(CheckYMargin())
+                targetY = Mathf.Lerp(transform.position.y, _target.position.y + YCenterOffset, YSmooth * Time.deltaTime);
+        }
+        //Else don't check deadzone or use offset
+        else
+        {
             targetX = Mathf.Lerp(transform.position.x, _target.position.x, XSmooth * Time.deltaTime);
-        if (!_deadZone || CheckYMargin())
             targetY = Mathf.Lerp(transform.position.y, _target.position.y, YSmooth * Time.deltaTime);
+        }
 
         //Clamp to Min & MaxXY
         if(CameraBounded)
@@ -66,9 +80,9 @@ public class CameraFollow : MonoBehaviour {
         transform.position = new Vector3(targetX, targetY, transform.position.z);
     }
 
-    public void SetTarget(Transform newTarget, bool useDeadZone)
+    public void SetTarget(Transform newTarget, bool lockToPlayer)
     {
         _target = newTarget;
-        _deadZone = useDeadZone;
+        _playerLocked = lockToPlayer;
     }
 }

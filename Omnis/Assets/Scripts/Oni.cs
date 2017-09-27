@@ -9,13 +9,13 @@ public class Oni : Enemy {
 
     void FixedUpdate()
     {
-        //This unfortunately flips the debug text as well
-        if ((_target.transform.position.x - transform.position.x > 0 && !_facingRight)
-            || (_target.transform.position.x - transform.position.x < 0 && _facingRight))
-            Flip();
-
-        if (_recoilTimer <= 0)
+        if(_active && _recoilTimer <= 0)
         {
+            //This unfortunately flips the debug text as well
+            if ((_target.transform.position.x - transform.position.x > 0 && !_facingRight)
+                || (_target.transform.position.x - transform.position.x < 0 && _facingRight))
+                Flip();
+
             //Leave AI_Type alone for now, replace later
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
@@ -34,14 +34,14 @@ public class Oni : Enemy {
                             _rb.velocity = Vector2.zero;
                             Attack();
                         }
-                        else if(!_attacking)
+                        else if (!_attacking)
                         {
                             MoveForward();
                         }
                         break;
                 }
             }
-
         }
+
     }
 }

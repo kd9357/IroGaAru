@@ -56,15 +56,15 @@ public class ColorDisplay : MonoBehaviour {
 //                direction < 0 ? -1 : 0;
 //            CycleColors((int)direction);
 
-            if (Input.GetButtonUp("Red"))
+            if (Input.GetButtonDown("Red"))
             {
                 CycleColors(0);
             }
-            if (Input.GetButtonUp("Yellow"))
+            if (Input.GetButtonDown("Yellow"))
             {
                 CycleColors(1);
             }
-            if (Input.GetButtonUp("Blue"))
+            if (Input.GetButtonDown("Blue"))
             {
                 CycleColors(2);
             }
