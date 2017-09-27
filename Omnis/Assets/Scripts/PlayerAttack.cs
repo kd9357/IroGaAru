@@ -64,7 +64,7 @@ public class PlayerAttack : MonoBehaviour {
 
 	    bool doAttack = false;
 #if (UNITY_ANDROID || UNITY_IPHONE)
-        doAttack = MobileUI.Instance.GetAttack() && !_attacking;
+        doAttack = MobileUI.Instance.GetAttack() && !_attacking;    //TODO: must account for new attack method
 #else
 	    doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
 #endif

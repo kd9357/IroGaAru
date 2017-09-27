@@ -22,6 +22,8 @@ public class FightZone : MonoBehaviour {
     [System.Serializable]
     public class SpawnDetails
     {
+        [Tooltip("The identifer for this new challenge")]
+        public string Name;
         [Tooltip("Drag a prefab for the folder here")]
         public GameObject SpawnObject;
         [Tooltip("Drag an existing spawn point here (if empty will spawn at FightTrigger's postion)")]

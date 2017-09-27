@@ -36,6 +36,7 @@ public class Enemy : MonoBehaviour
     public Color DefaultColor;
     public float Speed;
 
+    // Combat public variables
     [Tooltip("Greater values mean enemy will attack when player is further away")]
     public float AttackRange;
     [Tooltip("Force enemy experiences from player")]
@@ -46,6 +47,9 @@ public class Enemy : MonoBehaviour
     public float ColorCooldown = 5f;
     [Tooltip("Time before enemy takes another action")]
     public float ActionCooldown = 5f;
+
+    [Tooltip("How strong the enemy is knockbacked while Green")]
+    public float WindKnockbackForce;
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
@@ -77,6 +81,7 @@ public class Enemy : MonoBehaviour
     protected float _currentSpeed;
     protected float _currentKnockbackForce;
     protected bool _facingRight;
+    protected bool _active = false;
 
     // Debugging variables
     protected TextMesh _textMesh;
@@ -112,13 +117,12 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        //This unfortunately flips the debug text as well
-        if ((_target.position.x - transform.position.x > 0 && !_facingRight)
-            || (_target.position.x - transform.position.x < 0 && _facingRight))
-            Flip();
-
-        if (_recoilTimer <= 0)
+        if (_active && _recoilTimer <= 0)
         {
+            //This unfortunately flips the debug text as well
+            if ((_target.position.x - transform.position.x > 0 && !_facingRight)
+                || (_target.position.x - transform.position.x < 0 && _facingRight))
+                Flip();
             //Leave AI_Type alone for now, replace later
             switch (AI_Type)
             {
@@ -213,6 +217,12 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    public void SetActive(bool active)
+    {
+        _active = active;
+    }
+
     #endregion
 
     #region Enemy Health and Combat Status methods
@@ -276,7 +286,7 @@ public class Enemy : MonoBehaviour
                 _anim.SetBool("Recoil", true);
                 return;
             case ColorStatus.WindRecoil:
-                _currentKnockbackForce *= 2;    //For now, just double on normal enemies
+                _currentKnockbackForce = WindKnockbackForce;
                 _currentColor = Color.green;
                 return;
             case ColorStatus.DamageOverTime:
