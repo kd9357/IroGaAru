@@ -15,7 +15,10 @@ public class FlyingEnemy : Enemy {
 
     void FixedUpdate()
     {
-        if (_active && _recoilTimer <= 0)
+        if (_currentState == EnemyState.Inactive)
+            return;
+        
+        if(_currentState != EnemyState.Staggered)
         {
             //This unfortunately flips the debug text as well
             if ((_target.position.x - transform.position.x > 0 && !_facingRight)
@@ -24,29 +27,36 @@ public class FlyingEnemy : Enemy {
 
             //Constantly move towards player until in range
             //Should use lerp for more smooth stop
-            if (!InRange())
-                MoveTowardsPlayer();
-            else
-                _rb.velocity = Vector2.zero;
+            if (_currentState != EnemyState.Attacking)
+            {
+                if (!InRange())
+                    MoveTowardsPlayer();
+                else
+                {
+                    if (_currentState != EnemyState.Waiting)
+                        _currentState = EnemyState.Waiting;
+                    _rb.velocity = Vector2.zero;
+                }
+            }
 
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
             else
             {
-                if (!_attacking && InRange())  //Set up arc
+                if(_currentState != EnemyState.Attacking && InRange())
                 {
                     SetParabolaEquation();
-                    _attacking = true;
+                    _currentState = EnemyState.Attacking;
                 }
             }
 
-            if (_attacking)
+            if(_currentState == EnemyState.Attacking)
             {
                 MoveInArc();
                 //when traveled length of parabola && outside of range stop
                 if (Mathf.Abs(transform.position.x - _h) >= _distanceX && !InRange())
                 {
-                    _attacking = false;
+                    _currentState = EnemyState.Waiting;
                     _actionTimer = ActionCooldown;
                     //Possibly add a wait delay
                 }
@@ -83,9 +93,11 @@ public class FlyingEnemy : Enemy {
     //Move to the zone above the player
     protected void MoveTowardsPlayer()
     {
+        if (_currentState != EnemyState.Moving)
+            _currentState = EnemyState.Moving;
         float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
         float yMov = 0;
-        //Zone above player with 2-3 units (TODO: make public)
+        //Move to some zone around player
         if (transform.position.y < _target.position.y + MinDistanceAbovePlayer)
             yMov = _currentSpeed;
         else if (transform.position.y > _target.position.y + MaxDistanceAbovePlayer)
@@ -112,12 +124,13 @@ public class FlyingEnemy : Enemy {
             _colorTimer = ColorCooldown;
         _recoilTimer = RecoilCooldown;
         //When hit stop attacking
-        _attacking = false;
+        _currentState = EnemyState.Staggered;
         _actionTimer = ActionCooldown;
         _anim.SetBool("Recoil", true);
         _currentHealth -= damage;
 
         SetColor(color);
+
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
@@ -126,9 +139,9 @@ public class FlyingEnemy : Enemy {
     {
         //When special color first applied, reset timer
         _colorTimer = ColorCooldown;
-        if (!_colorParticleEffects[(int)_currentStatus].isPlaying)
-            _colorParticleEffects[(int)_currentStatus].Play();
-        switch (_currentStatus)
+        if (!_colorParticleEffects[(int)_currentColorStatus].isPlaying)
+            _colorParticleEffects[(int)_currentColorStatus].Play();
+        switch (_currentColorStatus)
         {
             case ColorStatus.Stun:
                 _currentSpeed = 0;
@@ -160,7 +173,8 @@ public class FlyingEnemy : Enemy {
             _currentKnockbackForce = EnemyKnockbackForce;
             _rb.gravityScale = 0;
             gameObject.GetComponent<Collider2D>().isTrigger = true;
-            _currentStatus = ColorStatus.None;
+            _currentColorStatus = ColorStatus.None;
+            _currentState = EnemyState.Waiting;
             foreach (ParticleSystem ps in _colorParticleEffects)
             {
                 if (ps.isPlaying)
