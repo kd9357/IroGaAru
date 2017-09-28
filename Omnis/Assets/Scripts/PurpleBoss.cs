@@ -27,7 +27,8 @@ public class PurpleBoss : Enemy {
         _currentSpeed = Speed;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
-        _attacking = false;
+        //_attacking = false;
+        _currentState = EnemyState.Waiting;
         _actionTimer = ActionCooldown;  //May set this only when player in range
 
         //For testing purposes
@@ -52,16 +53,19 @@ public class PurpleBoss : Enemy {
             || (_target.transform.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
-        if (_recoilTimer <= 0)
+        //if (_recoilTimer <= 0)
+        if(_currentState != EnemyState.Staggered)
         {
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
-            else if (InRange() && !_attacking) //Need to account for changing size
+            //else if (InRange() && !_attacking) //Need to account for changing size
+            else if (InRange() && _currentState != EnemyState.Attacking)
             {
                 _rb.velocity = Vector2.zero;
                 Attack();
             }
-            else if(!_attacking)
+            //else if(!_attacking)
+            else if(!InRange())
                 MoveForward();
         }
     }
@@ -78,7 +82,8 @@ public class PurpleBoss : Enemy {
     protected override void EndAttack()
     {
         _slapBox.enabled = false;
-        _attacking = false;
+        _currentState = EnemyState.Waiting;
+        //_attacking = false;
         _actionTimer = ActionCooldown;
     }
 
@@ -97,7 +102,7 @@ public class PurpleBoss : Enemy {
     protected override void SetColor(Color color)
     {
         //Only allow color mixing when NOT under some ailment
-        if (_currentStatus == ColorStatus.None)
+        if (_currentColorStatus == ColorStatus.None)
         {
             _currentColor = (_currentColor + color) / 2;
 
@@ -115,8 +120,8 @@ public class PurpleBoss : Enemy {
                 if (distance < threshold)
                     break;
             }
-            _currentStatus = (ColorStatus)(i);
-            if (_currentStatus != ColorStatus.None)
+            _currentColorStatus = (ColorStatus)(i);
+            if (_currentColorStatus != ColorStatus.None)
                 ApplyAilment();
 
             _sprite.color = _currentColor;
@@ -128,9 +133,9 @@ public class PurpleBoss : Enemy {
     {
         //When special color first applied, reset timer
         _colorTimer = ColorCooldown;
-        if (!_colorParticleEffects[(int)_currentStatus].isPlaying)
-            _colorParticleEffects[(int)_currentStatus].Play();
-        switch (_currentStatus)
+        if (!_colorParticleEffects[(int)_currentColorStatus].isPlaying)
+            _colorParticleEffects[(int)_currentColorStatus].Play();
+        switch (_currentColorStatus)
         {
             case ColorStatus.WindRecoil:
                 _currentKnockbackForce *= _currentKnockbackForce;
@@ -155,7 +160,7 @@ public class PurpleBoss : Enemy {
         float startMass = _rb.mass;
         Vector3 startScale = transform.localScale;
 
-        while (_currentStatus == ColorStatus.DamageOverTime && startMass != _defaultMass) //TODO: Fix _facingRight scale bug when jumping over during shrinking
+        while (_currentColorStatus == ColorStatus.DamageOverTime && startMass != _defaultMass) //TODO: Fix _facingRight scale bug when jumping over during shrinking
         {
             float proportionCompleted = timer / ColorCooldown;
             _rb.mass = Mathf.Lerp(startMass, _defaultMass, proportionCompleted);
@@ -171,14 +176,14 @@ public class PurpleBoss : Enemy {
     }
 
     //When shocked, jump back to middle of arena and grow in size
-    IEnumerator StartNextPhase()
+    IEnumerator StartNextPhase()    //TODO: Doesn't need to be a coroutine!
     {
         //Should change color to purple?
         _anim.SetBool("Recoil", true);
         yield return new WaitForSeconds(1.5f);  //Wait 1.5 seconds until jumping back (should make public or something)
         _anim.SetBool("Recoil", false);
         //Reset status
-        _currentStatus = ColorStatus.None;
+        _currentColorStatus = ColorStatus.None;
         _currentColor = DefaultColor;
         _sprite.color = _currentColor;
         //TODO: Need to jump back into arena
@@ -208,6 +213,7 @@ public class PurpleBoss : Enemy {
             yield return null;
         }
         _anim.SetBool("Growing", false);
+        _currentState = EnemyState.Waiting;
     }
     #endregion
 
@@ -224,6 +230,7 @@ public class PurpleBoss : Enemy {
             _currentHealth--;
             _phaseNum++;
             _recoilTimer = RecoilCooldown;
+            _currentState = EnemyState.Staggered;
             StartCoroutine(StartNextPhase());
         }
     }
