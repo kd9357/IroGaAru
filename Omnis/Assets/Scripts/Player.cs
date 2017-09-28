@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
     private bool _jumping;
     private bool _jumpCancel;
     private bool _facingRight;
-    private bool _hit;
     private int _knockbackDirection;
     private bool _invincible;
 
@@ -80,7 +79,6 @@ public class Player : MonoBehaviour
         _jumping = false;
         _jumpCancel = false;
         _facingRight = true;
-        _hit = false;
         _invincible = false;
 
         _knockbackTimer = 0f;
@@ -134,11 +132,6 @@ public class Player : MonoBehaviour
         else
         {
             _knockbackTimer -= Time.deltaTime;
-            if(_hit)
-            {
-                _rb.AddForce(new Vector2(PlayerKnockbackForce * _knockbackDirection, PlayerKnockbackForce), ForceMode2D.Impulse);
-                _hit = false;
-            }
         }
 
         //_anim.SetFloat("Horizontal Speed", _rb.velocity.x);;
@@ -146,7 +139,7 @@ public class Player : MonoBehaviour
             _anim.SetBool("Walking", true);
         else
             _anim.SetBool("Walking", false);
-        _anim.SetBool("OnGround", _onGround);
+        //_anim.SetBool("OnGround", _onGround);
     }
 
     // Update runs once per frame
@@ -167,6 +160,7 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump") && _onGround)
         {
             _jumping = true;
+            _anim.SetTrigger("Jumping");
         }
 
         _jumpCancel = Input.GetButtonUp("Jump");
@@ -204,7 +198,8 @@ public class Player : MonoBehaviour
     {
         _knockbackTimer = KnockbackCooldown;
         _knockbackDirection = fromRight ? -1 : 1;
-        _hit = true;
+        _rb.AddForce(new Vector2(PlayerKnockbackForce * _knockbackDirection, PlayerKnockbackForce), ForceMode2D.Impulse);
+        _anim.SetTrigger("Recoil");
     }
     //Maybe allow enemy to determine knockback distance
     #endregion
@@ -217,6 +212,7 @@ public class Player : MonoBehaviour
         if (collision.otherCollider is PolygonCollider2D)
         {
             _onGround = true;
+            _anim.SetTrigger("Grounded");
         }
 
         switch (collision.collider.tag)
