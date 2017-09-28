@@ -89,7 +89,7 @@ public class PlayerAttack : MonoBehaviour {
             _playerAudioSource.Play();
 
             //For testing
-            _weaponSprite.enabled = true;
+            //_weaponSprite.enabled = true;
 
             // Reset gamepad attack flag
 #if (UNITY_ANDROID || UNITY_IPHONE)

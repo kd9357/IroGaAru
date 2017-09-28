@@ -123,11 +123,12 @@ public class Player : MonoBehaviour
             {
                 if (_jumpCancel && _rb.velocity.y > 0)
                 {
-                    y_mov = Mathf.Lerp(_rb.velocity.y, 0, 0.8f);
+                    y_mov = _rb.velocity.y * 0.2f;
                 }
             }
 
             _rb.velocity = new Vector2(x_mov, y_mov);
+            _anim.SetFloat("Y_Mov", y_mov);
         }
         else
         {
@@ -139,7 +140,7 @@ public class Player : MonoBehaviour
             _anim.SetBool("Walking", true);
         else
             _anim.SetBool("Walking", false);
-        //_anim.SetBool("OnGround", _onGround);
+        _anim.SetBool("OnGround", _onGround);
     }
 
     // Update runs once per frame
@@ -212,7 +213,6 @@ public class Player : MonoBehaviour
         if (collision.otherCollider is PolygonCollider2D)
         {
             _onGround = true;
-            _anim.SetTrigger("Grounded");
         }
 
         switch (collision.collider.tag)
