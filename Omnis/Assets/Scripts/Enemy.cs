@@ -87,6 +87,8 @@ public class Enemy : MonoBehaviour
     // Movement and Orientation
     protected Transform _target;
     protected float _currentSpeed;
+    protected float _xMov;
+    protected float _yMov;
     protected float _currentKnockbackForce;
     protected bool _facingRight;
 
@@ -115,6 +117,8 @@ public class Enemy : MonoBehaviour
         _currentColorStatus = ColorStatus.None;
         _sprite.color = _currentColor;
         _currentSpeed = Speed;
+        _xMov = 0;
+        _yMov = 0;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
         _currentState = EnemyState.Inactive;
@@ -161,6 +165,8 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+        _xMov = 0;
+        _yMov = 0;
     }
 
     // Update is called once per frame
@@ -380,8 +386,11 @@ public class Enemy : MonoBehaviour
     {
         if (_currentState != EnemyState.Moving)
             _currentState = EnemyState.Moving;
-        _rb.velocity = _facingRight ? new Vector2(_currentSpeed, _rb.velocity.y)
-                                    : new Vector2(-_currentSpeed, _rb.velocity.y);
+        _xMov += _facingRight ? _currentSpeed : -_currentSpeed;
+        _yMov += _rb.velocity.y;
+        _xMov = Mathf.Clamp(_xMov, -_currentSpeed, _currentSpeed);
+        _yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
+        _rb.velocity = new Vector2(_xMov, _yMov);
     }
 
     #endregion
@@ -411,9 +420,6 @@ public class Enemy : MonoBehaviour
                 break;
             case "Instant Death":
                 Die();
-                break;
-            case "Enemy":
-                Debug.Log("Hit an enemy");
                 break;
             default:
                 break;
@@ -445,5 +451,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
-#endregion
+    protected virtual void OnTriggerStay2D(Collider2D collision)
+    {
+        switch(collision.tag)
+        {
+            case "Active Zone":
+                float dist = Vector2.Distance(transform.position, collision.transform.position);
+                if (dist < 5f)
+                {
+                    Vector2 dir = transform.position - collision.transform.position;
+                    dir.Normalize();
+                    _xMov += Mathf.Lerp(dir.x, 0, dist / 5);
+                    _yMov += Mathf.Lerp(dir.y, 0, dist / 5);
+                }
+                break;
+        }
+    }
+    #endregion
 }

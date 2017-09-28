@@ -17,8 +17,8 @@ public class FlyingEnemy : Enemy {
     {
         if (_currentState == EnemyState.Inactive)
             return;
-        
-        if(_currentState != EnemyState.Staggered)
+
+        if (_currentState != EnemyState.Staggered)
         {
             //This unfortunately flips the debug text as well
             if ((_target.position.x - transform.position.x > 0 && !_facingRight)
@@ -35,8 +35,10 @@ public class FlyingEnemy : Enemy {
                 {
                     if (_currentState != EnemyState.Waiting)
                         _currentState = EnemyState.Waiting;
-                    _rb.velocity = Vector2.zero;
+                    _rb.velocity = new Vector2(_xMov, _yMov);
                 }
+                _xMov = 0;
+                _yMov = 0;
             }
 
             if (_actionTimer > 0)
@@ -95,14 +97,15 @@ public class FlyingEnemy : Enemy {
     {
         if (_currentState != EnemyState.Moving)
             _currentState = EnemyState.Moving;
-        float xMov = _facingRight ? _currentSpeed : -_currentSpeed;
-        float yMov = 0;
+        _xMov += _facingRight ? _currentSpeed : -_currentSpeed;
         //Move to some zone around player
         if (transform.position.y < _target.position.y + MinDistanceAbovePlayer)
-            yMov = _currentSpeed;
+            _yMov += _currentSpeed;
         else if (transform.position.y > _target.position.y + MaxDistanceAbovePlayer)
-            yMov = -_currentSpeed;
-        _rb.velocity = new Vector2(xMov, yMov);
+            _yMov += -_currentSpeed;
+        _xMov = Mathf.Clamp(_xMov, -_currentSpeed, _currentSpeed);
+        _yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
+        _rb.velocity = new Vector2(_xMov, _yMov);
     }
     #endregion
 
@@ -189,35 +192,50 @@ public class FlyingEnemy : Enemy {
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        switch (collision.tag)
         {
-            var player = collision.gameObject.GetComponent<Player>();
-            if (player.IsInvincible())
-                return;
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player.IsInvincible())
+                    return;
 
-            player.PlayerDamaged(TouchDamage);
-            player.Knockback(collision.transform.position.x < transform.position.x);
+                player.PlayerDamaged(TouchDamage);
+                player.Knockback(collision.transform.position.x < transform.position.x);
 
-            // Enemy hit sound
-            _audioSource.clip = EnemySoundEffects[0];
-            _audioSource.Play();
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
         }
     }
 
-    protected void OnTriggerStay2D(Collider2D collision)
+    protected override void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        switch (collision.tag)
         {
-            var player = collision.gameObject.GetComponent<Player>();
-            if (player.IsInvincible())
-                return;
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player.IsInvincible())
+                    return;
 
-            player.PlayerDamaged(TouchDamage);
-            player.Knockback(collision.transform.position.x < transform.position.x);
+                player.PlayerDamaged(TouchDamage);
+                player.Knockback(collision.transform.position.x < transform.position.x);
 
-            // Enemy hit sound
-            _audioSource.clip = EnemySoundEffects[0];
-            _audioSource.Play();
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
+            case "Active Zone":
+                float dist = Vector2.Distance(transform.position, collision.transform.position);
+                if (dist < 3f)
+                {
+                    Vector2 dir = transform.position - collision.transform.position;
+                    dir.Normalize();
+                    _xMov += Mathf.Lerp(dir.x, 0, dist / 3);
+                    _yMov += Mathf.Lerp(dir.y, 0, dist / 3);
+                }
+                break;
+
         }
     }
 
