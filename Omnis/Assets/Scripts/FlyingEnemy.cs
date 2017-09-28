@@ -227,12 +227,11 @@ public class FlyingEnemy : Enemy {
                 break;
             case "Active Zone":
                 float dist = Vector2.Distance(transform.position, collision.transform.position);
-                if (dist < 3f)
+                if (dist < AvoidanceDistance)
                 {
                     Vector2 dir = transform.position - collision.transform.position;
-                    dir.Normalize();
-                    _xMov += Mathf.Lerp(dir.x, 0, dist / 3);
-                    _yMov += Mathf.Lerp(dir.y, 0, dist / 3);
+                    _xMov += Mathf.Lerp(dir.x, 0, dist / AvoidanceDistance);
+                    _yMov += Mathf.Lerp(dir.y, 0, dist / AvoidanceDistance);
                 }
                 break;
 

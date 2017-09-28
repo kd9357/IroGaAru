@@ -40,13 +40,18 @@ public class Enemy : MonoBehaviour
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
 
-    [Tooltip("Type in the movement behavior of the enemy")]
+    [Tooltip("Select the AI of the enemy")]
     public Behavior EnemyBehavior;
+    [Tooltip("The maximum health the enemy starts at")]
     public float MaxHealth = 5;
     [Tooltip("How much damage the enemy deals on contact")]
     public int TouchDamage = 1;
+    [Tooltip("The color the enemy will reset to")]
     public Color DefaultColor;
+    [Tooltip("The default movement speed this enemy moves at")]
     public float Speed;
+    [Tooltip("The distance this enemy wants to be from other enemies")]
+    public float AvoidanceDistance = 5f;
 
     // Combat public variables
     [Tooltip("Greater values mean enemy will attack when player is further away")]
@@ -59,7 +64,7 @@ public class Enemy : MonoBehaviour
     public float ColorCooldown = 5f;
     [Tooltip("Time before enemy takes another action")]
     public float ActionCooldown = 5f;
-
+    //Color effects
     [Tooltip("How strong the enemy is knockbacked while Green")]
     public float WindKnockbackForce;
 
@@ -165,6 +170,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+        //Reset movement direction, update each new physics tick
         _xMov = 0;
         _yMov = 0;
     }
@@ -387,9 +393,12 @@ public class Enemy : MonoBehaviour
         if (_currentState != EnemyState.Moving)
             _currentState = EnemyState.Moving;
         _xMov += _facingRight ? _currentSpeed : -_currentSpeed;
-        _yMov += _rb.velocity.y;
+        //Base enemies only move left and right, so they won't be trying to move vertically to get away from each other
+        //Override on more complex enemies
+        _yMov = _rb.velocity.y;
+
         _xMov = Mathf.Clamp(_xMov, -_currentSpeed, _currentSpeed);
-        _yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
+        //_yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
         _rb.velocity = new Vector2(_xMov, _yMov);
     }
 
@@ -451,18 +460,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Check other enemy locations
     protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         switch(collision.tag)
         {
             case "Active Zone":
                 float dist = Vector2.Distance(transform.position, collision.transform.position);
-                if (dist < 5f)
+                if (dist < AvoidanceDistance)
                 {
                     Vector2 dir = transform.position - collision.transform.position;
-                    dir.Normalize();
-                    _xMov += Mathf.Lerp(dir.x, 0, dist / 5);
-                    _yMov += Mathf.Lerp(dir.y, 0, dist / 5);
+                    _xMov += Mathf.Lerp(dir.x, 0, dist / AvoidanceDistance);    //Stronger affect closer the enemy
+                    _yMov += Mathf.Lerp(dir.y, 0, dist / AvoidanceDistance);
                 }
                 break;
         }
