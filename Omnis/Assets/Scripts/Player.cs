@@ -202,7 +202,7 @@ public class Player : MonoBehaviour
         _rb.AddForce(new Vector2(PlayerKnockbackForce * _knockbackDirection, PlayerKnockbackForce), ForceMode2D.Impulse);
         _anim.SetTrigger("Recoil");
     }
-    //Maybe allow enemy to determine knockback distance
+    //TODO: Maybe allow enemy/amount of damage to determine knockback distance
     #endregion
 
     #region Collisions
@@ -284,17 +284,20 @@ public class Player : MonoBehaviour
 
     public void PlayerDamaged(int damage)
     {
-        _currentHealth -= damage;
-        _invinceTimer = InvincibilityCooldown;
+        if (damage > 0)
+        {
+            _currentHealth -= damage;
+            _invinceTimer = InvincibilityCooldown;
 
-        _invincible = true;
+            _invincible = true;
 
-        //For now, just half the transparency when hit + invincible
-        _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
+            //For now, just half the transparency when hit + invincible
+            _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
 
-        // Player hurt sound
-        _audioSource.clip = PlayerSoundEffects[1];
-        _audioSource.Play();
+            // Player hurt sound
+            _audioSource.clip = PlayerSoundEffects[1];
+            _audioSource.Play();
+        }
     }
 
     public bool IsInvincible()

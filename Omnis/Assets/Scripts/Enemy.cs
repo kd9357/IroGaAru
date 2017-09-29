@@ -263,8 +263,9 @@ public class Enemy : MonoBehaviour
         //Only set the timer on first hit
         if(_colorTimer <= 0)
             _colorTimer = ColorCooldown;
-            
-        _recoilTimer = RecoilCooldown;
+        //Only mess with recoil when not stunned already
+        if(_currentColorStatus != ColorStatus.Stun)    
+            _recoilTimer = RecoilCooldown;
         _anim.SetBool("Recoil", true);
         _currentState = EnemyState.Staggered;
         _currentHealth -= damage;
@@ -418,7 +419,8 @@ public class Enemy : MonoBehaviour
                     return;
 
                 player.PlayerDamaged(TouchDamage);
-                player.Knockback(collision.transform.position.x < transform.position.x);
+                if(TouchDamage > 0)
+                    player.Knockback(collision.transform.position.x < transform.position.x);
 
                 // Enemy hit sound
                 _audioSource.clip = EnemySoundEffects[0];
@@ -446,7 +448,8 @@ public class Enemy : MonoBehaviour
                     return;
 
                 player.PlayerDamaged(TouchDamage);
-                player.Knockback(collision.transform.position.x < transform.position.x);
+                if (TouchDamage > 0)
+                    player.Knockback(collision.transform.position.x < transform.position.x);
 
                 // Enemy hit sound
                 _audioSource.clip = EnemySoundEffects[0];

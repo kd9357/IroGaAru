@@ -6,10 +6,14 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
 
-    [Tooltip("Distance in the x axis the player can move before the camera follows")]
-    public float XMargin = 1f;
-    [Tooltip("Distance in the y axis the player can move before the camera follows")]
-    public float YMargin = 1f;
+    [Tooltip("Distance in the player can move right before the camera follows")]
+    public float PositiveXMargin = 1f;
+    [Tooltip("Distance in the player can move left before the camera follows")]
+    public float NegativeXMargin = 1f;
+    [Tooltip("Distance in the player can move up before the camera follows")]
+    public float PositiveYMargin = 1f;
+    [Tooltip("Distance in the player can move down before the camera follows")]
+    public float NegativeYMargin = 1f;
     [Tooltip("How smoothly the camera catches up with it's target movement in the x axis (larger values = less smooth)")]
     public float XSmooth = 8f;
     [Tooltip("How smoothly the camera catches up with it's target movement in the y axis (larger values = less smooth)")]
@@ -35,14 +39,25 @@ public class CameraFollow : MonoBehaviour {
         _playerLocked = true;
 	}
 	
+    //Return true if out of bounds
     bool CheckXMargin()
     {
-        return Mathf.Abs(transform.position.x - _target.position.x) > XMargin;
+        //return Mathf.Abs(transform.position.x - _target.position.x) > XMargin;
+        if (transform.position.x > _target.position.x)
+            return transform.position.x - _target.position.x > NegativeXMargin;
+        else if (transform.position.x < _target.position.x)
+            return _target.position.x - transform.position.x > PositiveXMargin;
+        return false;
     }
 
     bool CheckYMargin()
     {
-        return Mathf.Abs(transform.position.y - _target.position.y) > YMargin;
+        //return Mathf.Abs(transform.position.y - _target.position.y) > YMargin;
+        if (transform.position.y > _target.position.y)
+            return transform.position.y - _target.position.y > NegativeYMargin;
+        else if (transform.position.y < _target.position.y)
+            return _target.position.y - transform.position.y > PositiveYMargin;
+        return false;
     }
 
     void FixedUpdate () {
