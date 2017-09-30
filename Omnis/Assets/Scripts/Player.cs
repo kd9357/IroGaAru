@@ -165,7 +165,7 @@ public class Player : MonoBehaviour
     }
 
     // Update runs once per frame
-    //Used to detect inputs
+    //Used to detect jump and attack (subject to change)
     private void Update()
     {
         if (_paused)
@@ -189,7 +189,7 @@ public class Player : MonoBehaviour
         if (MobileUI.Instance.GetJump() && _onGround)
         {
             _jumping = true;
-
+            _anim.SetTrigger("Jumping");
             // Reset gamepad attack flag
             MobileUI.Instance.SetJump(false);
         }
@@ -343,7 +343,6 @@ public class Player : MonoBehaviour
     #endregion
 
     #endregion
-
 
     #region Collisions
 
