@@ -41,6 +41,7 @@ public class ColorDisplay : MonoBehaviour {
         if (!PlayerAttack.IsAttacking())
         {
 #if (UNITY_ANDROID || UNITY_IPHONE)
+            //Currently just cycles in one direction
             if (MobileUI.Instance.GetSwitchColor())
             {
                 _direction++;
