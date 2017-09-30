@@ -103,7 +103,6 @@
     <Compile Include="Assets\Scripts\MobileUI.cs" />
     <Compile Include="Assets\Scripts\Oni.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\PurpleBoss.cs" />
     <Compile Include="Assets\Scripts\TextManager.cs" />
   </ItemGroup>

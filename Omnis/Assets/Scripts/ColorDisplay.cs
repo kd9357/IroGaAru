@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class ColorDisplay : MonoBehaviour {
 
     public AttackTrigger Weapon;
-    public PlayerAttack PlayerAttack;
+    public Player Player;
+    //public PlayerAttack PlayerAttack;
     public WeaponColor red_color = WeaponColor.Red;
     public WeaponColor yellow_color = WeaponColor.Yellow;
     public WeaponColor blue_color = WeaponColor.Blue;
@@ -20,7 +21,6 @@ public class ColorDisplay : MonoBehaviour {
 
     void Start()
     {
-        //Should really do this programatically
         if(GameController.instance.EquippedColor == red_color)
         {
             CycleColors(0);
@@ -38,7 +38,8 @@ public class ColorDisplay : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (!PlayerAttack.IsAttacking())
+        //if (!PlayerAttack.IsAttacking())
+        if(!Player.IsAttacking())
         {
 #if (UNITY_ANDROID || UNITY_IPHONE)
             //Currently just cycles in one direction
@@ -51,11 +52,6 @@ public class ColorDisplay : MonoBehaviour {
                 MobileUI.Instance.SetSwitchColor(false);
             }
 #else
-            // Not easy to use mousewheel
-//            float direction = Input.GetAxisRaw("Mouse ScrollWheel");
-//            direction = direction > 0 ? 1 :
-//                direction < 0 ? -1 : 0;
-//            CycleColors((int)direction);
 
             if (Input.GetButtonDown("Red"))
             {

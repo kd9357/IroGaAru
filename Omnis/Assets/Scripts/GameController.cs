@@ -121,6 +121,7 @@ public class GameController : MonoBehaviour
         Time.timeScale = _paused ? 0 : 1;
         _audio.mute = _paused;
         //TODO: Disable/Enable player input here
+        _player.FreezeMovement(_paused);
         pauseCanvas.SetActive(_paused);
     }
 
