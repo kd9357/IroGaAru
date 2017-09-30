@@ -116,7 +116,6 @@ public class Enemy : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
         _target = GameObject.FindGameObjectWithTag("Player").transform;
-
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
         _currentColorStatus = ColorStatus.None;

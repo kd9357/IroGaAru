@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
     // Health vars
     public int MaxHealth;
+    [Tooltip("Time player remains invincible after being hit")]
     public float InvincibilityCooldown = 3f;
 
     // Movement vars
@@ -30,7 +31,11 @@ public class Player : MonoBehaviour
     // Recoil vars
     [Tooltip("Force player experiences from enemy")]
     public float PlayerKnockbackForce = 20;
+    [Tooltip("Time until player may move after recoil")]
     public float KnockbackCooldown = 0.3f;
+
+    // Weapon var
+    public GameObject Weapon;
 
     // Audio vars
     public AudioClip[] PlayerSoundEffects;
@@ -47,6 +52,7 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource;
 
     // Flags
+    private bool _paused;
     private bool _onGround;
     private bool _onWall;
     private bool _jumping;
@@ -57,10 +63,18 @@ public class Player : MonoBehaviour
 
     // Timers
     private float _knockbackTimer;
-    private float _invinceTimer;
+    private float _invincibleTimer;
 
     // Health
     private int _currentHealth;
+
+    // Weapon components and private vars
+    private PolygonCollider2D _weaponCollider;
+    private Animator _weaponAnim;
+    private AttackTrigger _trigg;
+
+    private bool _attacking = false;
+    private WeaponColor _weaponColor;
 
     #endregion
 
@@ -74,6 +88,7 @@ public class Player : MonoBehaviour
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
 
+        _paused = false;
         _onGround = true;
         _onWall = false;
         _jumping = false;
@@ -82,9 +97,15 @@ public class Player : MonoBehaviour
         _invincible = false;
 
         _knockbackTimer = 0f;
-        _invinceTimer = 0f;
+        _invincibleTimer = 0f;
 
 	    _currentHealth = MaxHealth;
+
+        //Setup weapon stuff
+        _trigg = Weapon.GetComponent<AttackTrigger>();
+        _weaponCollider = Weapon.GetComponent<PolygonCollider2D>();
+        _weaponCollider.enabled = false;
+        _weaponAnim = Weapon.GetComponent<Animator>();
 	}
 
     #endregion
@@ -144,9 +165,27 @@ public class Player : MonoBehaviour
     }
 
     // Update runs once per frame
+    //Used to detect inputs
     private void Update()
     {
+        if (_paused)
+            return;
+
+        //Pulled from PlayerAttack.cs
+        //Check weapon color
+        if(_weaponColor != GameController.instance.EquippedColor)
+        {
+            _weaponColor = GameController.instance.EquippedColor;
+            _trigg.SetColor(_weaponColor);
+        }
+
+        bool doAttack = false;
+
 #if (UNITY_ANDROID || UNITY_IPHONE)
+        // MOBILE ATTACK
+        doAttack = MobileUI.Instance.GetAttack() && !_attacking;    //TODO: must account for new attack method
+
+        // MOBILE JUMP
         if (MobileUI.Instance.GetJump() && _onGround)
         {
             _jumping = true;
@@ -157,6 +196,9 @@ public class Player : MonoBehaviour
 
         _jumpCancel = MobileUI.Instance.GetJump();
 #else
+        // ATTACK
+        doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
+
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
         {
@@ -167,15 +209,22 @@ public class Player : MonoBehaviour
         _jumpCancel = Input.GetButtonUp("Jump");
 #endif
 
+        // ATTACK Continued
+        if(doAttack)
+        {
+            Attack();
+        }
+        _anim.SetBool("Attacking", _attacking);
+
         // HEALTH
         if (_currentHealth <= 0)
         {
             Die();
         }
 
-        if (_invinceTimer > 0)
+        if (_invincibleTimer > 0)
         {
-            _invinceTimer -= Time.deltaTime;
+            _invincibleTimer -= Time.deltaTime;
         }
         else if (!GodMode)
         {
@@ -187,6 +236,13 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Helper Methods
+
+    public void FreezeMovement(bool pause)
+    {
+        _paused = pause;
+    }
+
+    #region Movement & Orientation
     void Flip()
     {
         _facingRight = !_facingRight;
@@ -195,6 +251,9 @@ public class Player : MonoBehaviour
         transform.localScale = scale;
     }
 
+    #endregion
+
+    #region Combat
     public void Knockback(bool fromRight)
     {
         _knockbackTimer = KnockbackCooldown;
@@ -203,7 +262,88 @@ public class Player : MonoBehaviour
         _anim.SetTrigger("Recoil");
     }
     //TODO: Maybe allow enemy/amount of damage to determine knockback distance
+
+    //Activate weapon + animations + sound
+    void Attack()
+    {
+        _attacking = true;
+        _weaponCollider.enabled = _attacking;
+        _audioSource.clip = PlayerSoundEffects[0];
+        _audioSource.Play();
+#if (UNITY_ANDROID || UNITY_IPHONE)
+            MobileUI.Instance.SetAttack(false);
+#endif
+        _anim.SetBool("Attacking", _attacking);
+        _weaponAnim.SetBool("Attacking", _attacking);
+    }
+
+    //Called at end of animation
+    void EndAttack()
+    {
+        _attacking = false;
+        _weaponCollider.enabled = _attacking;
+        _anim.SetBool("Attacking", _attacking);
+        _weaponAnim.SetBool("Attacking", _attacking);
+    }
+
+    public bool IsAttacking()
+    {
+        return _attacking;
+    }
+
     #endregion
+
+    #region Health
+
+    public int GetCurrentHealth()
+    {
+        return _currentHealth;
+    }
+
+    public void RestoreHealth(int health)
+    {
+        _currentHealth = _currentHealth + health > MaxHealth ? MaxHealth : _currentHealth + health;
+    }
+
+    public void PlayerDamaged(int damage)
+    {
+        if (damage > 0)
+        {
+            _currentHealth -= damage;
+            _invincibleTimer = InvincibilityCooldown;
+
+            _invincible = true;
+
+            //For now, just half the transparency when hit + invincible
+            _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
+
+            // Player hurt sound
+            _audioSource.clip = PlayerSoundEffects[1];
+            _audioSource.Play();
+        }
+    }
+
+    public bool IsInvincible()
+    {
+        return _invincible;
+    }
+
+    public void Die()
+    {
+        // HACK TO RESTART GAME QUICKLY
+        // There is a bug where if you hold left or right while it reload,
+        // you'll start going that direction until you press the direction again
+        GameController.instance.GameOver();
+
+        // Destroy(gameObject.transform.GetChild(1));
+        // transform.DetachChildren();
+        // Destroy(gameObject);
+    }
+
+    #endregion
+
+    #endregion
+
 
     #region Collisions
 
@@ -270,52 +410,4 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Health
-
-    public int GetCurrentHealth()
-    {
-        return _currentHealth;
-    }
-
-    public void RestoreHealth(int health)
-    {
-        _currentHealth = _currentHealth + health > MaxHealth ? MaxHealth : _currentHealth + health;
-    }
-
-    public void PlayerDamaged(int damage)
-    {
-        if (damage > 0)
-        {
-            _currentHealth -= damage;
-            _invinceTimer = InvincibilityCooldown;
-
-            _invincible = true;
-
-            //For now, just half the transparency when hit + invincible
-            _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
-
-            // Player hurt sound
-            _audioSource.clip = PlayerSoundEffects[1];
-            _audioSource.Play();
-        }
-    }
-
-    public bool IsInvincible()
-    {
-        return _invincible;
-    }
-
-    public void Die()
-    {
-        // HACK TO RESTART GAME QUICKLY
-        // There is a bug where if you hold left or right while it reload,
-        // you'll start going that direction until you press the direction again
-        GameController.instance.GameOver();
-
-        // Destroy(gameObject.transform.GetChild(1));
-        // transform.DetachChildren();
-        // Destroy(gameObject);
-    }
-
-    #endregion
 }

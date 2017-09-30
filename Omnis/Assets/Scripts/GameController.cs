@@ -18,8 +18,10 @@ public class GameController : MonoBehaviour
     private Image gameoverPanel;
     private Text gameoverText;
 
-    public bool _paused;
+    private bool _paused;
     private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
+    private Player _player;         //To pause the player's inputs
+    private AudioSource _audio;
 
     void Awake()
     {
@@ -82,7 +84,10 @@ public class GameController : MonoBehaviour
 
         pauseCanvas.SetActive(false);
 
+        var audiosources = gameObject.GetComponentsInChildren<AudioSource>();
+        _audio = audiosources[1];   //Assuming music is first audio source in children
 
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     void Update()
@@ -102,6 +107,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    //Used for dialogue at the moment
     public void PauseGame(bool pause)
     {
         _paused = pause;
@@ -113,6 +119,9 @@ public class GameController : MonoBehaviour
     {
         _paused = !_paused;
         Time.timeScale = _paused ? 0 : 1;
+        _audio.mute = _paused;
+        //TODO: Disable/Enable player input here
+        _player.FreezeMovement(_paused);
         pauseCanvas.SetActive(_paused);
     }
 

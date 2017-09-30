@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PurpleBoss : Enemy {
+    //TODO: Should just restart now that code has been refactored
     //TODO: need to do a lot of fixes to account for scaling + flipping
 
     //Components
@@ -20,14 +21,16 @@ public class PurpleBoss : Enemy {
         _sprite = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
+        _target = GameObject.FindGameObjectWithTag("Player").transform;
 
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
         _sprite.color = _currentColor;
         _currentSpeed = Speed;
+        _xMov = 0;
+        _yMov = 0;
         _currentKnockbackForce = EnemyKnockbackForce;
         _recoilTimer = 0;
-        //_attacking = false;
         _currentState = EnemyState.Waiting;
         _actionTimer = ActionCooldown;  //May set this only when player in range
 
@@ -46,15 +49,15 @@ public class PurpleBoss : Enemy {
     }
 
     #region Updates
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         //This unfortunately flips the debug text as well
-        if ((_target.transform.position.x - transform.position.x > 0 && !_facingRight)
-            || (_target.transform.position.x - transform.position.x < 0 && _facingRight))
+        if ((_target.position.x - transform.position.x > 0 && !_facingRight)
+                || (_target.position.x - transform.position.x < 0 && _facingRight))
             Flip();
 
         //if (_recoilTimer <= 0)
-        if(_currentState != EnemyState.Staggered)
+        if (_currentState != EnemyState.Staggered)
         {
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
