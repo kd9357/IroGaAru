@@ -7,21 +7,21 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-
     public static GameController instance;
+
     public bool EndGame = false;
     public WeaponColor EquippedColor;
-
-    private const string START_SCREEN = "Start_Screen";
 
     private GameObject gameoverCanvas;
     private Image gameoverPanel;
     private Text gameoverText;
 
-    private bool _paused;
     private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
     private Player _player;         //To pause the player's inputs
-    private AudioSource _audio;
+    private AudioSource _audioSourceManager;
+    private AudioSource _gameOverAudio;
+
+    private bool _paused;
 
     void Awake()
     {
@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        // Game Over Setup
         var canvas = transform.Find("Game Over Canvas");
         if (canvas == null)
         {
@@ -73,7 +74,7 @@ public class GameController : MonoBehaviour
 
         gameoverCanvas.SetActive(false);
 
-        //for pause screen
+        // Pause Screen Setup
         canvas = transform.Find("Pause Canvas");
         if (canvas == null)
         {
@@ -84,8 +85,10 @@ public class GameController : MonoBehaviour
 
         pauseCanvas.SetActive(false);
 
+        // NOTE: If parent has audiosource, will be counted
         var audiosources = gameObject.GetComponentsInChildren<AudioSource>();
-        _audio = audiosources[1];   //Assuming music is first audio source in children
+        _gameOverAudio = audiosources[0];
+        _audioSourceManager = audiosources[1];   //Assuming music is first audio source in children
 
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
@@ -94,9 +97,11 @@ public class GameController : MonoBehaviour
     {
         if (EndGame && gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
         {
+            _audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
+
             if (Input.anyKey)
             {
-                LoadScene(START_SCREEN);
+                LoadScene(SceneManager.GetActiveScene().name);
             }  
         }
         
@@ -119,7 +124,7 @@ public class GameController : MonoBehaviour
     {
         _paused = !_paused;
         Time.timeScale = _paused ? 0 : 1;
-        _audio.mute = _paused;
+        _audioSourceManager.mute = _paused;
         //TODO: Disable/Enable player input here
         _player.FreezeMovement(_paused);
         pauseCanvas.SetActive(_paused);
@@ -132,8 +137,8 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
-        // Only sound available is gameover sound
-        GetComponent<AudioSource>().Play();
+        _gameOverAudio.volume = 1f;
+        _gameOverAudio.Play();
 
         gameoverCanvas.SetActive(true);
         gameoverPanel.CrossFadeAlpha(2f, 1.5f, false);

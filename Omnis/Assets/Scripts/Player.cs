@@ -47,7 +47,6 @@ public class Player : MonoBehaviour
     // Components on player
     private SpriteRenderer _sprite;
     private Rigidbody2D _rb;
-    //private PolygonCollider2D _footCollider;
     private Animator _anim;
     private AudioSource _audioSource;
 
@@ -128,6 +127,13 @@ public class Player : MonoBehaviour
             x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                 Input.GetAxisRaw("Horizontal") * Speed;
 #endif
+            // JUMPING
+            if (Input.GetButtonDown("Jump") && _onGround)
+            {
+                _jumping = true;
+                _anim.SetTrigger("Jumping");
+            }
+
             y_mov = _rb.velocity.y;
             x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
 
@@ -199,12 +205,12 @@ public class Player : MonoBehaviour
         // ATTACK
         doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
 
-        // JUMPING
-        if (Input.GetButtonDown("Jump") && _onGround)
-        {
-            _jumping = true;
-            _anim.SetTrigger("Jumping");
-        }
+//        // JUMPING
+//        if (Input.GetButtonDown("Jump") && _onGround)
+//        {
+//            _jumping = true;
+//            _anim.SetTrigger("Jumping");
+//        }
 
         _jumpCancel = Input.GetButtonUp("Jump");
 #endif
@@ -330,14 +336,8 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        // HACK TO RESTART GAME QUICKLY
-        // There is a bug where if you hold left or right while it reload,
-        // you'll start going that direction until you press the direction again
         GameController.instance.GameOver();
-
-        // Destroy(gameObject.transform.GetChild(1));
-        // transform.DetachChildren();
-        // Destroy(gameObject);
+        Destroy(gameObject.GetComponent<Player>());
     }
 
     #endregion
@@ -349,7 +349,7 @@ public class Player : MonoBehaviour
     // Collisions wtih Player
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.otherCollider is PolygonCollider2D)
+        if (collision.otherCollider is CircleCollider2D)
         {
             _onGround = true;
         }
@@ -369,7 +369,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.otherCollider is PolygonCollider2D)
+        if (collision.otherCollider is CircleCollider2D)
         {
             _onGround = true;
         }
@@ -389,7 +389,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.otherCollider is PolygonCollider2D)
+        if (collision.otherCollider is CircleCollider2D)
         {
             _onGround = false;
         }

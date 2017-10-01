@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public enum ColorStatus
 {
@@ -70,6 +71,11 @@ public class Enemy : MonoBehaviour
 
     // Audio vars
     public AudioClip[] EnemySoundEffects;
+
+    // Health pack prefab
+    public GameObject HealthDrop;
+    [Tooltip("Percent chance of dropping health")]
+    public int Percent = 30;
 
     #endregion
 
@@ -257,21 +263,25 @@ public class Enemy : MonoBehaviour
     #region Enemy Health and Combat Status methods
 
     // When the enemy gets hit by something
-    public virtual void EnemyDamaged(int damage, Color color, int direction)
+    public virtual void EnemyDamaged(int damage, Color color, int direction,
+                                     int additionalForce = 1)
     {
         //Only set the timer on first hit
         if(_colorTimer <= 0)
             _colorTimer = ColorCooldown;
+
         //Only mess with recoil when not stunned already
         if(_currentColorStatus != ColorStatus.Stun)    
             _recoilTimer = RecoilCooldown;
+
         _anim.SetBool("Recoil", true);
         _currentState = EnemyState.Staggered;
         _currentHealth -= damage;
 
         SetColor(color);
 
-        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
+        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce, 
+                     ForceMode2D.Impulse);
     }
 
     //Combine colors and determine if status changed
@@ -360,6 +370,15 @@ public class Enemy : MonoBehaviour
     {
         _currentState = EnemyState.Dying;
         _anim.SetTrigger("Death");  //TODO: May instead trigger death animation, and on last frame call Die()
+
+        // Random health pack drop
+        Random r = new Random();
+        if (r.Next(0, 100) <= Percent)
+        {
+            GameObject healthDrop = Instantiate(HealthDrop);
+            healthDrop.transform.position = transform.position;
+        }
+
         Destroy(gameObject);
     }
     #endregion

@@ -120,7 +120,8 @@ public class FlyingEnemy : Enemy {
         return xInRange && yInRange;
     }
 
-    public override void EnemyDamaged(int damage, Color color, int direction)
+    public override void EnemyDamaged(int damage, Color color, int direction,
+                                      int additionalForce = 1)
     {
         //Only set the timer on first hit
         if (_colorTimer == 0)
