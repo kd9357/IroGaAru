@@ -218,6 +218,7 @@ public class Player : MonoBehaviour
         // ATTACK Continued
         if(doAttack)
         {
+            GameController.instance.IncrementAttacksMade();
             Attack();
         }
         _anim.SetBool("Attacking", _attacking);
@@ -408,5 +409,4 @@ public class Player : MonoBehaviour
     }
 
     #endregion
-
 }

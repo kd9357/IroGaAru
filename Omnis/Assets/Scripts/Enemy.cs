@@ -280,6 +280,8 @@ public class Enemy : MonoBehaviour
 
         SetColor(color);
 
+        GameController.instance.IncrementAttacksConnected();
+
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce, 
                      ForceMode2D.Impulse);
     }
@@ -391,7 +393,7 @@ public class Enemy : MonoBehaviour
             healthDrop.transform.position = transform.position;
         }
 
-        GameController.instance.IncrementEnemyCount();
+        GameController.instance.IncrementEnemiesDefeated();
         Destroy(gameObject);
     }
     #endregion
