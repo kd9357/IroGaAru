@@ -391,6 +391,7 @@ public class Enemy : MonoBehaviour
             healthDrop.transform.position = transform.position;
         }
 
+        GameController.instance.IncrementEnemyCount();
         Destroy(gameObject);
     }
     #endregion

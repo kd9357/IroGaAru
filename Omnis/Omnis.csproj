@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
+    <Compile Include="Assets\Scripts\ColorTransition.cs" />
     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Assets\Scripts\TextManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\GrayScale.shader" />
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
