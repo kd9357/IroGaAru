@@ -259,6 +259,7 @@ public class GameController : MonoBehaviour
                     break;
                 case "Accuracy Number":
                     float accuracy = 100f * enemyHitCount / attackCount;
+                    accuracy = float.IsNaN(accuracy) ? 0 : accuracy;
                     t.text = String.Format("{0:0.00}", accuracy);
                     break;
             }
