@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     [Tooltip("How much damage the enemy deals on contact")]
     public int TouchDamage = 1;
     [Tooltip("The color the enemy will reset to")]
-    public Color DefaultColor;
+    public Color DefaultColor = Color.white;
     [Tooltip("The default movement speed this enemy moves at")]
     public float Speed;
     [Tooltip("The distance this enemy wants to be from other enemies")]
@@ -325,23 +325,35 @@ public class Enemy : MonoBehaviour
         switch (_currentColorStatus)
         {
             case ColorStatus.Stun:
-                _currentSpeed = 0;
-                _recoilTimer = ColorCooldown;
-                _anim.SetBool("Recoil", true);
-                _currentState = EnemyState.Staggered;
+                ApplyStun();
                 return;
             case ColorStatus.WindRecoil:
-                _currentKnockbackForce = WindKnockbackForce;
-                _currentColor = Color.green;
+                ApplyWindRecoil();
                 return;
             case ColorStatus.DamageOverTime:
-                StartCoroutine(DamageOverTime());
+                StartCoroutine(ApplyDamageOverTime());
                 return;
         }
     }
 
+    //Stop enemy's movement
+    protected virtual void ApplyStun()
+    {
+        _currentSpeed = 0;
+        _recoilTimer = ColorCooldown;
+        _anim.SetBool("Recoil", true);
+        _currentState = EnemyState.Staggered;
+    }
+
+    //Increase enemy's knockback
+    protected virtual void ApplyWindRecoil()
+    {
+        _currentKnockbackForce = WindKnockbackForce;
+        _currentColor = Color.green;
+    }
+
     //Reduce the enemy's health by 10% of currentHealth every second (Maxhealth instead?)
-    protected virtual IEnumerator DamageOverTime()
+    protected virtual IEnumerator ApplyDamageOverTime()
     {
         while(_currentColorStatus == ColorStatus.DamageOverTime)
         {

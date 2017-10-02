@@ -243,11 +243,6 @@ public class Player : MonoBehaviour
 
     #region Helper Methods
 
-    public void FreezeMovement(bool pause)
-    {
-        _paused = pause;
-    }
-
     #region Movement & Orientation
     void Flip()
     {
@@ -255,6 +250,11 @@ public class Player : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    public void FreezeMovement(bool pause)
+    {
+        _paused = pause;
     }
 
     #endregion

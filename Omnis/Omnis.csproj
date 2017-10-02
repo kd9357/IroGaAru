@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\HPDisplay.cs" />
+    <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\MobileUI.cs" />
     <Compile Include="Assets\Scripts\Oni.cs" />

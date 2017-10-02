@@ -128,8 +128,9 @@ public class FlyingEnemy : Enemy {
             _colorTimer = ColorCooldown;
         _recoilTimer = RecoilCooldown;
         //When hit stop attacking
+        if(_currentState == EnemyState.Attacking)
+            _actionTimer = ActionCooldown; //hotfix, should find a better method
         _currentState = EnemyState.Staggered;
-        _actionTimer = ActionCooldown;
         _anim.SetBool("Recoil", true);
         _currentHealth -= damage;
 
@@ -138,31 +139,12 @@ public class FlyingEnemy : Enemy {
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
     }
 
-    //TODO: add sound effect if using
-    protected override void ApplyAilment()
+    //Also apply gravity on enemy
+    protected override void ApplyStun()
     {
-        //When special color first applied, reset timer
-        _colorTimer = ColorCooldown;
-        if (!_colorParticleEffects[(int)_currentColorStatus].isPlaying)
-            _colorParticleEffects[(int)_currentColorStatus].Play();
-        switch (_currentColorStatus)
-        {
-            case ColorStatus.Stun:
-                _currentSpeed = 0;
-                _recoilTimer = ColorCooldown;
-                _anim.SetBool("Recoil", true);
-                //Enemy should fall and collide with objects
-                _rb.gravityScale = 30;
-                gameObject.GetComponent<Collider2D>().isTrigger = false;
-                return;
-            case ColorStatus.WindRecoil:
-                _currentKnockbackForce = WindKnockbackForce;
-                _currentColor = Color.green;
-                return;
-            case ColorStatus.DamageOverTime:
-                StartCoroutine(DamageOverTime());
-                return;
-        }
+        base.ApplyStun();
+        _rb.gravityScale = 30;
+        gameObject.GetComponent<Collider2D>().isTrigger = false;
     }
 
     protected override void ResetColorStatus()
