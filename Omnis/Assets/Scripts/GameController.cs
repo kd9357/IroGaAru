@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour
 
     public bool EndGame = false;
     public WeaponColor EquippedColor;
+    [Tooltip("The minimum number of enemies to be defeated before the environment is fully colored")]
+    public int MinimumEnemies;
 
     private GameObject gameoverCanvas;
     private Image gameoverPanel;
@@ -22,6 +24,9 @@ public class GameController : MonoBehaviour
     private AudioSource _gameOverAudio;
 
     private bool _paused;
+
+    private int _enemyCount = 0;
+    public Material GrayscaleMaterial;
 
     void Awake()
     {
@@ -82,7 +87,6 @@ public class GameController : MonoBehaviour
             return;
         }
         pauseCanvas = canvas.gameObject;
-
         pauseCanvas.SetActive(false);
 
         // NOTE: If parent has audiosource, will be counted
@@ -91,6 +95,9 @@ public class GameController : MonoBehaviour
         _audioSourceManager = audiosources[1];   //Assuming music is first audio source in children
 
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
+        //Color Transition setup
+        GrayscaleMaterial.SetFloat("_AmountColored", 0);
     }
 
     void Update()
@@ -112,6 +119,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    #region Pause
     //Used for dialogue at the moment
     public void PauseGame(bool pause)
     {
@@ -129,10 +137,28 @@ public class GameController : MonoBehaviour
         _player.FreezeMovement(_paused);
         pauseCanvas.SetActive(_paused);
     }
+    #endregion
+
+    #region Shader Management
+
+    public void IncrementEnemyCount()
+    {
+        _enemyCount++;
+        if(_enemyCount <= MinimumEnemies)
+        {
+
+            GrayscaleMaterial.SetFloat("_AmountColored", (float)_enemyCount / MinimumEnemies);
+        }
+    }
+    #endregion
+
+    #region Scene Management
 
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
+        //When loading a new scene or restarting on death, make sure to reset colors to gray
+        GrayscaleMaterial.SetFloat("_AmountColored", 0);
     }
 
     public void GameOver()
@@ -151,4 +177,6 @@ public class GameController : MonoBehaviour
     {
         Application.Quit();
     }
+
+    #endregion
 }

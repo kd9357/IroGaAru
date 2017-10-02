@@ -76,6 +76,9 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
+    <Compile Include="Assets\Scripts\ColorTransition.cs" />
     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
@@ -105,6 +109,7 @@
     <Compile Include="Assets\Scripts\TextManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\GrayScale.shader" />
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
