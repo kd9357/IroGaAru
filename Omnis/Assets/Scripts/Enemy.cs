@@ -14,11 +14,13 @@ public enum ColorStatus
 public enum Behavior
 {
     TrackPlayer,
+    LeftRight,
     Stationary
 }
 
 public class Enemy : MonoBehaviour
 {
+
     protected enum EnemyState
     {
         Inactive,
@@ -164,6 +166,9 @@ public class Enemy : MonoBehaviour
                             Attack();
                         else if (_currentState != EnemyState.Attacking) 
                             MoveForward();
+                        break;
+                    case Behavior.LeftRight:    //Move forward until we hit a wall, then turn around
+                        MoveForward();
                         break;
                     case Behavior.Stationary:
                         if (InRange() && _currentState != EnemyState.Attacking)
@@ -447,6 +452,7 @@ public class Enemy : MonoBehaviour
         switch (collision.collider.tag)
         {
             case "Player":
+                Debug.Log("Hit player");
                 var player = collision.gameObject.GetComponent<Player>();
                 if (player.IsInvincible())
                     return;
@@ -461,6 +467,7 @@ public class Enemy : MonoBehaviour
                 break;
             case "Wall":
                 // TODO: Make this more dynamic
+                Flip();
                 break;
             case "Instant Death":
                 Die();
