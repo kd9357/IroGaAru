@@ -43,20 +43,20 @@ public class CameraFollow : MonoBehaviour {
     bool CheckXMargin()
     {
         //return Mathf.Abs(transform.position.x - _target.position.x) > XMargin;
-        if (transform.position.x > _target.position.x)
-            return transform.position.x - _target.position.x > NegativeXMargin;
-        else if (transform.position.x < _target.position.x)
-            return _target.position.x - transform.position.x > PositiveXMargin;
+        if (transform.position.x > _target.position.x + XCenterOffset)
+            return transform.position.x - _target.position.x + XCenterOffset > NegativeXMargin;
+        else if (transform.position.x < _target.position.x + XCenterOffset)
+            return _target.position.x - transform.position.x + XCenterOffset > PositiveXMargin;
         return false;
     }
 
     bool CheckYMargin()
     {
         //return Mathf.Abs(transform.position.y - _target.position.y) > YMargin;
-        if (transform.position.y > _target.position.y)
-            return transform.position.y - _target.position.y > NegativeYMargin;
-        else if (transform.position.y < _target.position.y)
-            return _target.position.y - transform.position.y > PositiveYMargin;
+        if (transform.position.y > _target.position.y + YCenterOffset)
+            return transform.position.y - _target.position.y + YCenterOffset > NegativeYMargin;
+        else if (transform.position.y < _target.position.y + YCenterOffset)
+            return _target.position.y - transform.position.y + YCenterOffset > PositiveYMargin;
         return false;
     }
 
@@ -73,10 +73,20 @@ public class CameraFollow : MonoBehaviour {
         //If locked to player, use deadzone + offset
         if(_playerLocked)
         {
-            if(CheckXMargin())
-                targetX = Mathf.Lerp(transform.position.x, _target.position.x + XCenterOffset, XSmooth * Time.deltaTime);
-            if(CheckYMargin())
-                targetY = Mathf.Lerp(transform.position.y, _target.position.y + YCenterOffset, YSmooth * Time.deltaTime);
+            Vector2 xdist = _target.transform.position;
+            Vector2 ydist = xdist;
+            xdist.x += XCenterOffset;
+            ydist.y += YCenterOffset;
+            if (CheckXMargin())
+            {
+                float dist = Vector2.Distance(transform.position, xdist);
+                targetX = Mathf.Lerp(transform.position.x, _target.position.x + XCenterOffset, dist * XSmooth * Time.deltaTime);
+            }
+            if (CheckYMargin())
+            {
+                float dist = Vector2.Distance(transform.position, ydist);
+                targetY = Mathf.Lerp(transform.position.y, _target.position.y + YCenterOffset, dist * YSmooth * Time.deltaTime);
+            }
         }
         //Else don't check deadzone or use offset
         else

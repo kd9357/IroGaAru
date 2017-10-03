@@ -127,12 +127,12 @@ public class Player : MonoBehaviour
             x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                 Input.GetAxisRaw("Horizontal") * Speed;
 #endif
-            // JUMPING
-            if (Input.GetButtonDown("Jump") && _onGround)
-            {
-                _jumping = true;
-                _anim.SetTrigger("Jumping");
-            }
+            //// JUMPING
+            //if (Input.GetButtonDown("Jump") && _onGround)
+            //{
+            //    _jumping = true;
+            //    _anim.SetTrigger("Jumping");
+            //}
 
             y_mov = _rb.velocity.y;
             x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
@@ -205,12 +205,12 @@ public class Player : MonoBehaviour
         // ATTACK
         doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
 
-//        // JUMPING
-//        if (Input.GetButtonDown("Jump") && _onGround)
-//        {
-//            _jumping = true;
-//            _anim.SetTrigger("Jumping");
-//        }
+        // JUMPING
+        if (Input.GetButtonDown("Jump") && _onGround)
+        {
+            _jumping = true;
+            _anim.SetTrigger("Jumping");
+        }
 
         _jumpCancel = Input.GetButtonUp("Jump");
 #endif
