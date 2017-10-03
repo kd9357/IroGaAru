@@ -32,7 +32,8 @@ public class InteractableEnvironment : MonoBehaviour {
 
     #region Protected Attributes
 
-    protected SpriteRenderer _sprite;
+    //protected SpriteRenderer _sprite;
+    protected SpriteRenderer[] _sprites;
     protected Rigidbody2D _rb;
     protected int _currentHealth;
     protected Color _currentColor;
@@ -47,7 +48,8 @@ public class InteractableEnvironment : MonoBehaviour {
     // Use this for initialization
     protected virtual void Start () {
         _currentHealth = MaxHealth;
-        _sprite = GetComponent<SpriteRenderer>();
+        //_sprite = GetComponent<SpriteRenderer>();
+        _sprites = GetComponentsInChildren<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
 
         _currentColor = DefaultColor;
@@ -82,7 +84,11 @@ public class InteractableEnvironment : MonoBehaviour {
         {
             _colorTimer = 0;
             _currentColor = DefaultColor;
-            _sprite.color = _currentColor;
+            //_sprite.color = _currentColor;
+            foreach (SpriteRenderer sr in _sprites)
+            {
+                sr.color = _currentColor;
+            }
             //Reset ailments
             _currentKnockbackForce = KnockbackForce;
             _currentColorStatus = ColorStatus.None;
@@ -140,7 +146,11 @@ public class InteractableEnvironment : MonoBehaviour {
             if (_currentColorStatus != ColorStatus.None)
                 ApplyAilment();
 
-            _sprite.color = _currentColor;
+            //_sprite.color = _currentColor;
+            foreach (SpriteRenderer sr in _sprites)
+            {
+                sr.color = _currentColor;
+            }
         }
     }
 
@@ -183,6 +193,10 @@ public class InteractableEnvironment : MonoBehaviour {
     {
         while (_currentColorStatus == ColorStatus.DamageOverTime)
         {
+            foreach (SpriteRenderer sr in _sprites)
+            {
+                sr.color = (sr.color + Color.black) / 2;
+            }
             _currentHealth -= BurnDamage;
             yield return new WaitForSeconds(1);
         }

@@ -73,7 +73,7 @@ public class CameraFollow : MonoBehaviour {
         //If locked to player, use deadzone + offset
         if(_playerLocked)
         {
-            Vector2 xdist = _target.transform.position;
+            Vector2 xdist = _target.position;
             Vector2 ydist = xdist;
             xdist.x += XCenterOffset;
             ydist.y += YCenterOffset;
@@ -91,8 +91,8 @@ public class CameraFollow : MonoBehaviour {
         //Else don't check deadzone or use offset
         else
         {
-            targetX = Mathf.Lerp(transform.position.x, _target.position.x, XSmooth * Time.deltaTime);
-            targetY = Mathf.Lerp(transform.position.y, _target.position.y, YSmooth * Time.deltaTime);
+            targetX = Mathf.Lerp(transform.position.x, _target.position.x, 3 * XSmooth * Time.deltaTime);   //Multiplying by 3 to make transition faster (should replace down the line)
+            targetY = Mathf.Lerp(transform.position.y, _target.position.y, 3 * YSmooth * Time.deltaTime);
         }
 
         //Clamp to Min & MaxXY
