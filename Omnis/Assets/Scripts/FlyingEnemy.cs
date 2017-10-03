@@ -24,23 +24,29 @@ public class FlyingEnemy : Enemy {
             if ((_target.position.x - transform.position.x > 0 && !_facingRight)
                 || (_target.position.x - transform.position.x < 0 && _facingRight))
                 Flip();
-
-            //Constantly move towards player until in range
-            //Should use lerp for more smooth stop
-            if (_currentState != EnemyState.Attacking)
+            switch (EnemyBehavior)
             {
-                if (!InRange())
-                    MoveTowardsPlayer();
-                else
-                {
-                    if (_currentState != EnemyState.Waiting)
-                        _currentState = EnemyState.Waiting;
-                    _rb.velocity = new Vector2(_xMov, _yMov);
-                }
-                _xMov = 0;
-                _yMov = 0;
+                case Behavior.TrackPlayer:
+                    //Constantly move towards player until in range
+                    //Should use lerp for more smooth stop
+                    if (_currentState != EnemyState.Attacking)
+                    {
+                        if (!InRange())
+                            MoveTowardsPlayer();
+                        else
+                        {
+                            if (_currentState != EnemyState.Waiting)
+                                _currentState = EnemyState.Waiting;
+                            _rb.velocity = new Vector2(_xMov, _yMov);
+                        }
+                        _xMov = 0;
+                        _yMov = 0;
+                    }
+                    break;
+                default:
+                    Debug.Log("Behavior undefined for this enemy");
+                    break;
             }
-
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
             else
@@ -143,13 +149,13 @@ public class FlyingEnemy : Enemy {
     protected override void ApplyStun()
     {
         base.ApplyStun();
+        gameObject.layer = 11; //Set to enemy
         _rb.gravityScale = 30;
-        gameObject.GetComponent<Collider2D>().isTrigger = false;
     }
 
     protected override void ResetColorStatus()
     {
-        if (_colorTimer < 0)
+        if (_colorTimer < 0 && _currentColor != DefaultColor)
         {
             _colorTimer = 0;
             _currentColor = DefaultColor;
@@ -158,7 +164,7 @@ public class FlyingEnemy : Enemy {
             _currentSpeed = Speed;
             _currentKnockbackForce = EnemyKnockbackForce;
             _rb.gravityScale = 0;
-            gameObject.GetComponent<Collider2D>().isTrigger = true;
+            gameObject.layer = 14;  //Set to Transient Enemy
             _currentColorStatus = ColorStatus.None;
             _currentState = EnemyState.Waiting;
             foreach (ParticleSystem ps in _colorParticleEffects)
@@ -166,58 +172,6 @@ public class FlyingEnemy : Enemy {
                 if (ps.isPlaying)
                     ps.Stop();
             }
-        }
-    }
-
-    #endregion
-
-    #region Collisions
-
-    protected void OnTriggerEnter2D(Collider2D collision)
-    {
-        switch (collision.tag)
-        {
-            case "Player":
-                var player = collision.gameObject.GetComponent<Player>();
-                if (player.IsInvincible())
-                    return;
-
-                player.PlayerDamaged(TouchDamage);
-                player.Knockback(collision.transform.position.x < transform.position.x);
-
-                // Enemy hit sound
-                _audioSource.clip = EnemySoundEffects[0];
-                _audioSource.Play();
-                break;
-        }
-    }
-
-    protected override void OnTriggerStay2D(Collider2D collision)
-    {
-        switch (collision.tag)
-        {
-            case "Player":
-                var player = collision.gameObject.GetComponent<Player>();
-                if (player.IsInvincible())
-                    return;
-
-                player.PlayerDamaged(TouchDamage);
-                player.Knockback(collision.transform.position.x < transform.position.x);
-
-                // Enemy hit sound
-                _audioSource.clip = EnemySoundEffects[0];
-                _audioSource.Play();
-                break;
-            case "Active Zone":
-                float dist = Vector2.Distance(transform.position, collision.transform.position);
-                if (dist < AvoidanceDistance)
-                {
-                    Vector2 dir = transform.position - collision.transform.position;
-                    _xMov += Mathf.Lerp(dir.x, 0, dist / AvoidanceDistance);
-                    _yMov += Mathf.Lerp(dir.y, 0, dist / AvoidanceDistance);
-                }
-                break;
-
         }
     }
 
