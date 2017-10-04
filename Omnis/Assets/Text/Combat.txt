@@ -1,0 +1,5 @@
+Press the 'J','K', or 'L' keys to attack. Press 'Spacebar to continue.
+'J' turns enemies red
+'K' turns them yellow
+'L' turns them blue.
+Good Luck!

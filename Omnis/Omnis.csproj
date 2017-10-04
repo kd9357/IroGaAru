@@ -111,7 +111,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\GrayScale.shader" />
+    <None Include="Assets\Text\Boulder.txt" />
+    <None Include="Assets\Text\Burn Tree.txt" />
+    <None Include="Assets\Text\Combat.txt" />
+    <None Include="Assets\Text\Green Color Combo.txt" />
+    <None Include="Assets\Text\Health Item.txt" />
+    <None Include="Assets\Text\Orange Color Combo.txt" />
+    <None Include="Assets\Text\Purple Color Combo.txt" />
     <None Include="Assets\Text\Test.txt" />
+    <None Include="Assets\Text\Text Navigation.txt" />
     <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

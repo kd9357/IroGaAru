@@ -1,0 +1,3 @@
+Try coloring an enemy yellow and quickly hitting it with a blue attack
+This will make the enemy green!
+Green enemies fly farther away when hit to create space between you and your enemy.
