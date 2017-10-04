@@ -1,0 +1,1 @@
+Use the 'A' or 'D' keys to move left or right.

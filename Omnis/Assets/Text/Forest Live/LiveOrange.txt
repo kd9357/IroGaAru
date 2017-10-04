@@ -1,0 +1,2 @@
+Combine red and yellow to make orange.
+Orange burns enemies and certain objects.

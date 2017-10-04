@@ -1,0 +1,3 @@
+Press 'J' to attack enemies with red.
+Press 'K' to attack enemies with yellow.
+Press 'L' to attack enemies with blue.
