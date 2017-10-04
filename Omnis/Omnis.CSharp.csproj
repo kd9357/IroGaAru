@@ -103,6 +103,10 @@
     <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\LevelComplete.cs" />
+    <Compile Include="Assets\Scripts\LiveTextEnd.cs" />
+    <Compile Include="Assets\Scripts\LiveTextManager.cs" />
+    <Compile Include="Assets\Scripts\LiveTextOnDestroy.cs" />
+    <Compile Include="Assets\Scripts\LiveTextStart.cs" />
     <Compile Include="Assets\Scripts\MobileUI.cs" />
     <Compile Include="Assets\Scripts\Oni.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
@@ -111,6 +115,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\GrayScale.shader" />
+    <None Include="Assets\Text\Forest Live\LiveCombat.txt" />
+    <None Include="Assets\Text\Forest Live\LiveGreen.txt" />
+    <None Include="Assets\Text\Forest Live\LiveMovement.txt" />
+    <None Include="Assets\Text\Forest Live\LiveOrange.txt" />
+    <None Include="Assets\Text\Forest Live\LivePurple.txt" />
+    <None Include="Assets\Text\Forest\Boulder.txt" />
+    <None Include="Assets\Text\Forest\Burn Tree.txt" />
+    <None Include="Assets\Text\Forest\Combat.txt" />
+    <None Include="Assets\Text\Forest\Green Color Combo.txt" />
+    <None Include="Assets\Text\Forest\Health Item.txt" />
+    <None Include="Assets\Text\Forest\Orange Color Combo.txt" />
+    <None Include="Assets\Text\Forest\Purple Color Combo.txt" />
+    <None Include="Assets\Text\Forest\Text Navigation.txt" />
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
