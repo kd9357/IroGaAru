@@ -1,9 +1,24 @@
 fileFormatVersion: 2
 guid: 8d42245df8dfa8c43bbeb57a5c0c5b81
-timeCreated: 1507077994
+timeCreated: 1507126455
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: oni_attack_sprites_0
+    21300002: oni_attack_sprites_1
+    21300004: oni_attack_sprites_2
+    21300006: oni_attack_sprites_3
+    21300008: oni_attack_sprites_4
+    21300010: oni_attack_sprites_5
+    21300012: oni_attack_sprites_6
+    21300014: oni_attack_sprites_7
+    21300016: oni_attack_sprites_8
+    21300018: oni_attack_sprites_9
+    21300020: oni_attack_sprites_10
+    21300022: oni_attack_sprites_11
+    21300024: oni_attack_sprites_12
+    21300026: oni_attack_sprites_13
+    21300028: oni_attack_sprites_14
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -34,7 +49,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -51,7 +66,39 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 8192
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
     maxTextureSize: 2048
+    textureFormat: 33
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: 47
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: Windows Store Apps
+    maxTextureSize: 8192
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
@@ -60,7 +107,202 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: oni_attack_sprites_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_1
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_2
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_3
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_4
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_6
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_7
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_8
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_9
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_11
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_12
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_13
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: oni_attack_sprites_14
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

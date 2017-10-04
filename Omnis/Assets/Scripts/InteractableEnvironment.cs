@@ -193,12 +193,15 @@ public class InteractableEnvironment : MonoBehaviour {
     {
         while (_currentColorStatus == ColorStatus.DamageOverTime)
         {
-            foreach (SpriteRenderer sr in _sprites)
+            if (BurnDamage > 0)
             {
-                sr.color = (sr.color + Color.black) / 2;
+                foreach (SpriteRenderer sr in _sprites)
+                {
+                    sr.color = (sr.color + Color.black) / 2;
+                }
             }
             _currentHealth -= BurnDamage;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

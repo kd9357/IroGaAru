@@ -167,7 +167,7 @@ public class Enemy : MonoBehaviour
                         else if (_currentState != EnemyState.Attacking) 
                             MoveForward();
                         break;
-                    case Behavior.LeftRight:    //Move forward until we hit a wall, then turn around
+                    case Behavior.LeftRight:    //Move forward until we hit a wall, then turn around (atm actually goes towards player constantly)
                         MoveForward();
                         break;
                     case Behavior.Stationary:
@@ -452,7 +452,6 @@ public class Enemy : MonoBehaviour
         switch (collision.collider.tag)
         {
             case "Player":
-                Debug.Log("Hit player");
                 var player = collision.gameObject.GetComponent<Player>();
                 if (player.IsInvincible())
                     return;
@@ -470,6 +469,9 @@ public class Enemy : MonoBehaviour
                 Flip();
                 break;
             case "Instant Death":
+                Die();
+                break;
+            case "Spikes":
                 Die();
                 break;
             default:
@@ -496,6 +498,9 @@ public class Enemy : MonoBehaviour
                 _audioSource.Play();
                 break;
             case "Instant Death":
+                Die();
+                break;
+            case "Spikes":
                 Die();
                 break;
             default:
