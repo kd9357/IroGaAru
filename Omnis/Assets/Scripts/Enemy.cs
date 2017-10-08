@@ -63,11 +63,19 @@ public class Enemy : MonoBehaviour
     public float EnemyKnockbackForce;
     [Tooltip("Time before enemy can recover from being damaged")]
     public float RecoilCooldown = 0.5f;
-    [Tooltip("Time before enemy returns to default color")]
+    [Tooltip("Time before enemy returns to default color if not under an ailment")]
     public float ColorCooldown = 5f;
     [Tooltip("Time before enemy takes another action")]
     public float ActionCooldown = 5f;
     //Color effects
+    [Tooltip("How long the enemy is stunned while Purple")]
+    public float PurpleDuration = 5f;
+    [Tooltip("How long the enemy is burning while Orange")]
+    public float OrangeDuration = 5f;
+    [Tooltip("How much damage the enemy receives each second while Orange")]
+    public float BurnDamage = 0.5f;
+    [Tooltip("How long the enemy is affected while Green")]
+    public float GreenDuration = 5f;
     [Tooltip("How strong the enemy is knockbacked while Green")]
     public float WindKnockbackForce;
 
@@ -250,6 +258,7 @@ public class Enemy : MonoBehaviour
             _currentSpeed = Speed;
             _currentKnockbackForce = EnemyKnockbackForce;
             _currentColorStatus = ColorStatus.None;
+ 
             foreach (ParticleSystem ps in _colorParticleEffects)
             {
                 if (ps.isPlaying)
@@ -332,12 +341,15 @@ public class Enemy : MonoBehaviour
         switch (_currentColorStatus)
         {
             case ColorStatus.Stun:
+                _colorTimer = PurpleDuration;
                 ApplyStun();
                 return;
             case ColorStatus.WindRecoil:
+                _colorTimer = GreenDuration;
                 ApplyWindRecoil();
                 return;
             case ColorStatus.DamageOverTime:
+                _colorTimer = OrangeDuration;
                 StartCoroutine(ApplyDamageOverTime());
                 return;
         }
@@ -347,7 +359,7 @@ public class Enemy : MonoBehaviour
     protected virtual void ApplyStun()
     {
         _currentSpeed = 0;
-        _recoilTimer = ColorCooldown;
+        _recoilTimer = PurpleDuration;
         _anim.SetBool("Recoil", true);
         _currentState = EnemyState.Staggered;
     }
@@ -364,7 +376,7 @@ public class Enemy : MonoBehaviour
     {
         while(_currentColorStatus == ColorStatus.DamageOverTime)
         {
-            _currentHealth *= 0.90f;
+            _currentHealth -= BurnDamage;
             yield return new WaitForSeconds(1);
         }
     }
@@ -453,7 +465,7 @@ public class Enemy : MonoBehaviour
         {
             case "Player":
                 var player = collision.gameObject.GetComponent<Player>();
-                if (player.IsInvincible())
+                if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
                     return;
 
                 player.PlayerDamaged(TouchDamage);
@@ -486,7 +498,7 @@ public class Enemy : MonoBehaviour
         {
             case "Player":
                 var player = collision.gameObject.GetComponent<Player>();
-                if (player.IsInvincible())
+                if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
                     return;
 
                 player.PlayerDamaged(TouchDamage);

@@ -70,7 +70,10 @@ public class GameController : MonoBehaviour
         _audioSourceManager = audiosources[1];   //Assuming music is first audio source in children
 
         // TODO: Need to change for start screen, since there is no player
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        //  kd: evidently start gets called each time a new scene is loaded
+        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+        if (playerGO != null)
+            _player = playerGO.GetComponent<Player>();
 
         //Color Transition setup
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
@@ -226,12 +229,15 @@ public class GameController : MonoBehaviour
     //Used just for pressing esc at the moment
     private void TogglePause()
     {
-        _paused = !_paused;
-        Time.timeScale = _paused ? 0 : 1;
-        _audioSourceManager.mute = _paused;
-        //TODO: Disable/Enable player input here
-        _player.FreezeMovement(_paused);
-        pauseCanvas.SetActive(_paused);
+        if (SceneManager.GetActiveScene().name != "Start_Screen")
+        {
+            _paused = !_paused;
+            Time.timeScale = _paused ? 0 : 1;
+            _audioSourceManager.mute = _paused;
+            if (_player != null)
+                _player.FreezeMovement(_paused);
+            pauseCanvas.SetActive(_paused);
+        }
     }
     #endregion
 
@@ -244,6 +250,11 @@ public class GameController : MonoBehaviour
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
     }
 
+    public void ReturnToStart()
+    {
+        TogglePause();  //Turn off pause screen before returning to start
+        SceneManager.LoadScene("Start_Screen");
+    }
     public IEnumerator CompleteLevel()
     {
         // Set level complete results
