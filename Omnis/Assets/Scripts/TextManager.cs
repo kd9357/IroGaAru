@@ -45,14 +45,14 @@ public class TextManager : MonoBehaviour {
     {
         TextBox.SetActive(true);
         _isActive = true;
-        GameController.instance.PauseGame(true);
+        GameController.Instance.PauseGame(true);
     }
 
     public void DisableTextBox()
     {
         TextBox.SetActive(false);
         _isActive = false;
-        GameController.instance.PauseGame(false);
+        GameController.Instance.PauseGame(false);
     }
 
     public void ReloadScript(TextAsset newText)
