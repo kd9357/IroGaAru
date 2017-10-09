@@ -124,7 +124,6 @@ public class Enemy : MonoBehaviour
     #endregion
 
     // Use this for initialization
-    //Maybe have a helper method specifically for unique components?
     protected virtual void Start()
     {
         _anim = GetComponent<Animator>();
@@ -152,40 +151,28 @@ public class Enemy : MonoBehaviour
 
     #region Updates
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (_currentState == EnemyState.Inactive)
             return;
 
-        if(_currentState != EnemyState.Staggered)
+        if(_currentState != EnemyState.Staggered && _currentState != EnemyState.Attacking)
         {
-            //This unfortunately flips the debug text as well
-            if ((_target.position.x - transform.position.x > 0 && !_facingRight)
-                || (_target.position.x - transform.position.x < 0 && _facingRight))
-                Flip();
-            if (_actionTimer > 0)
-                _actionTimer -= Time.deltaTime;
-            else
+            _actionTimer -= Time.deltaTime;
+            switch (EnemyBehavior)
             {
-                switch (EnemyBehavior)
-                {
-                    case Behavior.TrackPlayer:
-                        if (InRange() && _currentState != EnemyState.Attacking)
-                            Attack();
-                        else if (_currentState != EnemyState.Attacking) 
-                            MoveForward();
-                        break;
-                    case Behavior.LeftRight:    //Move forward until we hit a wall, then turn around (atm actually goes towards player constantly)
-                        MoveForward();
-                        break;
-                    case Behavior.Stationary:
-                        if (InRange() && _currentState != EnemyState.Attacking)
-                            Attack();
-                        break;
-                    default:
-                        Debug.Log("Enemy has achieved nirvana and thinks beyond our mortal understanding");
-                        break;
-                }
+                case Behavior.TrackPlayer:
+                    TrackPlayer();
+                    break;
+                case Behavior.LeftRight:
+                    LeftRight();
+                    break;
+                case Behavior.Stationary:
+                    Stationary();
+                    break;
+                default:
+                    Debug.LogError("Enemy Behavior Undefined");
+                    break;
             }
         }
         //Reset movement direction, update each new physics tick
@@ -194,7 +181,6 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    //Turn this protected so that children can just update individual functions
     protected void Update()
     {
         UpdateTimers();
@@ -229,14 +215,14 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Helper Methods
-    
+
     #region Bookkeeping methods
     protected virtual void UpdateTimers()
     {
         //Update stagger/knockback time
         if (_recoilTimer > 0)
             _recoilTimer -= Time.deltaTime;
-        else if(_recoilTimer <= 0 && _currentState == EnemyState.Staggered)
+        else if (_recoilTimer <= 0 && _currentState == EnemyState.Staggered)
         {
             _currentState = EnemyState.Waiting;
             _anim.SetBool("Recoil", false);
@@ -246,10 +232,10 @@ public class Enemy : MonoBehaviour
         if (_colorTimer > 0)
             _colorTimer -= Time.deltaTime;
     }
-    
+
     protected virtual void ResetColorStatus()
     {
-        if(_colorTimer <= 0 && _currentColor != DefaultColor)
+        if (_colorTimer <= 0 && _currentColor != DefaultColor)
         {
             _colorTimer = 0;
             _currentColor = DefaultColor;
@@ -258,7 +244,7 @@ public class Enemy : MonoBehaviour
             _currentSpeed = Speed;
             _currentKnockbackForce = EnemyKnockbackForce;
             _currentColorStatus = ColorStatus.None;
- 
+
             foreach (ParticleSystem ps in _colorParticleEffects)
             {
                 if (ps.isPlaying)
@@ -281,11 +267,11 @@ public class Enemy : MonoBehaviour
                                      int additionalForce = 1)
     {
         //Only set the timer on first hit
-        if(_colorTimer <= 0)
+        if (_colorTimer <= 0)
             _colorTimer = ColorCooldown;
 
         //Only mess with recoil when not stunned already
-        if(_currentColorStatus != ColorStatus.Stun)    
+        if (_currentColorStatus != ColorStatus.Stun)
             _recoilTimer = RecoilCooldown;
 
         _anim.SetBool("Recoil", true);
@@ -296,7 +282,7 @@ public class Enemy : MonoBehaviour
 
         GameController.Instance.IncrementAttacksConnected();
 
-        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce, 
+        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce,
                      ForceMode2D.Impulse);
     }
 
@@ -374,7 +360,7 @@ public class Enemy : MonoBehaviour
     //Reduce the enemy's health by 10% of currentHealth every second (Maxhealth instead?)
     protected virtual IEnumerator ApplyDamageOverTime()
     {
-        while(_currentColorStatus == ColorStatus.DamageOverTime)
+        while (_currentColorStatus == ColorStatus.DamageOverTime)
         {
             _currentHealth -= BurnDamage;
             yield return new WaitForSeconds(1);
@@ -384,7 +370,6 @@ public class Enemy : MonoBehaviour
     //Trigger the attack animation if using and lock direction
     protected virtual void Attack()
     {
-        //_attacking = true;
         _currentState = EnemyState.Attacking;
         _anim.SetTrigger("Attack");
     }
@@ -392,7 +377,6 @@ public class Enemy : MonoBehaviour
     //Called at animation's end and resets status
     protected virtual void EndAttack()
     {
-        //_attacking = false;
         _currentState = EnemyState.Waiting;
         _actionTimer = ActionCooldown;
     }
@@ -414,20 +398,53 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
     #endregion
-    
+
     #region Movement & AI methods
+
+    protected virtual void TrackPlayer()
+    {
+        if (_actionTimer > 0)
+            return;
+        if(!FacingTarget())
+            Flip();
+        if (InRange())
+            Attack();
+        else
+            MoveForward();
+    }
+
+    protected virtual void LeftRight()
+    {
+        MoveForward();
+    }
+
+    protected virtual void Stationary()
+    {
+        if (_actionTimer > 0)
+            return;
+        if (InRange())
+            Attack();
+    }
+
+    //Return true if enemy is facing the player
+    protected virtual bool FacingTarget()
+    {
+        return (_target.position.x - transform.position.x > 0 && _facingRight)
+                || (_target.position.x - transform.position.x < 0 && !_facingRight);
+    }
+
     //Reorient enemy to face player
     protected virtual void Flip()
     {
-        //Only flip when not stunned (looks better) && not attacking
-        if (_currentColorStatus != ColorStatus.Stun && _currentState != EnemyState.Attacking)
+        if (_currentColorStatus != ColorStatus.Stun 
+            && _currentState != EnemyState.Attacking)
         {
             _facingRight = !_facingRight;
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
             //Delay Enemy's actions
-            if (_actionTimer != 0)
+            if (_actionTimer < ActionCooldown / 2)
                 _actionTimer = ActionCooldown / 2;
         }
     }
