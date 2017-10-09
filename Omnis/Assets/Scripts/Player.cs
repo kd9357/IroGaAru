@@ -69,7 +69,6 @@ public class Player : MonoBehaviour
 
     // Weapon components and private vars
     private PolygonCollider2D _weaponCollider;
-    private Animator _weaponAnim;
     private AttackTrigger _trigg;
 
     private bool _attacking = false;
@@ -104,7 +103,6 @@ public class Player : MonoBehaviour
         _trigg = Weapon.GetComponent<AttackTrigger>();
         _weaponCollider = Weapon.GetComponent<PolygonCollider2D>();
         _weaponCollider.enabled = false;
-        _weaponAnim = Weapon.GetComponent<Animator>();
 	}
 
     #endregion
@@ -127,12 +125,6 @@ public class Player : MonoBehaviour
             x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                 Input.GetAxisRaw("Horizontal") * Speed;
 #endif
-            //// JUMPING
-            //if (Input.GetButtonDown("Jump") && _onGround)
-            //{
-            //    _jumping = true;
-            //    _anim.SetTrigger("Jumping");
-            //}
 
             y_mov = _rb.velocity.y;
             x_mov = _onGround || (!_onGround && !_onWall) ? x_mov : _rb.velocity.x;
@@ -281,7 +273,6 @@ public class Player : MonoBehaviour
             MobileUI.Instance.SetAttack(false);
 #endif
         _anim.SetBool("Attacking", _attacking);
-        _weaponAnim.SetBool("Attacking", _attacking);
     }
 
     //Called at end of animation
@@ -290,7 +281,6 @@ public class Player : MonoBehaviour
         _attacking = false;
         _weaponCollider.enabled = _attacking;
         _anim.SetBool("Attacking", _attacking);
-        _weaponAnim.SetBool("Attacking", _attacking);
     }
 
     public bool IsAttacking()

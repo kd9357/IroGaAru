@@ -13,63 +13,19 @@ public class FlyingEnemy : Enemy {
     private float _k;
     private float _distanceX;
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        if (_currentState == EnemyState.Inactive)
-            return;
-
-        if (_currentState != EnemyState.Staggered)
+        base.FixedUpdate();
+        //Because MoveInArc must be called each physics tick, override FixedUpdate
+        if (_currentState == EnemyState.Attacking)
         {
-            //This unfortunately flips the debug text as well
-            if ((_target.position.x - transform.position.x > 0 && !_facingRight)
-                || (_target.position.x - transform.position.x < 0 && _facingRight))
-                Flip();
-            switch (EnemyBehavior)
+            MoveInArc();
+            //when traveled length of parabola
+            if (Mathf.Abs(transform.position.x - _h) >= _distanceX)
             {
-                case Behavior.TrackPlayer:
-                    //Constantly move towards player until in range
-                    //Should use lerp for more smooth stop
-                    if (_currentState != EnemyState.Attacking)
-                    {
-                        if (!InRange())
-                            MoveTowardsPlayer();
-                        else
-                        {
-                            if (_currentState != EnemyState.Waiting)
-                                _currentState = EnemyState.Waiting;
-                            _rb.velocity = new Vector2(_xMov, _yMov);
-                        }
-                        _xMov = 0;
-                        _yMov = 0;
-                    }
-                    break;
-                default:
-                    Debug.Log("Behavior undefined for this enemy");
-                    break;
+                _currentState = EnemyState.Waiting;
+                _actionTimer = ActionCooldown;
             }
-            if (_actionTimer > 0)
-                _actionTimer -= Time.deltaTime;
-            else
-            {
-                if(_currentState != EnemyState.Attacking && InRange())
-                {
-                    SetParabolaEquation();
-                    _currentState = EnemyState.Attacking;
-                }
-            }
-
-            if(_currentState == EnemyState.Attacking)
-            {
-                MoveInArc();
-                //when traveled length of parabola && outside of range stop
-                if (Mathf.Abs(transform.position.x - _h) >= _distanceX && !InRange())
-                {
-                    _currentState = EnemyState.Waiting;
-                    _actionTimer = ActionCooldown;
-                    //Possibly add a wait delay
-                }
-            }
-
         }
     }
 
@@ -117,6 +73,45 @@ public class FlyingEnemy : Enemy {
 
     #region Overrides
 
+    //Constantly move towards player until initiating attack
+    protected override void TrackPlayer()
+    {
+        if(!FacingTarget())
+            Flip();
+        if (!InRange())
+            MoveTowardsPlayer();
+        else
+        {
+            if (_currentState != EnemyState.Waiting)
+                _currentState = EnemyState.Waiting;
+            _rb.velocity = new Vector2(_xMov, _yMov);
+        }
+        _xMov = 0;
+        _yMov = 0;
+        if (_actionTimer <= 0 && InRange())
+        {
+            SetParabolaEquation();
+            _currentState = EnemyState.Attacking;
+        }
+    }
+
+    //Move until hit wall
+    protected override void LeftRight()
+    {
+        MoveForward();
+    }
+
+    protected override void Stationary()
+    {
+        if(!FacingTarget())
+            Flip();
+        if (_actionTimer <= 0 && InRange())
+        {
+            SetParabolaEquation();
+            _currentState = EnemyState.Attacking;
+        }
+    }
+
     //Determines Enemy is in zone above player
     protected override bool InRange()
     {
@@ -126,30 +121,11 @@ public class FlyingEnemy : Enemy {
         return xInRange && yInRange;
     }
 
-    public override void EnemyDamaged(int damage, Color color, int direction,
-                                      int additionalForce = 1)
-    {
-        //Only set the timer on first hit
-        if (_colorTimer == 0)
-            _colorTimer = ColorCooldown;
-        _recoilTimer = RecoilCooldown;
-        //When hit stop attacking
-        if(_currentState == EnemyState.Attacking)
-            _actionTimer = ActionCooldown; //hotfix, should find a better method
-        _currentState = EnemyState.Staggered;
-        _anim.SetBool("Recoil", true);
-        _currentHealth -= damage;
-
-        SetColor(color);
-
-        _rb.AddForce(Vector2.right * direction * _currentKnockbackForce, ForceMode2D.Impulse);
-    }
-
     //Also apply gravity on enemy
     protected override void ApplyStun()
     {
         base.ApplyStun();
-        gameObject.layer = 11; //Set to enemy
+        gameObject.layer = 11; //Set to Enemy (Should make const)
         _rb.gravityScale = 30;
     }
 
