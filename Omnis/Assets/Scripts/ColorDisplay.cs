@@ -21,15 +21,15 @@ public class ColorDisplay : MonoBehaviour {
 
     void Start()
     {
-        if(GameController.Instance.EquippedColor == red_color)
+        if(GameController.instance.EquippedColor == red_color)
         {
             CycleColors(0);
         }
-        if (GameController.Instance.EquippedColor == yellow_color)
+        if (GameController.instance.EquippedColor == yellow_color)
         {
             CycleColors(1);
         }
-        if (GameController.Instance.EquippedColor == blue_color)
+        if (GameController.instance.EquippedColor == blue_color)
         {
             CycleColors(2);
         }
@@ -83,19 +83,19 @@ public class ColorDisplay : MonoBehaviour {
                         red_image.rectTransform.localScale = new Vector3(1, 1, 0);
                         yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
                         blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        GameController.Instance.EquippedColor = red_color;
+                        GameController.instance.EquippedColor = red_color;
                         break;
             case 1:     ring.rectTransform.localPosition = new Vector3(0, -42, 0);
                         red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
                         yellow_image.rectTransform.localScale = new Vector3(1, 1, 0);
                         blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        GameController.Instance.EquippedColor = yellow_color;
+                        GameController.instance.EquippedColor = yellow_color;
                         break;
             case 2:     ring.rectTransform.localPosition = new Vector3(40, -42, 0);
                         red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
                         yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
                         blue_image.rectTransform.localScale = new Vector3(1, 1, 0);
-                        GameController.Instance.EquippedColor = blue_color;
+                        GameController.instance.EquippedColor = blue_color;
                         break;
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    public static GameController Instance;
+    public static GameController instance;
 
     public string NextScene = "Start_Screen";
     public bool EndGame = false;
@@ -16,49 +16,42 @@ public class GameController : MonoBehaviour
     public int MinimumEnemies;
     public Material GrayscaleMaterial;
 
-    // Game Over Canvas
-    private GameObject _gameoverCanvas;
-    private Image _gameoverPanel;
-    private Text _gameoverText;
+    private GameObject gameoverCanvas;
+    private Image gameoverPanel;
+    private Text gameoverText;
 
-    // Pause Canvas
-    private GameObject _pauseCanvas; //May just reuse gameoverCanvas instead
+    private GameObject pauseCanvas; //May just reuse gameoverCanvas instead
 
-    // Level Complete Canvas
-    private GameObject _levelCompleteCanvas;
-    private Image _levelCompletePanel;
-    private List<Text> _levelCompleteTexts;
-
-    // Load Level Canvas
-    private GameObject _loadLevelCanvas;
-    private Image _loadLevelPanel;
-    private Text _loadLevelText;
+    private GameObject levelCompleteCanvas;
+    private Image levelCompletePanel;
+    private List<Text> levelCompleteTexts;
 
     private Player _player;         //To pause the player's inputs
     private AudioSource _audioSourceManager;
     private AudioSource _gameOverAudio;
 
     private bool _paused;
-    private bool _loadScene;
 
     // Critical Vars
-    private int _enemyCount;
-    private int _attackCount;
-    private int _enemyHitCount;
-    private System.Object _enemyLock;
-    private System.Object _attackLock;
-    private System.Object _hitLock;
+    private int enemyCount;
+    private int attackCount;
+    private int enemyHitCount;
+    private System.Object enemyLock;
+    private System.Object attackLock;
+    private System.Object hitLock;
 
     void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
         }
-        else if (Instance != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
+
+        _paused = false;
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
         Screen.orientation = ScreenOrientation.LandscapeLeft;
@@ -70,7 +63,6 @@ public class GameController : MonoBehaviour
         SetupGameOverCanvas();
         SetupLevelCompleteCanvas();
         SetupPauseCanvas();
-        SetupLoadLevelCanvas();
 
         // NOTE: If parent has audiosource, will be counted
         var audiosources = gameObject.GetComponentsInChildren<AudioSource>();
@@ -81,27 +73,37 @@ public class GameController : MonoBehaviour
         //  kd: evidently start gets called each time a new scene is loaded
         GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
         if (playerGO != null)
-        {
             _player = playerGO.GetComponent<Player>();
-        }
-        else
-        {
-            Debug.LogError("There is no Player in the scene!");
-        }
 
         //Color Transition setup
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
 
-        _paused = false;
-        _loadScene = false;
-
         // Initialize critical section vars
-        _enemyCount = 0;
-        _attackCount = 0;
-        _enemyHitCount = 0;
-        _enemyLock = new System.Object();
-        _attackLock = new System.Object();
-        _hitLock = new System.Object();
+        enemyCount = 0;
+        attackCount = 0;
+        enemyHitCount = 0;
+        enemyLock = new System.Object();
+        attackLock = new System.Object();
+        hitLock = new System.Object();
+    }
+
+    void Update()
+    {
+        if (EndGame && gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
+        {
+            _audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
+
+            if (Input.anyKey)
+            {
+                LoadScene(SceneManager.GetActiveScene().name);
+            }  
+        }
+        
+        if(Input.GetButtonDown("Cancel"))
+        {
+            //Eventually setup a pause screen
+            TogglePause();
+        }
     }
 
     #region Canvas Setups
@@ -114,9 +116,9 @@ public class GameController : MonoBehaviour
             Debug.LogError("Cannot find game over canvas");
             return;
         }
-        _gameoverCanvas = canvas.gameObject;
+        gameoverCanvas = canvas.gameObject;
 
-        var panel = _gameoverCanvas.transform.Find("Panel");
+        var panel = gameoverCanvas.transform.Find("Panel");
         if (panel == null)
         {
             Debug.LogError("Cannot find game over panel");
@@ -126,17 +128,17 @@ public class GameController : MonoBehaviour
         var text = panel.transform.Find("Text");
         if (text == null)
         {
-            Debug.LogError("Cannot find game over text");
+            Debug.LogError("Cannot find game over panel");
             return;
         }
 
-        _gameoverPanel = panel.gameObject.GetComponent<Image>();
-        _gameoverText = text.gameObject.GetComponent<Text>();
+        gameoverPanel = panel.gameObject.GetComponent<Image>();
+        gameoverText = text.gameObject.GetComponent<Text>();
 
-        _gameoverPanel.canvasRenderer.SetAlpha(0f);
-        _gameoverText.canvasRenderer.SetAlpha(0f);
+        gameoverPanel.canvasRenderer.SetAlpha(0f);
+        gameoverText.canvasRenderer.SetAlpha(0f);
 
-        _gameoverCanvas.SetActive(false);
+        gameoverCanvas.SetActive(false);
 
     }
 
@@ -148,26 +150,26 @@ public class GameController : MonoBehaviour
             Debug.LogError("Cannot find level complete canvas");
             return;
         }
-        _levelCompleteCanvas = canvas.gameObject;
+        levelCompleteCanvas = canvas.gameObject;
 
-        var panel = _levelCompleteCanvas.transform.Find("Panel");
+        var panel = levelCompleteCanvas.transform.Find("Panel");
         if (panel == null)
         {
             Debug.LogError("Cannot find level complete panel");
             return;
         }
-        _levelCompletePanel = panel.gameObject.GetComponent<Image>();
+        levelCompletePanel = panel.gameObject.GetComponent<Image>();
 
-        _levelCompleteTexts = new List<Text>();
+        levelCompleteTexts = new List<Text>();
         Text[] texts = panel.transform.GetComponentsInChildren<Text>();
         foreach (Text t in texts)
         {
             t.canvasRenderer.SetAlpha(0f);
-            _levelCompleteTexts.Add(t);
+            levelCompleteTexts.Add(t);
         }
 
-        _levelCompletePanel.canvasRenderer.SetAlpha(0f);
-        _levelCompleteCanvas.SetActive(false);
+        levelCompletePanel.canvasRenderer.SetAlpha(0f);
+        levelCompleteCanvas.SetActive(false);
     }
 
     private void SetupPauseCanvas()
@@ -178,99 +180,39 @@ public class GameController : MonoBehaviour
             Debug.LogError("Cannot find pause canvas");
             return;
         }
-        _pauseCanvas = canvas.gameObject;
-        _pauseCanvas.SetActive(false);
-    }
-
-    private void SetupLoadLevelCanvas()
-    {
-        var canvas = transform.Find("Load Level Canvas");
-        if (canvas == null)
-        {
-            Debug.LogError("Cannot find load level canvas");
-            return;
-        }
-        _loadLevelCanvas = canvas.gameObject;
-
-        var panel = _loadLevelCanvas.transform.Find("Panel");
-        if (panel == null)
-        {
-            Debug.LogError("Cannot find load level panel");
-            return;
-        }
-
-        var text = panel.transform.Find("Text");
-        if (text == null)
-        {
-            Debug.LogError("Cannot find load level text");
-            return;
-        }
-
-        _loadLevelPanel = panel.gameObject.GetComponent<Image>();
-        _loadLevelText = text.gameObject.GetComponent<Text>();
-
-        _loadLevelPanel.canvasRenderer.SetAlpha(0f);
-        _loadLevelText.canvasRenderer.SetAlpha(0f);
-
-        _loadLevelCanvas.SetActive(false);
-
+        pauseCanvas = canvas.gameObject;
+        pauseCanvas.SetActive(false);
     }
 
     #endregion
-
-    void Update()
-    {
-        // Visually indicate that level is actively loading
-        if (_loadScene)
-        {
-            _loadLevelText.canvasRenderer.SetAlpha(Mathf.PingPong(Time.time, 1f));
-        }
-
-        if (EndGame && _gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
-        {
-            _audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
-
-            if (Input.anyKey)
-            {
-                EndGame = false;
-                LoadScene(SceneManager.GetActiveScene().name);
-            }  
-        }
-        
-        if(Input.GetButtonDown("Cancel"))
-        {
-            //Eventually setup a pause screen
-            TogglePause();
-        }
-    }
 
     #region Critical Sections
 
     public void IncrementEnemiesDefeated()
     {
-        lock (_enemyLock)
+        lock (enemyLock)
         {
-            ++_enemyCount;
-            if (_enemyCount <= MinimumEnemies)
+            ++enemyCount;
+            if (enemyCount <= MinimumEnemies)
             {
-                GrayscaleMaterial.SetFloat("_AmountColored", (float)_enemyCount / MinimumEnemies);
+                GrayscaleMaterial.SetFloat("_AmountColored", (float)enemyCount / MinimumEnemies);
             }
         }
     }
 
     public void IncrementAttacksMade()
     {
-        lock (_attackLock)
+        lock (attackLock)
         {
-            ++_attackCount;
+            ++attackCount;
         }
     }
 
     public void IncrementAttacksConnected()
     {
-        lock (_hitLock)
+        lock (hitLock)
         {
-            ++_enemyHitCount;
+            ++enemyHitCount;
         }
     }
 
@@ -294,7 +236,7 @@ public class GameController : MonoBehaviour
             _audioSourceManager.mute = _paused;
             if (_player != null)
                 _player.FreezeMovement(_paused);
-            _pauseCanvas.SetActive(_paused);
+            pauseCanvas.SetActive(_paused);
         }
     }
     #endregion
@@ -303,24 +245,9 @@ public class GameController : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        _loadScene = true;
+        SceneManager.LoadScene(sceneName);
+        //When loading a new scene or restarting on death, make sure to reset colors to gray
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
-
-        _loadLevelCanvas.SetActive(true);
-        _loadLevelPanel.CrossFadeAlpha(2f, 1.5f, false);
-
-        StartCoroutine(LoadLevelInBackground(sceneName));
-    }
-
-    private IEnumerator LoadLevelInBackground(string sceneName)
-    {
-        // NOTE: This is artifical because the game loads so quickly
-        yield return new WaitForSeconds(3);
-
-        AsyncOperation loadAsync = SceneManager.LoadSceneAsync(sceneName);
-        yield return loadAsync;
-
-        _loadScene = false;
     }
 
     public void ReturnToStart()
@@ -331,18 +258,18 @@ public class GameController : MonoBehaviour
     public IEnumerator CompleteLevel()
     {
         // Set level complete results
-        foreach (Text t in _levelCompleteTexts)
+        foreach (Text t in levelCompleteTexts)
         {
             switch (t.gameObject.name)
             {
                 case "Enemies Number":
-                    t.text = _enemyCount.ToString();
+                    t.text = enemyCount.ToString();
                     break;
                 case "Swings Number":
-                    t.text = _attackCount.ToString();
+                    t.text = attackCount.ToString();
                     break;
                 case "Accuracy Number":
-                    float accuracy = 100f * _enemyHitCount / _attackCount;
+                    float accuracy = 100f * enemyHitCount / attackCount;
                     accuracy = float.IsNaN(accuracy) ? 0 : accuracy;
                     t.text = String.Format("{0:0.00}", accuracy);
                     break;
@@ -350,21 +277,21 @@ public class GameController : MonoBehaviour
         }
 
         // Show level complete results
-        _levelCompleteCanvas.SetActive(true);
-        _levelCompletePanel.CrossFadeAlpha(2f, 1f, false);
-        _levelCompleteTexts[0].CrossFadeAlpha(2f, 1f, false);
+        levelCompleteCanvas.SetActive(true);
+        levelCompletePanel.CrossFadeAlpha(2f, 1f, false);
+        levelCompleteTexts[0].CrossFadeAlpha(2f, 1f, false);
 
         yield return new WaitForSeconds(1f);
 
-        for (int k = 1; k < _levelCompleteTexts.Count; ++k)
+        for (int k = 1; k < levelCompleteTexts.Count; ++k)
         {
-            _levelCompleteTexts[k].CrossFadeAlpha(2f, 1.5f, false);
+            levelCompleteTexts[k].CrossFadeAlpha(2f, 1.5f, false);
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
 
-        _levelCompletePanel.CrossFadeColor(Color.black, 1f, false, false, true);
-        foreach (Text t in _levelCompleteTexts)
+        levelCompletePanel.CrossFadeColor(Color.black, 1f, false, false, true);
+        foreach (Text t in levelCompleteTexts)
         {
             t.CrossFadeAlpha(0, .5f, false);
         }
@@ -379,9 +306,9 @@ public class GameController : MonoBehaviour
         _gameOverAudio.volume = 1f;
         _gameOverAudio.Play();
 
-        _gameoverCanvas.SetActive(true);
-        _gameoverPanel.CrossFadeAlpha(2f, 1.5f, false);
-        _gameoverText.CrossFadeAlpha(2f, 1.5f, false);
+        gameoverCanvas.SetActive(true);
+        gameoverPanel.CrossFadeAlpha(2f, 1.5f, false);
+        gameoverText.CrossFadeAlpha(2f, 1.5f, false);
 
         EndGame = true;
     }

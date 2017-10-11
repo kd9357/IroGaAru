@@ -9,7 +9,7 @@ public class LevelComplete : MonoBehaviour {
         switch (collider.tag)
         {
             case "Player":
-                StartCoroutine(GameController.Instance.CompleteLevel());
+                StartCoroutine(GameController.instance.CompleteLevel());
                 Destroy(collider.gameObject.GetComponent<Player>());
                 break;
         }

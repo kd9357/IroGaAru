@@ -280,7 +280,7 @@ public class Enemy : MonoBehaviour
 
         SetColor(color);
 
-        GameController.Instance.IncrementAttacksConnected();
+        GameController.instance.IncrementAttacksConnected();
 
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce,
                      ForceMode2D.Impulse);
@@ -394,7 +394,7 @@ public class Enemy : MonoBehaviour
             healthDrop.transform.position = transform.position;
         }
 
-        GameController.Instance.IncrementEnemiesDefeated();
+        GameController.instance.IncrementEnemiesDefeated();
         Destroy(gameObject);
     }
     #endregion
@@ -482,6 +482,8 @@ public class Enemy : MonoBehaviour
         {
             case "Player":
                 var player = collision.gameObject.GetComponent<Player>();
+                if (player == null)
+                    Debug.LogError("Player script doesn't exist!");
                 if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
                     return;
 
@@ -515,6 +517,8 @@ public class Enemy : MonoBehaviour
         {
             case "Player":
                 var player = collision.gameObject.GetComponent<Player>();
+                if (player == null)
+                    Debug.LogError("Player script doesn't exist!");
                 if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
                     return;
 
