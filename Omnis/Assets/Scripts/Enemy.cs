@@ -280,7 +280,7 @@ public class Enemy : MonoBehaviour
 
         SetColor(color);
 
-        GameController.instance.IncrementAttacksConnected();
+        GameController.Instance.IncrementAttacksConnected();
 
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce,
                      ForceMode2D.Impulse);
@@ -394,7 +394,7 @@ public class Enemy : MonoBehaviour
             healthDrop.transform.position = transform.position;
         }
 
-        GameController.instance.IncrementEnemiesDefeated();
+        GameController.Instance.IncrementEnemiesDefeated();
         Destroy(gameObject);
     }
     #endregion
@@ -460,9 +460,8 @@ public class Enemy : MonoBehaviour
     {
         if (_currentState != EnemyState.Moving)
             _currentState = EnemyState.Moving;
-        _xMov += _facingRight ? _currentSpeed : -_currentSpeed;
-        //Base enemies only move left and right, so they won't be trying to move vertically to get away from each other
         //Override on more complex enemies
+        _xMov += _facingRight ? _currentSpeed : -_currentSpeed;
         _yMov = _rb.velocity.y;
 
         _xMov = Mathf.Clamp(_xMov, -_currentSpeed, _currentSpeed);

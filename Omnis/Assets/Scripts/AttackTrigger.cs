@@ -21,7 +21,7 @@ public class AttackTrigger : MonoBehaviour {
         switch(collision.tag)
         {
             case "Enemy":
-                int direction = collision.transform.position.x < transform.position.x ? -1 : 1;
+                int direction = collision.transform.position.x < transform.parent.position.x ? -1 : 1;
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
                     enemy.EnemyDamaged(Damage, GetColor(_color), direction);

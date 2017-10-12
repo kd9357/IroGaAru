@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum Item_Type
 {
@@ -13,11 +11,13 @@ public class Item : MonoBehaviour
     public Item_Type ItemType = Item_Type.Health;
     public int Value = 1;
 
-    void OnTriggerEnter2D (Collider2D collider)
+    private bool _pickedUp = false;
+    private readonly System.Object _itemLock = new System.Object();
+
+    void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "Player")
         {
-            bool pickedUp = false;
             var player = collider.gameObject.GetComponent<Player>();
             if (player == null)
             {
@@ -25,20 +25,25 @@ public class Item : MonoBehaviour
                 return;
             }
 
-            switch (ItemType)
+            lock (_itemLock)
             {
-                case Item_Type.Health:
-                    player.RestoreHealth(Value);
-                    pickedUp = true;
-                    break;
-                default:
-                    Debug.LogError("Invalid item type: " + ItemType);
-                    break;
-            }
+                if (_pickedUp)
+                    return;
 
-            // May be inefficient if called a lot; could disable sprite and collider instead
-            if (pickedUp)
-                Destroy(gameObject);
+                switch (ItemType)
+                {
+                    case Item_Type.Health:
+                        player.RestoreHealth(Value);
+                        _pickedUp = true;
+                        break;
+                    default:
+                        Debug.LogError("Invalid item type: " + ItemType);
+                        break;
+                }
+
+                if (_pickedUp)
+                    gameObject.SetActive(false);
+            }
         }
     }
 }
