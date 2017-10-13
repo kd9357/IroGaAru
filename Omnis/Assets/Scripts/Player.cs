@@ -171,9 +171,9 @@ public class Player : MonoBehaviour
 
         //Pulled from PlayerAttack.cs
         //Check weapon color
-        if(_weaponColor != GameController.instance.EquippedColor)
+        if(_weaponColor != GameController.Instance.EquippedColor)
         {
-            _weaponColor = GameController.instance.EquippedColor;
+            _weaponColor = GameController.Instance.EquippedColor;
             _trigg.SetColor(_weaponColor);
         }
 
@@ -210,7 +210,7 @@ public class Player : MonoBehaviour
         // ATTACK Continued
         if(doAttack)
         {
-            GameController.instance.IncrementAttacksMade();
+            GameController.Instance.IncrementAttacksMade();
             Attack();
         }
         _anim.SetBool("Attacking", _attacking);
@@ -327,7 +327,7 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        GameController.instance.GameOver();
+        GameController.Instance.GameOver();
         Destroy(gameObject.GetComponent<Player>());
     }
 

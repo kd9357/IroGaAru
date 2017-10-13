@@ -88,7 +88,7 @@ public class FlyingEnemy : Enemy {
         }
         _xMov = 0;
         _yMov = 0;
-        if (_actionTimer <= 0 && InRange())
+        if (InRange())
         {
             SetParabolaEquation();
             _currentState = EnemyState.Attacking;
@@ -105,7 +105,7 @@ public class FlyingEnemy : Enemy {
     {
         if(!FacingTarget())
             Flip();
-        if (_actionTimer <= 0 && InRange())
+        if (InRange())
         {
             SetParabolaEquation();
             _currentState = EnemyState.Attacking;
