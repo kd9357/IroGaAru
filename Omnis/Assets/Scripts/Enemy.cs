@@ -156,9 +156,10 @@ public class Enemy : MonoBehaviour
         if (_currentState == EnemyState.Inactive)
             return;
 
-        if(_currentState != EnemyState.Staggered && _currentState != EnemyState.Attacking)
+        if(_currentState != EnemyState.Staggered 
+            && _currentState != EnemyState.Attacking
+            && _actionTimer <= 0)
         {
-            _actionTimer -= Time.deltaTime;
             switch (EnemyBehavior)
             {
                 case Behavior.TrackPlayer:
@@ -175,6 +176,7 @@ public class Enemy : MonoBehaviour
                     break;
             }
         }
+        _anim.SetBool("Walking", _xMov > 0.1f || _xMov < -0.1f);
         //Reset movement direction, update each new physics tick
         _xMov = 0;
         _yMov = 0;
@@ -219,6 +221,10 @@ public class Enemy : MonoBehaviour
     #region Bookkeeping methods
     protected virtual void UpdateTimers()
     {
+        //Update action timer
+        if (_currentState != EnemyState.Staggered && _currentState != EnemyState.Attacking)
+            _actionTimer -= Time.deltaTime;
+
         //Update stagger/knockback time
         if (_recoilTimer > 0)
             _recoilTimer -= Time.deltaTime;
@@ -403,8 +409,8 @@ public class Enemy : MonoBehaviour
 
     protected virtual void TrackPlayer()
     {
-        if (_actionTimer > 0)
-            return;
+        //if (_actionTimer > 0)
+        //    return;
         if(!FacingTarget())
             Flip();
         if (InRange())
@@ -420,8 +426,8 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Stationary()
     {
-        if (_actionTimer > 0)
-            return;
+        //if (_actionTimer > 0)
+        //    return;
         if (InRange())
             Attack();
     }
@@ -444,8 +450,8 @@ public class Enemy : MonoBehaviour
             scale.x *= -1;
             transform.localScale = scale;
             //Delay Enemy's actions
-            if (_actionTimer < ActionCooldown / 2)
-                _actionTimer = ActionCooldown / 2;
+            if (_actionTimer < ActionCooldown * 0.2f)
+                _actionTimer = ActionCooldown * 0.2f;
         }
     }
 
@@ -494,9 +500,13 @@ public class Enemy : MonoBehaviour
                 _audioSource.clip = EnemySoundEffects[0];
                 _audioSource.Play();
                 break;
+            case "Patrol Stop":
+                if (EnemyBehavior == Behavior.LeftRight)
+                    Flip();
+                break;
             case "Wall":
-                // TODO: Make this more dynamic
-                Flip();
+                if(EnemyBehavior == Behavior.LeftRight)
+                    Flip();
                 break;
             case "Instant Death":
                 Die();
@@ -536,6 +546,21 @@ public class Enemy : MonoBehaviour
                 Die();
                 break;
             default:
+                break;
+        }
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch(collision.tag)
+        {
+            case "Patrol Stop":
+                if (EnemyBehavior == Behavior.LeftRight)
+                    Flip();
+                break;
+            case "Wall":
+                if (EnemyBehavior == Behavior.LeftRight)
+                    Flip();
                 break;
         }
     }

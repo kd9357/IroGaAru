@@ -9,39 +9,14 @@ public class Spearfish : Enemy {
 
     protected override void FixedUpdate()
     {
-        if (_currentState == EnemyState.Inactive)
-            return;
-
-        if (_currentState != EnemyState.Staggered && _currentState != EnemyState.Attacking)
-        {
-            _actionTimer -= Time.deltaTime;
-            switch (EnemyBehavior)
-            {
-                //case Behavior.TrackPlayer:
-                //    TrackPlayer();
-                //    break;
-                case Behavior.LeftRight:
-                    LeftRight();
-                    break;
-                //case Behavior.Stationary:
-                //    Stationary();
-                //    break;
-                default:
-                    Debug.LogError("Enemy Behavior Undefined");
-                    break;
-            }
-        }
-
+        base.FixedUpdate();
         if (_currentState == EnemyState.Attacking)
-        { 
+        {
             if (_actionTimer > 0)
                 _actionTimer -= Time.deltaTime;
             else
                 Charge();
         }
-        //Reset movement direction, update each new physics tick
-        _xMov = 0;
-        _yMov = 0;
     }
 
     protected override void LeftRight()
@@ -83,7 +58,9 @@ public class Spearfish : Enemy {
         if (_colorTimer <= 0)
             _colorTimer = ColorCooldown;
 
-        if(_currentState != EnemyState.Attacking)
+        //For fish, only be staggered when not charging
+        if(_currentState != EnemyState.Attacking
+            || (_currentState == EnemyState.Attacking && _actionTimer > 0))
         {
             //Only mess with recoil when not stunned already
             if (_currentColorStatus != ColorStatus.Stun)
