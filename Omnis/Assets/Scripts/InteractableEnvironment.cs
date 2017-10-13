@@ -27,6 +27,8 @@ public class InteractableEnvironment : MonoBehaviour {
     public int BurnDamage = 0;
     [Tooltip("How strong the enemy is knockbacked while Green")]
     public float WindKnockbackForce = 0;
+    [Tooltip("Only check this if the object is a moving platform (ie a boat)")]
+    public bool MovingPlatform = false;
 
     #endregion
 

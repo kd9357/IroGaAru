@@ -28,7 +28,7 @@ public class AttackTrigger : MonoBehaviour {
                 break;
             case "Interactable Environment":
                 direction = collision.transform.position.x < transform.position.x ? -1 : 1;
-                InteractableEnvironment ie = collision.gameObject.GetComponent<InteractableEnvironment>();
+                InteractableEnvironment ie = collision.gameObject.GetComponentInParent<InteractableEnvironment>();
                 if (ie != null)
                     ie.EnvironmentDamaged(GetColor(_color), direction);
                 break;
