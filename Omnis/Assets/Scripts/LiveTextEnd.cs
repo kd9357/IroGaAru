@@ -1,22 +1,39 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// TeamTwo
+
+/*
+ * Include Files
+ */
+
 using UnityEngine;
 
-//Removed activate text at line functionality (may need to rename)
-public class LiveTextEnd : MonoBehaviour {
+/* 
+ * Typedefs
+ */
 
-    private TextManager _textManager;
+public class LiveTextEnd : MonoBehaviour
+{
 
-    // Use this for initialization
-    void Start () {
+    /* 
+     * Private Member Variables
+     */
+
+    private static TextManager _textManager;
+
+    /*
+     * Private Method Declarations
+     */
+
+    private void Awake()
+    {
         _textManager = FindObjectOfType<TextManager>();
-	}
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             _textManager.DisableTextBox();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

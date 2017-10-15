@@ -1,68 +1,121 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// TeamTwo
+
+/* 
+ * Include Files
+ */
+
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TextManager : MonoBehaviour {
+/*
+ * Typedefs
+ */
 
-    //Should find these in start, not public
+public class TextManager : MonoBehaviour
+{
+    /*
+     * Public Member Variables
+     */
+
     public GameObject TextBox;
-    public Text TheText;
 
-    //Should also make these private down the line
-    public TextAsset TextFile;
-    public string[] TextLines;
+    /*
+     * Private Member Variables
+     */
 
+    private Text _text;
+    private TextAsset _dialogFile;
+
+    private bool _timeSensitive;
+    private float _maxDisplayTime;
+    private float _time;
+
+    private string[] _lines;
     private int _currentLine;
-    private bool _isActive;
 
-	// Use this for initialization
-	void Start () {
-        if (TextFile != null)
-        {
-            TextLines = (TextFile.text.Split('\n'));
-        }
-        _currentLine = 0;
+    /* 
+     * Public Method Declarations
+     */
+
+    void Start()
+    {
+        _dialogFile = null;
+        _text = TextBox.transform.GetComponentInChildren<Text>();
         TextBox.SetActive(false);
-        _isActive = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if(_isActive)
+    }
+
+    public void LoadTextFile(TextAsset dialogFile)
+    {
+        _dialogFile = dialogFile;
+        _currentLine = 0;
+        _time = 0;
+
+        if (dialogFile != null)
         {
-            TheText.text = TextLines[_currentLine];
-            if (Input.GetButtonDown("Submit"))
+            _lines = _dialogFile.text.Split('\n');
+        }
+        else
+        {
+            Debug.LogError("Textfile is null; cannot load text. Aborting Text Manager");
+            gameObject.SetActive(false);
+        }
+    }
+
+    void Update()
+    {
+        if (TextBox.activeInHierarchy)
+        {
+            _text.text = _lines[_currentLine];
+
+            if (_timeSensitive)
             {
-                _currentLine += 1;
-                if (_currentLine >= TextLines.Length)
-                    DisableTextBox();
+                _time += Time.deltaTime;
+                if (_time >= _maxDisplayTime)
+                {
+                    _time = 0;
+                    _currentLine += 1;
+                    if (_currentLine >= _lines.Length)
+                    {
+                        _currentLine = 0;
+                    }
+                }
+            }
+            else
+            {
+                if (Input.GetButtonDown("Submit"))
+                {
+                    _currentLine += 1;
+                    if (_currentLine >= _lines.Length)
+                    {
+                        _currentLine = 0;
+                        DisableTextBox();
+                    }
+                }
             }
         }
     }
 
-    public void EnableTextBox()
+    public void EnableTextBox(bool timeSensitive = false, float maxTime = 0f)
     {
+        _timeSensitive = timeSensitive;
+        _maxDisplayTime = maxTime <= 0f ? _maxDisplayTime : maxTime;
+
         TextBox.SetActive(true);
-        _isActive = true;
-        GameController.Instance.PauseGame(true);
+
+        if (!_timeSensitive)
+        {
+            GameController.Instance.PauseGame(true);
+        }
+
     }
 
     public void DisableTextBox()
     {
         TextBox.SetActive(false);
-        _isActive = false;
-        GameController.Instance.PauseGame(false);
-    }
 
-    public void ReloadScript(TextAsset newText)
-    {
-        if(newText == null)
+        if (!_timeSensitive)
         {
-            Debug.Log("Text not provided");
-            return;
+            GameController.Instance.PauseGame(false);
         }
-        _currentLine = 0;
-        TextLines = (newText.text.Split('\n'));
     }
 }

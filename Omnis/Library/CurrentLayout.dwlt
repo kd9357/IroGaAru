@@ -106,8 +106,8 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 683, y: 492}
-  m_MaxSize: {x: 14004, y: 14042}
+  m_MinSize: {x: 681, y: 492}
+  m_MaxSize: {x: 14002, y: 14042}
   vertical: 0
   controlID: 9
 --- !u!114 &6
@@ -253,8 +253,8 @@ MonoBehaviour:
     y: 0
     width: 468
     height: 947
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -364,28 +364,28 @@ MonoBehaviour:
     height: 522
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 08faffff
-    m_LastClickedID: -1528
-    m_ExpandedIDs: d4fbffff00000000
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: 2064fdff2c79fdff52b7ffff1cb9ffff6eb9ffff7ab9ffffd8b9ffff0abeffffbebeffff38c3ffff1ac7ffff3cc9ffff96c9ffffaae0ffff0ef6ffff00000000763f000096400000d8410000ce42000038430000dc430000ba440000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Live Text Attack Trigger
+      m_OriginalName: Live Text Attack Trigger
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: -15560
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
   m_ExpandedScenes:
-  - demo_scene
+  - forest_level_shorter
   m_CurrenRootInstanceID: 0
   m_Locked: 0
   m_CurrentSortingName: TransformSorting
@@ -416,14 +416,14 @@ MonoBehaviour:
     width: 1088
     height: 522
   m_SceneLighting: 1
-  lastFramingTime: 1152.7116940515782
+  lastFramingTime: 3722.412517047299
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.39123267, y: -1.1659598, z: -3.5898438}
+    m_Target: {x: 10.617729, y: 5.7142706, z: 0}
     speed: 2
-    m_Value: {x: -0.39123267, y: -1.1659598, z: -3.5898438}
+    m_Value: {x: 10.617729, y: 5.7142706, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -450,9 +450,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 19.47896
+    m_Target: 20.178217
     speed: 2
-    m_Value: 19.47896
+    m_Value: 20.178217
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -500,19 +500,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts
+    - Assets/Scenes
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Amadeus\Documents\GitHub\capstone\Omnis
+  m_LastProjectPath: C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 246}
-    m_SelectedIDs: 30280000
-    m_LastClickedID: 10288
-    m_ExpandedIDs: 00000000f82400003c2500003e250000542700002e28000030280000002a0000c02a00000c2b0000302c0000c42c00008030000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 290}
+    m_SelectedIDs: 0a2e0000
+    m_LastClickedID: 11786
+    m_ExpandedIDs: 00000000382a00007c2a00007e2a0000202b0000802c0000562d0000582d0000022f0000aa2f0000f42f0000183100008a310000fa34000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -540,7 +540,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f82400003c250000542700002e28000030280000002a0000c02a00000c2b0000302c0000c42c000080300000
+    m_ExpandedIDs: 00000000382a00007c2a00007e2a0000802c0000562d0000582d0000022f0000aa2f0000f42f0000183100008a310000fa340000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -568,7 +568,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: ec2f000062340000
+    m_ExpandedInstanceIDs: ec2f0000623400008e2a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
