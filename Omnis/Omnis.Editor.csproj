@@ -112,23 +112,11 @@
     <Reference Include="UnityEditor.iOS.Extensions">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.WSA.Extensions">
-      <HintPath>Library\UnityAssemblies\UnityEditor.WSA.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>Library\UnityAssemblies\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>Library\UnityAssemblies\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.OSXStandalone.Extensions">
-      <HintPath>Library\UnityAssemblies\UnityEditor.OSXStandalone.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -138,9 +126,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Omnis.Plugins.csproj">
+      <Project>{AC66B856-3A83-4B1A-DCE5-8F83BD13DD58}</Project>
+      <Name>Omnis.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="Omnis.csproj">
       <Project>{311F5620-3B69-3A91-104B-31F92129A8C5}</Project>
       <Name>Omnis</Name>
+    </ProjectReference>
+    <ProjectReference Include="Omnis.Editor.Plugins.csproj">
+      <Project>{DFB8F6EB-4ACD-D0CF-7368-87E23E7B4A2E}</Project>
+      <Name>Omnis.Editor.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
