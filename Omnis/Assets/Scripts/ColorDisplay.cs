@@ -1,101 +1,103 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿// TeamTwo
+
+/*
+ * Include Files
+ */
+
 using UnityEngine;
 using UnityEngine.UI;
+using CnControls;
 
 public class ColorDisplay : MonoBehaviour {
 
+    /* 
+     * Public Member Variables
+     */
+
     public AttackTrigger Weapon;
     public Player Player;
-    //public PlayerAttack PlayerAttack;
-    public WeaponColor red_color = WeaponColor.Red;
-    public WeaponColor yellow_color = WeaponColor.Yellow;
-    public WeaponColor blue_color = WeaponColor.Blue;
-    public Image red_image;
-    public Image yellow_image;
-    public Image blue_image;
-    public Image ring;
 
-    private int _direction = 0;
+    public WeaponColor RedColor = WeaponColor.Red;
+    public WeaponColor YellowColor = WeaponColor.Yellow;
+    public WeaponColor BlueColor = WeaponColor.Blue;
+
+    public Image RedImage;
+    public Image YellowImage;
+    public Image BlueImage;
+    public Image Ring;
+
+    /*
+     * Public Method Declarations
+     */
 
     void Start()
     {
-        if(GameController.Instance.EquippedColor == red_color)
+        if(GameController.Instance.EquippedColor == RedColor)
         {
             CycleColors(0);
         }
-        if (GameController.Instance.EquippedColor == yellow_color)
+        if (GameController.Instance.EquippedColor == YellowColor)
         {
             CycleColors(1);
         }
-        if (GameController.Instance.EquippedColor == blue_color)
+        if (GameController.Instance.EquippedColor == BlueColor)
         {
             CycleColors(2);
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //if (!PlayerAttack.IsAttacking())
-        if(!Player.IsAttacking())
-        {
 #if (UNITY_ANDROID || UNITY_IPHONE)
-            //Currently just cycles in one direction
-            if (MobileUI.Instance.GetSwitchColor())
-            {
-                _direction++;
-                if(_direction > 2)
-                    _direction = 0;
-                CycleColors(_direction);
-                MobileUI.Instance.SetSwitchColor(false);
-            }
-#else
-
-            if (Input.GetButtonDown("Red"))
-            {
-                CycleColors(0);
-            }
-            if (Input.GetButtonDown("Yellow"))
-            {
-                CycleColors(1);
-            }
-            if (Input.GetButtonDown("Blue"))
-            {
-                CycleColors(2);
-            }
-#endif
+        if (CnInputManager.GetButtonDown("Red"))
+        {
+            CycleColors(0);
         }
+        if (CnInputManager.GetButtonDown("Yellow"))
+        {
+            CycleColors(1);
+        }
+        if (CnInputManager.GetButtonDown("Blue"))
+        {
+            CycleColors(2);
+        }
+#else
+        if (Input.GetButtonDown("Red"))
+        {
+            CycleColors(0);
+        }
+        if (Input.GetButtonDown("Yellow"))
+        {
+            CycleColors(1);
+        }
+        if (Input.GetButtonDown("Blue"))
+        {
+            CycleColors(2);
+        }
+#endif
     }
-
-    void OnGUI()
-    {
-
-    }
-
 
     public void CycleColors(int direction)
     {
         switch (direction)
         {
-            case 0:     ring.rectTransform.localPosition = new Vector3(-40,-42,0);
-                        red_image.rectTransform.localScale = new Vector3(1, 1, 0);
-                        yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        GameController.Instance.EquippedColor = red_color;
+            case 0:     Ring.rectTransform.localPosition = new Vector3(-40,-42,0);
+                        RedImage.rectTransform.localScale = new Vector3(1, 1, 0);
+                        YellowImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        BlueImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        GameController.Instance.EquippedColor = RedColor;
                         break;
-            case 1:     ring.rectTransform.localPosition = new Vector3(0, -42, 0);
-                        red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        yellow_image.rectTransform.localScale = new Vector3(1, 1, 0);
-                        blue_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        GameController.Instance.EquippedColor = yellow_color;
+            case 1:     Ring.rectTransform.localPosition = new Vector3(0, -42, 0);
+                        RedImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        YellowImage.rectTransform.localScale = new Vector3(1, 1, 0);
+                        BlueImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        GameController.Instance.EquippedColor = YellowColor;
                         break;
-            case 2:     ring.rectTransform.localPosition = new Vector3(40, -42, 0);
-                        red_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        yellow_image.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
-                        blue_image.rectTransform.localScale = new Vector3(1, 1, 0);
-                        GameController.Instance.EquippedColor = blue_color;
+            case 2:     Ring.rectTransform.localPosition = new Vector3(40, -42, 0);
+                        RedImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        YellowImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 0);
+                        BlueImage.rectTransform.localScale = new Vector3(1, 1, 0);
+                        GameController.Instance.EquippedColor = BlueColor;
                         break;
         }
     }

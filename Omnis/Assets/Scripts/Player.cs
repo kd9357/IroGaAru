@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+#if UNITY_ANDROID || UNITY_IPHONE
+using CnControls;
+#endif
+
 public class Player : MonoBehaviour
 {
 
@@ -55,6 +59,7 @@ public class Player : MonoBehaviour
     private bool _onGround;
     private bool _onWall;
     private bool _jumping;
+    private bool _tapJump;
     private bool _jumpCancel;
     private bool _facingRight;
     private int _knockbackDirection;
@@ -91,6 +96,7 @@ public class Player : MonoBehaviour
         _onWall = false;
         _jumping = false;
         _jumpCancel = false;
+        _tapJump = false;
         _facingRight = true;
         _invincible = false;
 
@@ -118,9 +124,8 @@ public class Player : MonoBehaviour
         {
             float x_mov, y_mov;
 #if (UNITY_ANDROID || UNITY_IPHONE)
-            x_mov = MobileUI.Instance.GetLeft() && MobileUI.Instance.GetRight() ? 0 :
-                    MobileUI.Instance.GetLeft() ? -Speed :
-                    MobileUI.Instance.GetRight() ? Speed : 0;
+            x_mov = Slide ? CnInputManager.GetAxis("Horizontal") * Speed:
+                CnInputManager.GetAxisRaw("Horizontal") * Speed;
 #else
             x_mov = Slide ? Input.GetAxis("Horizontal") * Speed :
                 Input.GetAxisRaw("Horizontal") * Speed;
@@ -180,22 +185,23 @@ public class Player : MonoBehaviour
         bool doAttack = false;
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
-        // MOBILE ATTACK
-        doAttack = MobileUI.Instance.GetAttack() && !_attacking;    //TODO: must account for new attack method
+        doAttack = (CnInputManager.GetButtonDown("Red") || 
+                    CnInputManager.GetButtonDown("Yellow") ||
+                    CnInputManager.GetButtonDown("Blue")) && !_attacking;
 
-        // MOBILE JUMP
-        if (MobileUI.Instance.GetJump() && _onGround)
+        if (CnInputManager.GetButtonDown("Jump") && _onGround)
         {
             _jumping = true;
+            _jumpCancel = false;
+            _tapJump = true;
             _anim.SetTrigger("Jumping");
-            // Reset gamepad attack flag
-            MobileUI.Instance.SetJump(false);
         }
 
-        _jumpCancel = MobileUI.Instance.GetJump();
+        _jumpCancel = CnInputManager.GetButtonUp("Jump");
 #else
         // ATTACK
-        doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || Input.GetButtonDown("Blue")) && !_attacking;
+        doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || 
+                    Input.GetButtonDown("Blue")) && !_attacking;
 
         // JUMPING
         if (Input.GetButtonDown("Jump") && _onGround)
@@ -267,11 +273,10 @@ public class Player : MonoBehaviour
     {
         _attacking = true;
         _weaponCollider.enabled = _attacking;
+
         _audioSource.clip = PlayerSoundEffects[0];
         _audioSource.Play();
-#if (UNITY_ANDROID || UNITY_IPHONE)
-            MobileUI.Instance.SetAttack(false);
-#endif
+
         _anim.SetBool("Attacking", _attacking);
     }
 
