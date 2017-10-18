@@ -102,7 +102,7 @@ public class InteractableEnvironment : MonoBehaviour {
 
     protected virtual void Die()
     {
-        Destroy(transform.parent.gameObject);
+        Destroy(gameObject);
     }
     #endregion
 
