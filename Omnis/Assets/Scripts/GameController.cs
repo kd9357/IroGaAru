@@ -63,6 +63,17 @@ public class GameController : MonoBehaviour
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
         Screen.orientation = ScreenOrientation.LandscapeLeft;
+        GameObject mUI = GameObject.Find("Mobile UI");
+        if (mUI != null)
+        {
+            mUI.SetActive(true);
+        }
+#else
+        GameObject mUI = GameObject.Find("Mobile UI");
+        if (mUI != null)
+        {
+            mUI.SetActive(false);
+        }
 #endif
     }
 
