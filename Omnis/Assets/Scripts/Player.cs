@@ -59,6 +59,7 @@ public class Player : MonoBehaviour
     private bool _onGround;
     private bool _onWall;
     private bool _jumping;
+    private bool _tapJump;
     private bool _jumpCancel;
     private bool _facingRight;
     private int _knockbackDirection;
@@ -95,6 +96,7 @@ public class Player : MonoBehaviour
         _onWall = false;
         _jumping = false;
         _jumpCancel = false;
+        _tapJump = false;
         _facingRight = true;
         _invincible = false;
 
@@ -187,17 +189,15 @@ public class Player : MonoBehaviour
                     CnInputManager.GetButtonDown("Yellow") ||
                     CnInputManager.GetButtonDown("Blue")) && !_attacking;
 
-        if (CnInputManager.GetAxis("Vertical") >= .5f && _onGround)
+        if (CnInputManager.GetButtonDown("Jump") && _onGround)
         {
             _jumping = true;
             _jumpCancel = false;
+            _tapJump = true;
             _anim.SetTrigger("Jumping");
         }
 
-        if (CnInputManager.GetAxis("Vertical") < .5f)
-        {
-            _jumpCancel = true;
-        }
+        _jumpCancel = CnInputManager.GetButtonUp("Jump");
 #else
         // ATTACK
         doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || 
