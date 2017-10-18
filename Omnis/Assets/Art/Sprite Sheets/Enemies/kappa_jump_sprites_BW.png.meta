@@ -1,0 +1,464 @@
+fileFormatVersion: 2
+guid: 8233b6a08b3334540b233e4c6f92bd2d
+timeCreated: 1508307484
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: kappa_jump_sprites_BW_0
+    21300002: kappa_jump_sprites_BW_1
+    21300004: kappa_jump_sprites_BW_2
+    21300006: kappa_jump_sprites_BW_3
+    21300008: kappa_jump_sprites_BW_4
+    21300010: kappa_jump_sprites_BW_5
+    21300012: kappa_jump_sprites_BW_6
+    21300014: kappa_jump_sprites_BW_7
+    21300016: kappa_jump_sprites_BW_8
+    21300018: kappa_jump_sprites_BW_9
+    21300020: kappa_jump_sprites_BW_10
+    21300022: kappa_jump_sprites_BW_11
+    21300024: kappa_jump_sprites_BW_12
+    21300026: kappa_jump_sprites_BW_13
+    21300028: kappa_jump_sprites_BW_14
+    21300030: kappa_jump_sprites_BW_15
+    21300032: kappa_jump_sprites_BW_16
+    21300034: kappa_jump_sprites_BW_17
+    21300036: kappa_jump_sprites_BW_18
+    21300038: kappa_jump_sprites_BW_19
+    21300040: kappa_jump_sprites_BW_20
+    21300042: kappa_jump_sprites_BW_21
+    21300044: kappa_jump_sprites_BW_22
+    21300046: kappa_jump_sprites_BW_23
+    21300048: kappa_jump_sprites_BW_24
+    21300050: kappa_jump_sprites_BW_25
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 8192
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: 33
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: 47
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: Windows Store Apps
+    maxTextureSize: 8192
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_1
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_2
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_3
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_4
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_5
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 7840
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_7
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_8
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_9
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_10
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_11
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 5880
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_13
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_14
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_15
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_16
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_17
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 3920
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_19
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_20
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_21
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_22
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_23
+      rect:
+        serializedVersion: 2
+        x: 5400
+        y: 1960
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: kappa_jump_sprites_BW_25
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 0
+        width: 1080
+        height: 1960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

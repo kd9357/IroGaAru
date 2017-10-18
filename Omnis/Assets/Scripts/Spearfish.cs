@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Spearfish : Enemy {
 
+    public float AttackSpeed = 1f;
+
     private Vector3 _initialPosition;
     private float _distanceToTravel;
 
@@ -38,13 +40,16 @@ public class Spearfish : Enemy {
     private void Charge()
     {
         if (Mathf.Abs(transform.position.x - _initialPosition.x) >= _distanceToTravel + 2)
+        {
             EndAttack();
+            _anim.SetTrigger("EndAttack");
+        }
         else
         {
-            _xMov += _facingRight ? _currentSpeed * 2 : -_currentSpeed * 2;
+            _xMov += _facingRight ? _currentSpeed * AttackSpeed : -_currentSpeed * AttackSpeed;
             _yMov = _rb.velocity.y;
 
-            _xMov = Mathf.Clamp(_xMov, -_currentSpeed * 2, _currentSpeed * 2);
+            _xMov = Mathf.Clamp(_xMov, -_currentSpeed * AttackSpeed, _currentSpeed * AttackSpeed);
             //_yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
             _rb.velocity = new Vector2(_xMov, _yMov);
         }

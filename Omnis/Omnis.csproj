@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\HPDisplay.cs" />
     <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\Kappa.cs" />
     <Compile Include="Assets\Scripts\LevelComplete.cs" />
     <Compile Include="Assets\Scripts\LiveTextEnd.cs" />
     <Compile Include="Assets\Scripts\LiveTextManager.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="Assets\Scripts\MobileUI.cs" />
     <Compile Include="Assets\Scripts\Parallaxing.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\PurpleBoss.cs" />
     <Compile Include="Assets\Scripts\Spearfish.cs" />
     <Compile Include="Assets\Scripts\TextManager.cs" />
   </ItemGroup>

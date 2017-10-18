@@ -48,7 +48,6 @@ public class InteractableEnvironment : MonoBehaviour {
     // Use this for initialization
     protected virtual void Start () {
         _currentHealth = MaxHealth;
-        //_sprite = GetComponent<SpriteRenderer>();
         _sprites = GetComponentsInChildren<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
 

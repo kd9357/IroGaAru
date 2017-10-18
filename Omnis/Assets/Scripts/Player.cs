@@ -240,6 +240,71 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Collisions
+
+    // Collisions wtih Player
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.otherCollider is CircleCollider2D)
+        {
+            _onGround = true;
+        }
+
+        switch (collision.collider.tag)
+        {
+            case "Wall":
+                _onWall = true;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.otherCollider is CircleCollider2D)
+        {
+            _onGround = true;
+        }
+
+        switch (collision.collider.tag)
+        {
+            case "Wall":
+                _onWall = true;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.otherCollider is CircleCollider2D)
+        {
+            _onGround = false;
+        }
+
+        switch (collision.collider.tag)
+        {
+            case "Wall":
+                _onWall = false;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
+
+    #endregion
+
     #region Helper Methods
 
     #region Movement & Orientation
@@ -338,70 +403,14 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Accessors
+
+    public bool FacingRight()
+    {
+        return _facingRight;
+    }
     #endregion
 
-    #region Collisions
-
-    // Collisions wtih Player
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.otherCollider is CircleCollider2D)
-        {
-            _onGround = true;
-        }
-
-        switch (collision.collider.tag)
-        {
-            case "Wall":
-                _onWall = true;
-                break;
-            case "Instant Death":
-                Die();
-                break;
-            default:
-                break;
-        }
-    }
-
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.otherCollider is CircleCollider2D)
-        {
-            _onGround = true;
-        }
-
-        switch (collision.collider.tag)
-        {
-            case "Wall":
-                _onWall = true;
-                break;
-            case "Instant Death":
-                Die();
-                break;
-            default:
-                break;
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.otherCollider is CircleCollider2D)
-        {
-            _onGround = false;
-        }
-
-        switch (collision.collider.tag)
-        {
-            case "Wall":
-                _onWall = false;
-                break;
-            case "Instant Death":
-                Die();
-                break;
-            default:
-                break;
-        }
-    }
-
     #endregion
+
 }

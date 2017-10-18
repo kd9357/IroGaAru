@@ -1,56 +1,28 @@
-﻿// TeamTwo
-
-/*
- * Include Files
- */
-
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-/* 
- * Typedefs
- */
-
+//Removed activate text at line functionality (may need to rename)
 public class LiveTextStart : MonoBehaviour {
 
-    /*
-     * Public Member Variables
-     */
-
-    public TextAsset DialogText;
+    public TextAsset TextToDisplay;
 
     [Tooltip("Check to only activate textbox on first trigger")]
-    public bool DisableWhenActivated;
+    public bool DestroyWhenActivated;
 
-    [Tooltip("Enable if text should be sensitive to time rather than input")] 
-    public bool TimeSensitive = true;
-    public float DisplayTime = 3.0f;
+    private LiveTextManager _textManager;
 
-    /* 
-     * Private Member Variables
-     */
-
-    private static TextManager _textManager;
-
-    /*
-     * Private Method Declarations
-     */
-
-    private void Awake () 
-    {
-        _textManager = FindObjectOfType<TextManager>();
+    // Use this for initialization
+    void Start () {
+        _textManager = FindObjectOfType<LiveTextManager>();
 	}
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            _textManager.LoadTextFile(DialogText);
-            _textManager.EnableTextBox(TimeSensitive, DisplayTime);
-
-            if (DisableWhenActivated)
-            {
-                gameObject.SetActive(false);   
-            }
+            _textManager.ReloadScript(TextToDisplay);
+            _textManager.EnableTextBox();
+            Destroy(gameObject);
         }
     }
 

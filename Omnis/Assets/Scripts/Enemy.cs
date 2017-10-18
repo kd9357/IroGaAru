@@ -158,7 +158,8 @@ public class Enemy : MonoBehaviour
 
         if(_currentState != EnemyState.Staggered 
             && _currentState != EnemyState.Attacking
-            && _actionTimer <= 0)
+            && _actionTimer <= 0
+            && _recoilTimer <= 0)
         {
             switch (EnemyBehavior)
             {
@@ -176,7 +177,7 @@ public class Enemy : MonoBehaviour
                     break;
             }
         }
-        _anim.SetBool("Walking", _xMov > 0.1f || _xMov < -0.1f);
+        _anim.SetBool("Walking", _xMov > 0.01f || _xMov < -0.01f);
         //Reset movement direction, update each new physics tick
         _xMov = 0;
         _yMov = 0;
@@ -409,8 +410,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void TrackPlayer()
     {
-        //if (_actionTimer > 0)
-        //    return;
         if(!FacingTarget())
             Flip();
         if (InRange())
@@ -426,8 +425,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Stationary()
     {
-        //if (_actionTimer > 0)
-        //    return;
         if (InRange())
             Attack();
     }
@@ -500,13 +497,12 @@ public class Enemy : MonoBehaviour
                 _audioSource.clip = EnemySoundEffects[0];
                 _audioSource.Play();
                 break;
-            case "Patrol Stop":
-                if (EnemyBehavior == Behavior.LeftRight)
-                    Flip();
-                break;
             case "Wall":
-                if(EnemyBehavior == Behavior.LeftRight)
+                if (EnemyBehavior == Behavior.LeftRight)
+                {
+                    _currentState = EnemyState.Waiting;
                     Flip();
+                }
                 break;
             case "Instant Death":
                 Die();
@@ -519,7 +515,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //This is necessary if the player is pushing against the enemy while invincible, and their invincibility wears off
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
         switch (collision.collider.tag)
@@ -554,13 +549,12 @@ public class Enemy : MonoBehaviour
     {
         switch(collision.tag)
         {
-            case "Patrol Stop":
-                if (EnemyBehavior == Behavior.LeftRight)
-                    Flip();
-                break;
             case "Wall":
                 if (EnemyBehavior == Behavior.LeftRight)
+                {
+                    _currentState = EnemyState.Waiting;
                     Flip();
+                }
                 break;
         }
     }
