@@ -138,9 +138,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Omnis.Plugins.csproj">
+      <Project>{AC66B856-3A83-4B1A-DCE5-8F83BD13DD58}</Project>
+      <Name>Omnis.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="Omnis.csproj">
       <Project>{311F5620-3B69-3A91-104B-31F92129A8C5}</Project>
       <Name>Omnis</Name>
+    </ProjectReference>
+    <ProjectReference Include="Omnis.Editor.Plugins.csproj">
+      <Project>{DFB8F6EB-4ACD-D0CF-7368-87E23E7B4A2E}</Project>
+      <Name>Omnis.Editor.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

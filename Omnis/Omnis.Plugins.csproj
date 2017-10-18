@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{311F5620-3B69-3A91-104B-31F92129A8C5}</ProjectGuid>
+    <ProjectGuid>{AC66B856-3A83-4B1A-DCE5-8F83BD13DD58}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>GamePlugins:3</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.1p3</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -87,38 +87,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Omnis.Plugins.csproj">
-      <Project>{AC66B856-3A83-4B1A-DCE5-8F83BD13DD58}</Project>
-      <Name>Omnis.Plugins</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Scripts\ActivateTextAtLine.cs" />
-    <Compile Include="Assets\Scripts\ActiveZone.cs" />
-    <Compile Include="Assets\Scripts\AttackTrigger.cs" />
-    <Compile Include="Assets\Scripts\CameraFollow.cs" />
-    <Compile Include="Assets\Scripts\ChangeTextColor.cs" />
-    <Compile Include="Assets\Scripts\ColorDisplay.cs" />
-    <Compile Include="Assets\Scripts\ColorTransition.cs" />
-    <Compile Include="Assets\Scripts\DamageBlocks.cs" />
-    <Compile Include="Assets\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
-    <Compile Include="Assets\Scripts\FightZone.cs" />
-    <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\HPDisplay.cs" />
-    <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
-    <Compile Include="Assets\Scripts\Item.cs" />
-    <Compile Include="Assets\Scripts\Kappa.cs" />
-    <Compile Include="Assets\Scripts\LevelComplete.cs" />
-    <Compile Include="Assets\Scripts\LiveTextEnd.cs" />
-    <Compile Include="Assets\Scripts\LiveTextManager.cs" />
-    <Compile Include="Assets\Scripts\LiveTextOnDestroy.cs" />
-    <Compile Include="Assets\Scripts\LiveTextStart.cs" />
-    <Compile Include="Assets\Scripts\Parallaxing.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\Spearfish.cs" />
-    <Compile Include="Assets\Scripts\TextManager.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\CnInputManager.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\VirtualAxis.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\VirtualButton.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\CommonOnScreenControl.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\Dpad.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\DpadAxis.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SensitiveJoystick.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SimpleButton.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SimpleJoystick.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\Touchpad.cs" />
+    <Compile Include="Assets\Standard Assets\CNControls\Scripts\EmptyGraphic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\GrayScale.shader" />
