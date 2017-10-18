@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/forest_level_shorter.unity
+- path: Assets/Scenes/water_level.unity
   isLoaded: 1
   isActive: 1
