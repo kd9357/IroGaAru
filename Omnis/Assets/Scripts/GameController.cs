@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CnControls;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -236,12 +237,19 @@ public class GameController : MonoBehaviour
                 LoadScene(SceneManager.GetActiveScene().name);
             }
         }
-
+#if UNITY_ANDROID || UNITY_IPHONE
+        if (CnInputManager.GetButtonDown("Cancel"))
+        {
+            //Eventually setup a pause screen
+            TogglePause();
+        }
+#else
         if (Input.GetButtonDown("Cancel"))
         {
             //Eventually setup a pause screen
             TogglePause();
         }
+#endif
     }
 
     #region Critical Sections
@@ -285,7 +293,7 @@ public class GameController : MonoBehaviour
     }
 
     //Used just for pressing esc at the moment
-    private void TogglePause()
+    public void TogglePause()
     {
         if (SceneManager.GetActiveScene().name != "Start_Screen")
         {
