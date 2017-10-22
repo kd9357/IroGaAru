@@ -1,1 +1,17 @@
-Omnis/Library/metadata/
+Omnis/Library/
+Omnis/Temp/
+Omnis/obj/
+Omnis/Builds/
+
+# Visual Studio 2015 cache directory
+Omnis/.vs/
+
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
