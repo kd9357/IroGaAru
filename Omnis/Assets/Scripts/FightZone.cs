@@ -91,8 +91,12 @@ public class FightZone : MonoBehaviour {
     //Check if all waves completed, otherwise clear list out and increment wave number
     void StartNewWave()
     {
-        if(_nextWave + 1 > Waves.Length - 1)
+        if (_nextWave + 1 > Waves.Length - 1)
+        {
             UnlockZone();
+            gameObject.SetActive(false);
+            Camera.main.GetComponent<CameraFollow>().SetTarget(_player, true);
+        }
         else
         {
             _state = SpawnState.COUNTING;
@@ -107,7 +111,7 @@ public class FightZone : MonoBehaviour {
     {
         foreach (GameObject challenge in ChallengeList)
         {
-            if (challenge != null)
+            if (challenge.activeInHierarchy)
                 return false;
         }
         return true;
@@ -139,11 +143,11 @@ public class FightZone : MonoBehaviour {
         ChallengeList.Add(Instantiate(nextObject.SpawnObject, spawnPosition.position, spawnPosition.rotation));
     }
 
-    //All waves completed, unlock camera and destroy self
-    void UnlockZone()
+    //All waves completed, unlock camera and set inactive
+    public void UnlockZone()
     {
-        Camera.main.GetComponent<CameraFollow>().SetTarget(_player, true);
-        Destroy(gameObject);
+        _nextWave = -1;
+        gameObject.SetActive(true);
     }
 
     //When player enters zone, lock camera and begin wave process

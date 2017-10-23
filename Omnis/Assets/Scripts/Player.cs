@@ -321,6 +321,11 @@ public class Player : MonoBehaviour
         _paused = pause;
     }
 
+    public void TeleportToPosition(Vector3 pos)
+    {
+        gameObject.transform.position = pos;
+    }
+
     #endregion
 
     #region Combat
@@ -397,8 +402,9 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        _currentHealth = MaxHealth;             // May want to save before death health
         GameController.Instance.GameOver();
-        Destroy(gameObject.GetComponent<Player>());
+        gameObject.SetActive(false);
     }
 
     #endregion

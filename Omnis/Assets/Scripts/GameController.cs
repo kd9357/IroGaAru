@@ -1,4 +1,10 @@
-﻿using System;
+﻿// TeamTwo
+
+/*
+ * Include Files
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CnControls;
@@ -6,8 +12,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/*
+ * Typedefs
+ */
+
 public class GameController : MonoBehaviour
 {
+    /*
+     * Public Member Varialbes
+     */
+
     public static GameController Instance;
 
     public string NextScene = "Start_Screen";
@@ -16,6 +30,10 @@ public class GameController : MonoBehaviour
     [Tooltip("The minimum number of enemies to be defeated before the environment is fully colored")]
     public int MinimumEnemies;
     public Material GrayscaleMaterial;
+
+    /*
+     * Private Member Variables
+     */
 
     // Game Over Canvas
     private GameObject _gameoverCanvas;
@@ -39,6 +57,12 @@ public class GameController : MonoBehaviour
     private AudioSource _audioSourceManager;
     private AudioSource _gameOverAudio;
 
+    private Vector3 _lastCheckpointPos;
+    private GameObject[] _enemyObjects;
+    private GameObject[] _itemObjects;
+    private GameObject[] _fightZoneObjects;
+
+
     private bool _paused;
     private bool _loadScene;
 
@@ -46,11 +70,11 @@ public class GameController : MonoBehaviour
     private int _enemyCount;
     private int _attackCount;
     private int _enemyHitCount;
-    private System.Object _enemyLock;
-    private System.Object _attackLock;
-    private System.Object _hitLock;
+    private object _enemyLock;
+    private object _attackLock;
+    private object _hitLock;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -58,8 +82,12 @@ public class GameController : MonoBehaviour
         }
         else if (Instance != this)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            return;
         }
+
+        // DON'T TOUCH
+//        DontDestroyOnLoad(gameObject);
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
         Screen.orientation = ScreenOrientation.LandscapeLeft;
@@ -69,15 +97,13 @@ public class GameController : MonoBehaviour
             mUI.SetActive(true);
         }
 #else
-        GameObject mUI = GameObject.Find("Mobile UI");
+        var mUI = GameObject.Find("Mobile UI");
         if (mUI != null)
-        {
             mUI.SetActive(false);
-        }
 #endif
     }
 
-    void Start()
+    private void Start()
     {
         SetupGameOverCanvas();
         SetupLevelCompleteCanvas();
@@ -91,18 +117,20 @@ public class GameController : MonoBehaviour
 
         // TODO: Need to change for start screen, since there is no player
         //  kd: evidently start gets called each time a new scene is loaded
-        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+        var playerGO = GameObject.FindGameObjectWithTag("Player");
         if (playerGO != null)
-        {
             _player = playerGO.GetComponent<Player>();
-        }
         else
-        {
             Debug.LogError("There is no Player in the scene!");
-        }
 
         //Color Transition setup
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
+
+        _lastCheckpointPos = _player.transform.position;
+        _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
+        _itemObjects = GameObject.FindGameObjectsWithTag("Item");
+        _fightZoneObjects = GameObject.FindGameObjectsWithTag("Fight Zone");
+
 
         _paused = false;
         _loadScene = false;
@@ -111,9 +139,9 @@ public class GameController : MonoBehaviour
         _enemyCount = 0;
         _attackCount = 0;
         _enemyHitCount = 0;
-        _enemyLock = new System.Object();
-        _attackLock = new System.Object();
-        _hitLock = new System.Object();
+        _enemyLock = new object();
+        _attackLock = new object();
+        _hitLock = new object();
     }
 
     #region Canvas Setups
@@ -171,8 +199,8 @@ public class GameController : MonoBehaviour
         _levelCompletePanel = panel.gameObject.GetComponent<Image>();
 
         _levelCompleteTexts = new List<Text>();
-        Text[] texts = panel.transform.GetComponentsInChildren<Text>();
-        foreach (Text t in texts)
+        var texts = panel.transform.GetComponentsInChildren<Text>();
+        foreach (var t in texts)
         {
             t.canvasRenderer.SetAlpha(0f);
             _levelCompleteTexts.Add(t);
@@ -230,13 +258,11 @@ public class GameController : MonoBehaviour
 
     #endregion
 
-    void Update()
+    private void Update()
     {
         // Visually indicate that level is actively loading
         if (_loadScene)
-        {
             _loadLevelText.canvasRenderer.SetAlpha(Mathf.PingPong(Time.time, 1f));
-        }
 
         if (EndGame && _gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
         {
@@ -245,7 +271,7 @@ public class GameController : MonoBehaviour
             if (Input.anyKey)
             {
                 EndGame = false;
-                LoadScene(SceneManager.GetActiveScene().name);
+                LoadCheckpoint();
             }
         }
 #if UNITY_ANDROID || UNITY_IPHONE
@@ -256,10 +282,7 @@ public class GameController : MonoBehaviour
         }
 #else
         if (Input.GetButtonDown("Cancel"))
-        {
-            //Eventually setup a pause screen
             TogglePause();
-        }
 #endif
     }
 
@@ -271,9 +294,7 @@ public class GameController : MonoBehaviour
         {
             ++_enemyCount;
             if (_enemyCount <= MinimumEnemies)
-            {
                 GrayscaleMaterial.SetFloat("_AmountColored", (float)_enemyCount / MinimumEnemies);
-            }
         }
     }
 
@@ -294,6 +315,11 @@ public class GameController : MonoBehaviour
     }
 
     #endregion
+
+    public void UpdateLastCheckpoint(Vector3 pos)
+    {
+        _lastCheckpointPos = new Vector3(pos.x, pos.y + 1f, pos.z);
+    }
 
     #region Pause
     //Used for dialogue at the moment
@@ -336,7 +362,7 @@ public class GameController : MonoBehaviour
         // NOTE: This is artifical because the game loads so quickly
         yield return new WaitForSeconds(3);
 
-        AsyncOperation loadAsync = SceneManager.LoadSceneAsync(sceneName);
+        var loadAsync = SceneManager.LoadSceneAsync(sceneName);
         yield return loadAsync;
 
         _loadScene = false;
@@ -355,8 +381,7 @@ public class GameController : MonoBehaviour
     public IEnumerator CompleteLevel()
     {
         // Set level complete results
-        foreach (Text t in _levelCompleteTexts)
-        {
+        foreach (var t in _levelCompleteTexts)
             switch (t.gameObject.name)
             {
                 case "Enemies Number":
@@ -366,12 +391,11 @@ public class GameController : MonoBehaviour
                     t.text = _attackCount.ToString();
                     break;
                 case "Accuracy Number":
-                    float accuracy = 100f * _enemyHitCount / _attackCount;
+                    var accuracy = 100f * _enemyHitCount / _attackCount;
                     accuracy = float.IsNaN(accuracy) ? 0 : accuracy;
-                    t.text = String.Format("{0:0.00}", accuracy);
+                    t.text = string.Format("{0:0.00}", accuracy);
                     break;
             }
-        }
 
         // Show level complete results
         _levelCompleteCanvas.SetActive(true);
@@ -380,18 +404,14 @@ public class GameController : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        for (int k = 1; k < _levelCompleteTexts.Count; ++k)
-        {
+        for (var k = 1; k < _levelCompleteTexts.Count; ++k)
             _levelCompleteTexts[k].CrossFadeAlpha(2f, 1.5f, false);
-        }
 
         yield return new WaitForSeconds(3f);
 
         _levelCompletePanel.CrossFadeColor(Color.black, 1f, false, false, true);
-        foreach (Text t in _levelCompleteTexts)
-        {
+        foreach (var t in _levelCompleteTexts)
             t.CrossFadeAlpha(0, .5f, false);
-        }
 
         yield return new WaitForSeconds(2);
 
@@ -404,10 +424,58 @@ public class GameController : MonoBehaviour
         _gameOverAudio.Play();
 
         _gameoverCanvas.SetActive(true);
+
+        _gameoverPanel.canvasRenderer.SetAlpha(0f);
+        _gameoverText.canvasRenderer.SetAlpha(0f);
         _gameoverPanel.CrossFadeAlpha(2f, 1.5f, false);
         _gameoverText.CrossFadeAlpha(2f, 1.5f, false);
 
-        EndGame = true;
+        EndGame = true;   
+    }
+
+    private void LoadCheckpoint()
+    {
+        // Reset enemies
+        foreach (var e in _enemyObjects)
+        {
+            if (e.GetComponent<Enemy>())
+                e.GetComponent<Enemy>().Clear();
+            else if (e.GetComponent<FlyingEnemy>())
+                e.GetComponent<FlyingEnemy>().Clear();
+            else if (e.GetComponent<Kappa>())
+                e.GetComponent<Kappa>().Clear();
+            else if (e.GetComponent<Spearfish>())
+                e.GetComponent<Spearfish>().Clear();
+        }
+
+        // Reset items
+        foreach (var i in _itemObjects)
+            if (i.GetComponent<Item>())
+                i.GetComponent<Item>().ResetItem();
+
+        // Reset fight zones and camera
+        Camera.main.GetComponent<CameraFollow>().SetTarget(_player.gameObject.transform, true);
+        foreach (var fz in _fightZoneObjects)
+            if (fz.GetComponent<FightZone>())
+                fz.GetComponent<FightZone>().UnlockZone();
+
+        StartCoroutine(FadeOutGameOver());
+    }
+
+    private IEnumerator FadeOutGameOver()
+    {
+        _player.gameObject.SetActive(true);
+        _player.TeleportToPosition(_lastCheckpointPos);
+
+        _gameoverText.CrossFadeAlpha(0f, .5f, false);
+        _gameoverPanel.CrossFadeAlpha(0f, 2f, false);
+        while (_gameoverPanel.canvasRenderer.GetAlpha() >= .01f)
+            yield return null;
+
+        _gameoverCanvas.SetActive(false);
+
+        _audioSourceManager.volume = 1f;
+        _audioSourceManager.Play();
     }
 
     public void QuitGame()

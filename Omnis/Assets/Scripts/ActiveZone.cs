@@ -14,12 +14,12 @@ public class ActiveZone : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
-            _parent.SetActive(true);
+            _parent.SetState(true);
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
-            _parent.SetActive(false);    
+            _parent.SetState(false);    
     }
 }

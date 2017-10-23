@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
@@ -131,17 +132,8 @@ public class Enemy : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
         _target = GameObject.FindGameObjectWithTag("Player").transform;
-        _currentHealth = MaxHealth;
-        _currentColor = DefaultColor;
-        _currentColorStatus = ColorStatus.None;
-        _sprite.color = _currentColor;
-        _currentSpeed = Speed;
-        _xMov = 0;
-        _yMov = 0;
-        _currentKnockbackForce = EnemyKnockbackForce;
-        _recoilTimer = 0;
-        _currentState = EnemyState.Inactive;
-        _actionTimer = 0;
+
+        Clear();
 
         //For testing purposes
         _textMesh = gameObject.GetComponentInChildren<TextMesh>();
@@ -260,7 +252,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void SetActive(bool active)
+    public void SetState(bool active)
     {
         _currentState = active ? EnemyState.Waiting : EnemyState.Inactive;
     }
@@ -268,6 +260,27 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Enemy Health and Combat Status methods
+
+    public void Clear()
+    {
+        _currentHealth = MaxHealth;
+        _currentColor = DefaultColor;
+        _currentColorStatus = ColorStatus.None;
+        _sprite.color = _currentColor;
+        _currentSpeed = Speed;
+        _xMov = 0;
+        _yMov = 0;
+        _currentKnockbackForce = EnemyKnockbackForce;
+        _recoilTimer = 0;
+        _currentState = EnemyState.Inactive;
+        _actionTimer = 0;
+
+        // For enemies with weapons (i.e. Oni)
+        if (GetComponentInChildren<PolygonCollider2D>())
+            GetComponentInChildren<PolygonCollider2D>().enabled = false;
+
+        gameObject.SetActive(true);
+    }
 
     // When the enemy gets hit by something
     public virtual void EnemyDamaged(int damage, Color color, int direction,
@@ -402,7 +415,7 @@ public class Enemy : MonoBehaviour
         }
 
         GameController.Instance.IncrementEnemiesDefeated();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
     #endregion
 

@@ -14,6 +14,12 @@ public class Item : MonoBehaviour
     private bool _pickedUp = false;
     private readonly System.Object _itemLock = new System.Object();
 
+    public void ResetItem()
+    {
+        _pickedUp = false;
+        gameObject.SetActive(true);
+    }
+
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "Player")
