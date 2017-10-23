@@ -88,6 +88,12 @@ public class Enemy : MonoBehaviour
     [Tooltip("Percent chance of dropping health")]
     public int Percent = 30;
 
+    //Explosion prefab
+    [Tooltip("Prefab used for explosion.")]
+    public GameObject KillExplosion;
+    [Tooltip("How long does the exlplosion prefab exist until destroying itself")]
+    public float KillExplosionTimer = 1.0f;
+
     #endregion
 
     #region Protected Attributes
@@ -414,6 +420,11 @@ public class Enemy : MonoBehaviour
             healthDrop.transform.position = transform.position;
         }
 
+        if (KillExplosion) {
+            GameObject killExplosion = Instantiate(KillExplosion);
+            killExplosion.transform.position = transform.position;
+            Destroy(killExplosion, KillExplosionTimer);
+        }
         GameController.Instance.IncrementEnemiesDefeated();
         gameObject.SetActive(false);
     }

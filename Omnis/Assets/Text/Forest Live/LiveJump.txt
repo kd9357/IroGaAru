@@ -1,0 +1,2 @@
+Press W or Space to Jump.
+Jump to dodge enemies and reach platforms.

@@ -6,10 +6,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E99104F1-6A1A-2E2C-1C65-163262AEE852}</ProjectGuid>
+    <ProjectGuid>{72E96D14-E07A-4D01-0291-54CE4D17CC1D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -46,32 +46,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ActivateTextAtLine.cs" />
-     <Compile Include="Assets\Scripts\ActiveZone.cs" />
-     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
-     <Compile Include="Assets\Scripts\CameraFollow.cs" />
-     <Compile Include="Assets\Scripts\ChangeTextColor.cs" />
-     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
-     <Compile Include="Assets\Scripts\ColorTransition.cs" />
-     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
-     <Compile Include="Assets\Scripts\Enemy.cs" />
-     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
-     <Compile Include="Assets\Scripts\FightZone.cs" />
-     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
-     <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\HPDisplay.cs" />
-     <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
-     <Compile Include="Assets\Scripts\Item.cs" />
-     <Compile Include="Assets\Scripts\Kappa.cs" />
-     <Compile Include="Assets\Scripts\LevelComplete.cs" />
-     <Compile Include="Assets\Scripts\LiveTextEnd.cs" />
-     <Compile Include="Assets\Scripts\LiveTextManager.cs" />
-     <Compile Include="Assets\Scripts\LiveTextOnDestroy.cs" />
-     <Compile Include="Assets\Scripts\LiveTextStart.cs" />
-     <Compile Include="Assets\Scripts\Parallaxing.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Spearfish.cs" />
-     <Compile Include="Assets\Scripts\TextManager.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\CnInputManager.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\VirtualAxis.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\CnInputSystem\VirtualButton.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\CommonOnScreenControl.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\Dpad.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\DpadAxis.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SensitiveJoystick.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SimpleButton.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\SimpleJoystick.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\Controllers\Touchpad.cs" />
+     <Compile Include="Assets\Standard Assets\CNControls\Scripts\EmptyGraphic.cs" />
      <None Include="Assets\Text\ZoneTest.txt" />
      <None Include="Assets\Text\Forest\Combat.txt" />
      <None Include="Assets\Text\Forest Live\LiveCombat.txt" />
@@ -110,10 +95,6 @@
  <Reference Include="UnityEngine.VR">
  <HintPath>I:/Programs/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{72E96D14-E07A-4D01-0291-54CE4D17CC1D}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
