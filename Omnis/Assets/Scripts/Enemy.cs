@@ -56,6 +56,8 @@ public class Enemy : MonoBehaviour
     public float Speed;
     [Tooltip("The distance this enemy wants to be from other enemies")]
     public float AvoidanceDistance = 5f;
+    [Tooltip("For left right, the distance this enemy will move before turning around")]
+    public float PatrolDistance = 10f;
 
     // Combat public variables
     [Tooltip("Greater values mean enemy will attack when player is further away")]
@@ -119,6 +121,8 @@ public class Enemy : MonoBehaviour
     protected float _yMov;
     protected float _currentKnockbackForce;
     protected bool _facingRight;
+    protected float _distanceTraveled;
+    protected float _lastPos;
 
     //Assuming 0: Purple, 1: Orange, 2: Green
     protected ParticleSystem[] _colorParticleEffects;
@@ -445,6 +449,12 @@ public class Enemy : MonoBehaviour
     protected virtual void LeftRight()
     {
         MoveForward();
+        if(_distanceTraveled >= PatrolDistance)
+        {
+            Flip();
+            _lastPos = transform.position.x;
+            _distanceTraveled = 0;
+        }
     }
 
     protected virtual void Stationary()
@@ -493,6 +503,9 @@ public class Enemy : MonoBehaviour
 
         _xMov = Mathf.Clamp(_xMov, -_currentSpeed, _currentSpeed);
         //_yMov = Mathf.Clamp(_yMov, -_currentSpeed, _currentSpeed);
+
+        _distanceTraveled += Mathf.Abs(transform.position.x - _lastPos);
+        _lastPos = transform.position.x;
         _rb.velocity = new Vector2(_xMov, _yMov);
     }
 
