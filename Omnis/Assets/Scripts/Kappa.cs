@@ -78,6 +78,7 @@ public class Kappa : Enemy {
                     Flip();
                 }
                 break;
+            case "Instant Death":
             case "Spikes":
                 Die();
                 break;
@@ -116,6 +117,7 @@ public class Kappa : Enemy {
                 _audioSource.clip = EnemySoundEffects[0];
                 _audioSource.Play();
                 break;
+            case "Instant Death":
             case "Spikes":
                 Die();
                 break;
