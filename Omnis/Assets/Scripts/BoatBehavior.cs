@@ -26,7 +26,7 @@ namespace Assets.Scripts
 
         void FixedUpdate()
         {
-            if (_rb.velocity.x >= .01f && !_player.isKinematic)
+            if (_rb.velocity.x >= .01f || _rb.velocity.x <= -0.1f && !_player.isKinematic)
             {
                 _player.isKinematic = true;
             }

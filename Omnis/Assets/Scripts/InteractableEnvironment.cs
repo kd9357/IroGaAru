@@ -40,6 +40,8 @@ public class InteractableEnvironment : MonoBehaviour {
     protected float _colorTimer;
     protected ColorStatus _currentColorStatus;
     protected float _currentKnockbackForce;
+    protected Vector3 _initialPos;
+    protected Quaternion _initialRot;
 
     //Assuming 0: Purple, 1: Orange, 2: Green
     protected ParticleSystem[] _colorParticleEffects;
@@ -55,6 +57,8 @@ public class InteractableEnvironment : MonoBehaviour {
         _colorTimer = 0;
         _currentColorStatus = ColorStatus.None;
         _currentKnockbackForce = KnockbackForce;
+        _initialPos = transform.position;
+        _initialRot = transform.rotation;
 
         _colorParticleEffects = GetComponentsInChildren<ParticleSystem>();
 	}
@@ -97,6 +101,12 @@ public class InteractableEnvironment : MonoBehaviour {
                     ps.Stop();
             }
         }
+    }
+
+    public virtual void ResetObject()
+    {
+        transform.position = _initialPos;
+        transform.rotation = _initialRot;
     }
 
     protected virtual void Die()

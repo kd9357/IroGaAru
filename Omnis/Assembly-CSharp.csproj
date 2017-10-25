@@ -49,8 +49,10 @@
      <Compile Include="Assets\Scripts\ActivateTextAtLine.cs" />
      <Compile Include="Assets\Scripts\ActiveZone.cs" />
      <Compile Include="Assets\Scripts\AttackTrigger.cs" />
+     <Compile Include="Assets\Scripts\BoatBehavior.cs" />
      <Compile Include="Assets\Scripts\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\ChangeTextColor.cs" />
+     <Compile Include="Assets\Scripts\Checkpoint.cs" />
      <Compile Include="Assets\Scripts\ColorDisplay.cs" />
      <Compile Include="Assets\Scripts\ColorTransition.cs" />
      <Compile Include="Assets\Scripts\DamageBlocks.cs" />

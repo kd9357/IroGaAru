@@ -480,6 +480,8 @@ public class Enemy : MonoBehaviour
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
+            _lastPos = transform.position.x;
+            _distanceTraveled = 0;
             //Delay Enemy's actions
             if (_actionTimer < ActionCooldown * 0.2f)
                 _actionTimer = ActionCooldown * 0.2f;

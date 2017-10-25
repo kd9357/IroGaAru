@@ -60,6 +60,7 @@ public class GameController : MonoBehaviour
     private Vector3 _lastCheckpointPos;
     private GameObject[] _enemyObjects;
     private GameObject[] _itemObjects;
+    private GameObject[] _interactableObjects;
     private GameObject[] _fightZoneObjects;
 
 
@@ -129,6 +130,7 @@ public class GameController : MonoBehaviour
         _lastCheckpointPos = _player.transform.position;
         _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         _itemObjects = GameObject.FindGameObjectsWithTag("Item");
+        _interactableObjects = GameObject.FindGameObjectsWithTag("Interactable Environment");
         _fightZoneObjects = GameObject.FindGameObjectsWithTag("Fight Zone");
 
 
@@ -452,6 +454,13 @@ public class GameController : MonoBehaviour
         foreach (var i in _itemObjects)
             if (i.GetComponent<Item>())
                 i.GetComponent<Item>().ResetItem();
+
+        // Reset interactable objects
+        foreach (var i in _interactableObjects)
+        {
+            if (i != null && i.GetComponent<InteractableEnvironment>()) //This doesn't reset burned trees!
+                i.GetComponent<InteractableEnvironment>().ResetObject();
+        }
 
         // Reset fight zones and camera
         Camera.main.GetComponent<CameraFollow>().SetTarget(_player.gameObject.transform, true);

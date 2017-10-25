@@ -25,7 +25,8 @@ public class Spearfish : Enemy {
     {
         if (_actionTimer > 0)
             return;
-        if(!InRange() || !FacingTarget())
+        //If not in range OR not facing target OR in range but not on similar y planes
+        if (!InRange() || !FacingTarget() || (InRange() && Mathf.Abs(_target.position.y - transform.position.y) > 1))
             MoveForward();
         else if(FacingTarget())
         {
@@ -39,8 +40,6 @@ public class Spearfish : Enemy {
         if (_distanceTraveled >= PatrolDistance)
         {
             Flip();
-            _lastPos = transform.position.x;
-            _distanceTraveled = 0;
         }
     }
 
