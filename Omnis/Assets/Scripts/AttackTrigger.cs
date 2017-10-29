@@ -31,14 +31,20 @@ public class AttackTrigger : MonoBehaviour {
                 int direction = _player.FacingRight() ? 1 : -1;
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
-                    enemy.EnemyDamaged(Damage, GetColor(_color), direction);
+                {
+                    if(!enemy.EnemyDamaged(Damage, GameController.Instance.GetColor(_color), direction))
+                    {
+                        //Enemy was protected, knockback player (or some alternative animation)
+                        _player.Knockback(direction > 0);
+                    }
+                }
                 break;
             case "Interactable Environment":
                 //direction = collision.transform.position.x < transform.position.x ? -1 : 1;
                 direction = _player.FacingRight() ? 1 : -1;
                 InteractableEnvironment ie = collision.gameObject.GetComponentInParent<InteractableEnvironment>();
                 if (ie != null)
-                    ie.EnvironmentDamaged(GetColor(_color), direction);
+                    ie.EnvironmentDamaged(GameController.Instance.GetColor(_color), direction);
                 break;
 
         }
@@ -46,34 +52,34 @@ public class AttackTrigger : MonoBehaviour {
 
     #region Color
 
-    public Color GetColor(WeaponColor color)
-    {
-        switch (color)
-        {
-            case WeaponColor.Red:
-            {
-                return Color.red;
-            }
-            case WeaponColor.Yellow:
-            {
-                return Color.yellow;
-            }
-            case WeaponColor.Blue:
-            {
-                return Color.blue;
-            }
-            default:
-            {
-                Debug.LogError("Invalid color: " + color);
-                return Color.white;
-            }
-        }
-    }
+    //public Color GetColor(WeaponColor color)
+    //{
+    //    switch (color)
+    //    {
+    //        case WeaponColor.Red:
+    //        {
+    //            return Color.red;
+    //        }
+    //        case WeaponColor.Yellow:
+    //        {
+    //            return Color.yellow;
+    //        }
+    //        case WeaponColor.Blue:
+    //        {
+    //            return Color.blue;
+    //        }
+    //        default:
+    //        {
+    //            Debug.LogError("Invalid color: " + color);
+    //            return Color.white;
+    //        }
+    //    }
+    //}
 
     public void SetColor(WeaponColor color)
     {
         _color = color;
-        GetComponent<SpriteRenderer>().color = GetColor(color);
+        GetComponent<SpriteRenderer>().color = GameController.Instance.GetColor(color);
     }
 
     #endregion

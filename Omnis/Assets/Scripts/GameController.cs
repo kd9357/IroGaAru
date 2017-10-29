@@ -321,6 +321,7 @@ public class GameController : MonoBehaviour
     public void UpdateLastCheckpoint(Vector3 pos)
     {
         _lastCheckpointPos = new Vector3(pos.x, pos.y + 1f, pos.z);
+        //TODO: Reset background color
     }
 
     #region Pause
@@ -380,6 +381,7 @@ public class GameController : MonoBehaviour
         StartCoroutine(LoadLevelInBackground("Start_Screen"));
 
     }
+
     public IEnumerator CompleteLevel()
     {
         // Set level complete results
@@ -493,4 +495,28 @@ public class GameController : MonoBehaviour
     }
 
     #endregion
+
+    public Color GetColor(WeaponColor color)
+    {
+        switch (color)
+        {
+            case WeaponColor.Red:
+                {
+                    return Color.red;
+                }
+            case WeaponColor.Yellow:
+                {
+                    return Color.yellow;
+                }
+            case WeaponColor.Blue:
+                {
+                    return Color.blue;
+                }
+            default:
+                {
+                    Debug.LogError("Invalid color: " + color);
+                    return Color.white;
+                }
+        }
+    }
 }
