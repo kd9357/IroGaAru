@@ -46,20 +46,24 @@ public class FightZone : MonoBehaviour {
     private float _waveCountdown;
     private SpawnState _state = SpawnState.INACTIVE;
 
+    private CameraFollow _camScript;
+
     // Use this for initialization
     void Start () {
         _target = transform.Find("Camera Center");
         if(_target == null)
         {
-            Debug.Log("Camera lock for fight zone not found");
+            Debug.LogError("Camera lock for fight zone not found");
             return;
         }
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         if(_player == null)
         {
-            Debug.Log("Player does not exist");
+            Debug.LogError("Player does not exist");
             return;
         }
+        _camScript = Camera.main.GetComponent<CameraFollow>();
+
     }
 
     // Update is called once per frame
@@ -95,7 +99,8 @@ public class FightZone : MonoBehaviour {
         {
             UnlockZone();
             gameObject.SetActive(false);
-            Camera.main.GetComponent<CameraFollow>().SetTarget(_player, true);
+            _camScript.SetTarget(_player, true);
+            _camScript.EnableWalls(false);
         }
         else
         {
@@ -155,10 +160,11 @@ public class FightZone : MonoBehaviour {
     {
         if(collision.CompareTag("Player"))
         {
-            Camera.main.GetComponent<CameraFollow>().SetTarget(_target, false);
+            _camScript.SetTarget(_target, false);
             //Only do this on first enter
             if (_state == SpawnState.INACTIVE)
             {
+                _camScript.EnableWalls(true);
                 _waveCountdown = TimeBetweenWaves;
                 _state = SpawnState.WAITING;
             }

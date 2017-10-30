@@ -521,10 +521,10 @@ MonoBehaviour:
     m_ValueSerializationHelper:
     - {x: 473.40002, y: 290.00003}
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: df6e75c3ac52e8a4fbf7e5a16079ea64,
+  m_AnimatorController: {fileID: 9100000, guid: 0b793caae19215246ae63e8adb4cbb2c,
     type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: 1107356077120126862, guid: df6e75c3ac52e8a4fbf7e5a16079ea64,
+  - m_Target: {fileID: 1107463400215618350, guid: 0b793caae19215246ae63e8adb4cbb2c,
       type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/Scenes
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Persia\Desktop\UT\Fall 2017\CS354S\repo\Omnis
+  m_LastProjectPath: C:\Users\Amadeus\Documents\GitHub\capstone\Omnis
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 90}

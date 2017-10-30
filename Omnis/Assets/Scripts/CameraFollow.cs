@@ -91,8 +91,8 @@ public class CameraFollow : MonoBehaviour {
         //Else don't check deadzone or use offset
         else
         {
-            targetX = Mathf.Lerp(transform.position.x, _target.position.x, 3 * XSmooth * Time.deltaTime);   //Multiplying by 3 to make transition faster (should replace down the line)
-            targetY = Mathf.Lerp(transform.position.y, _target.position.y, 3 * YSmooth * Time.deltaTime);
+            targetX = Mathf.Lerp(transform.position.x, _target.position.x, 2.5f * XSmooth * Time.deltaTime);   //Multiplying by 3 to make transition faster (should replace down the line)
+            targetY = Mathf.Lerp(transform.position.y, _target.position.y, 2.5f * YSmooth * Time.deltaTime);
         }
 
         //Clamp to Min & MaxXY
@@ -109,5 +109,14 @@ public class CameraFollow : MonoBehaviour {
     {
         _target = newTarget;
         _playerLocked = lockToPlayer;
+    }
+
+    public void EnableWalls(bool enable)
+    {
+        var walls = gameObject.GetComponentsInChildren<BoxCollider2D>();
+        foreach(BoxCollider2D w in walls)
+        {
+            w.enabled = enable;
+        }
     }
 }

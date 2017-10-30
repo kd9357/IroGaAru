@@ -101,7 +101,6 @@
     <Compile Include="Assets\Scripts\ChangeTextColor.cs" />
     <Compile Include="Assets\Scripts\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\ColorDisplay.cs" />
-    <Compile Include="Assets\Scripts\ColorTransition.cs" />
     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
