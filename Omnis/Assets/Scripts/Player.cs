@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿// TeamTwo
+
+/* 
+ * Include Files
+ */
+
+using System.Diagnostics;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -10,6 +14,10 @@ using UnityEditor;
 #if UNITY_ANDROID || UNITY_IPHONE
 using CnControls;
 #endif
+
+/*
+ * Typedefs
+ */
 
 public class Player : MonoBehaviour
 {
@@ -216,7 +224,6 @@ public class Player : MonoBehaviour
         // ATTACK Continued
         if(doAttack)
         {
-            GameController.Instance.IncrementAttacksMade();
             Attack();
         }
         _anim.SetBool("Attacking", _attacking);
@@ -341,6 +348,26 @@ public class Player : MonoBehaviour
     //Activate weapon + animations + sound
     void Attack()
     {
+        // Check if gauge is depleted before attacking
+        switch (GameController.Instance.EquippedColor)
+        {
+            case WeaponColor.Red:
+                if (GaugeManager.Instance.IsRedDisabled())
+                    return;
+                GaugeManager.Instance.DepleteGauge(GaugeColor.Red);
+                break;
+            case WeaponColor.Yellow:
+                if (GaugeManager.Instance.IsYellowDisabled())
+                    return;
+                GaugeManager.Instance.DepleteGauge(GaugeColor.Yellow);
+                break;
+            case WeaponColor.Blue:
+                if (GaugeManager.Instance.IsBlueDisabled())
+                    return;
+                GaugeManager.Instance.DepleteGauge(GaugeColor.Blue);
+                break;
+        }
+
         _attacking = true;
         _weaponCollider.enabled = _attacking;
 
@@ -348,6 +375,7 @@ public class Player : MonoBehaviour
         _audioSource.Play();
 
         _anim.SetBool("Attacking", _attacking);
+        GameController.Instance.IncrementAttacksMade();
     }
 
     //Called at end of animation
