@@ -45,6 +45,8 @@ public class Enemy : MonoBehaviour
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
 
+    [Tooltip("Check to have enemy begin facing right")]
+    public bool FacingRight = false;
     [Tooltip("Select the AI of the enemy")]
     public Behavior EnemyBehavior;
     [Tooltip("The maximum health the enemy starts at")]
@@ -301,6 +303,8 @@ public class Enemy : MonoBehaviour
         _recoilTimer = 0;
         _currentState = EnemyState.Inactive;
         _actionTimer = 0;
+        if (_facingRight != FacingRight)
+            Flip();
 
         // For enemies with weapons (i.e. Oni)
         if (GetComponentInChildren<PolygonCollider2D>())
