@@ -317,7 +317,7 @@ public class Enemy : MonoBehaviour
     public virtual bool EnemyDamaged(int damage, Color color, int direction,
                                      int additionalForce = 1)
     {
-        if(color == GameController.Instance.GetColor(ColorOutline))
+        if(_usingGlow && color == GameController.Instance.GetColor(ColorOutline))
             return false;
 
         //Only set the timer on first hit
