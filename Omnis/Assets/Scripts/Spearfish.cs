@@ -66,9 +66,12 @@ public class Spearfish : Enemy {
     }
 
     // When the enemy gets hit by something
-    public override void EnemyDamaged(int damage, Color color, int direction,
+    public override bool EnemyDamaged(int damage, Color color, int direction,
                                      int additionalForce = 1)
     {
+        if (_usingGlow && color == GameController.Instance.GetColor(ColorOutline))
+            return false;
+
         //Only set the timer on first hit
         if (_colorTimer <= 0)
             _colorTimer = ColorCooldown;
@@ -94,5 +97,6 @@ public class Spearfish : Enemy {
         if (_currentState != EnemyState.Attacking)
             _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce,
                          ForceMode2D.Impulse);
+        return true;
     }
 }

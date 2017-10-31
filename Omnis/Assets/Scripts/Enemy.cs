@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
         Staggered,
         Dying
     }
+
     protected static List<Color> SpecialColors = new List<Color>
     {
         new Color(.5f, 0f, .5f),        //Purple
@@ -44,6 +45,8 @@ public class Enemy : MonoBehaviour
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
 
+    [Tooltip("Check to have enemy begin facing right")]
+    public bool FacingRight = false;
     [Tooltip("Select the AI of the enemy")]
     public Behavior EnemyBehavior;
     [Tooltip("The maximum health the enemy starts at")]
@@ -96,6 +99,10 @@ public class Enemy : MonoBehaviour
     [Tooltip("How long does the exlplosion prefab exist until destroying itself")]
     public float KillExplosionTimer = 1.0f;
 
+    //Aura/Color/Protector thing
+    [Tooltip("Color the enemy's outline aura is (what color is this enemy immune to? Without SpriteGlow Script is normal enemy)")]
+    public WeaponColor ColorOutline;
+
     #endregion
 
     #region Protected Attributes
@@ -113,6 +120,8 @@ public class Enemy : MonoBehaviour
     protected float _colorTimer;
     protected float _actionTimer;
     protected ColorStatus _currentColorStatus;
+    protected SpriteGlow _glowScript;
+    protected bool _usingGlow;
 
     // Movement and Orientation
     protected Transform _target;
@@ -142,6 +151,16 @@ public class Enemy : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
         _target = GameObject.FindGameObjectWithTag("Player").transform;
+        _glowScript = GetComponent<SpriteGlow>();
+        if(_glowScript == null)
+        {
+            _usingGlow = false;
+        }
+        else
+        {
+            _usingGlow = true;
+            _glowScript.GlowColor = GameController.Instance.GetColor(ColorOutline);
+        }
 
         Clear();
 
@@ -284,6 +303,8 @@ public class Enemy : MonoBehaviour
         _recoilTimer = 0;
         _currentState = EnemyState.Inactive;
         _actionTimer = 0;
+        if (_facingRight != FacingRight)
+            Flip();
 
         // For enemies with weapons (i.e. Oni)
         if (GetComponentInChildren<PolygonCollider2D>())
@@ -293,9 +314,12 @@ public class Enemy : MonoBehaviour
     }
 
     // When the enemy gets hit by something
-    public virtual void EnemyDamaged(int damage, Color color, int direction,
+    public virtual bool EnemyDamaged(int damage, Color color, int direction,
                                      int additionalForce = 1)
     {
+        if(_usingGlow && color == GameController.Instance.GetColor(ColorOutline))
+            return false;
+
         //Only set the timer on first hit
         if (_colorTimer <= 0)
             _colorTimer = ColorCooldown;
@@ -314,6 +338,7 @@ public class Enemy : MonoBehaviour
 
         _rb.AddForce(Vector2.right * direction * _currentKnockbackForce * additionalForce,
                      ForceMode2D.Impulse);
+        return true;
     }
 
     //Combine colors and determine if status changed
