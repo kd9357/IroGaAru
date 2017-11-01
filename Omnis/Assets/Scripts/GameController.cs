@@ -31,6 +31,9 @@ public class GameController : MonoBehaviour
     public int MinimumEnemies;
     public Material GrayscaleMaterial;
 
+    //Testing var
+    public bool AltAttack = false;
+
     /*
      * Private Member Variables
      */
@@ -74,6 +77,10 @@ public class GameController : MonoBehaviour
     private object _enemyLock;
     private object _attackLock;
     private object _hitLock;
+
+    private int _savedEnemyCount;
+    private int _savedAttackCount;
+    private int _savedEnemyHitCount;
 
     private void Awake()
     {
@@ -321,7 +328,9 @@ public class GameController : MonoBehaviour
     public void UpdateLastCheckpoint(Vector3 pos)
     {
         _lastCheckpointPos = new Vector3(pos.x, pos.y + 1f, pos.z);
-        //TODO: Reset background color
+        _savedAttackCount = _attackCount;
+        _savedEnemyCount = _enemyCount;
+        _savedEnemyHitCount = _enemyHitCount;
     }
 
     #region Pause
@@ -464,8 +473,16 @@ public class GameController : MonoBehaviour
                 i.GetComponent<InteractableEnvironment>().ResetObject();
         }
 
+        //Reset level clear parameters
+        _enemyCount = _savedEnemyCount;
+        _enemyHitCount = _savedEnemyHitCount;
+        _attackCount = _savedAttackCount;
+        if (_enemyCount <= MinimumEnemies)
+            GrayscaleMaterial.SetFloat("_AmountColored", (float)_enemyCount / MinimumEnemies);
+
         // Reset fight zones and camera
         Camera.main.GetComponent<CameraFollow>().SetTarget(_player.gameObject.transform, true);
+        Camera.main.GetComponent<CameraFollow>().EnableWalls(false);
         foreach (var fz in _fightZoneObjects)
             if (fz.GetComponent<FightZone>())
                 fz.GetComponent<FightZone>().UnlockZone();

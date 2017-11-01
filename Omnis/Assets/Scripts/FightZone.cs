@@ -161,10 +161,10 @@ public class FightZone : MonoBehaviour {
         if(collision.CompareTag("Player"))
         {
             _camScript.SetTarget(_target, false);
+            _camScript.EnableWalls(true);
             //Only do this on first enter
             if (_state == SpawnState.INACTIVE)
             {
-                _camScript.EnableWalls(true);
                 _waveCountdown = TimeBetweenWaves;
                 _state = SpawnState.WAITING;
             }

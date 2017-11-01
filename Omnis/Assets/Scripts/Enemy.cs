@@ -330,7 +330,11 @@ public class Enemy : MonoBehaviour
 
         _anim.SetBool("Recoil", true);
         _currentState = EnemyState.Staggered;
-        _currentHealth -= damage;
+
+        if (GameController.Instance.AltAttack && _currentColorStatus == ColorStatus.None)
+            _currentHealth -= (float)damage / 10;
+        else
+            _currentHealth -= damage;
 
         SetColor(color);
 

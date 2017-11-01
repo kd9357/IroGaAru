@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\GrayScale.shader" />
+    <None Include="Assets\Shaders\Outline.shader" />
     <None Include="Assets\Text\Forest Live\LiveCombat.txt" />
     <None Include="Assets\Text\Forest Live\LiveGreen.txt" />
     <None Include="Assets\Text\Forest Live\LiveJump.txt" />

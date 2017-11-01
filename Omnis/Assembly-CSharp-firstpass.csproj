@@ -60,6 +60,7 @@
      <None Include="Assets\Text\ZoneTest.txt" />
      <None Include="Assets\Text\Forest\Combat.txt" />
      <None Include="Assets\Text\Forest Live\LiveCombat.txt" />
+     <None Include="Assets\Shaders\Outline.shader" />
      <None Include="Assets\Text\Test.txt" />
      <None Include="Assets\Text\Forest\Green Color Combo.txt" />
      <None Include="Assets\Text\Forest Live\LivePurple.txt" />

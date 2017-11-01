@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\FightZone.cs" />
     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\GaugeManager.cs" />
     <Compile Include="Assets\Scripts\HPDisplay.cs" />
     <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
@@ -119,10 +120,13 @@
     <Compile Include="Assets\Scripts\Parallaxing.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Spearfish.cs" />
+    <Compile Include="Assets\Scripts\SpriteGlow.cs" />
+    <Compile Include="Assets\Scripts\SpriteGlowMaterial.cs" />
     <Compile Include="Assets\Scripts\TextManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\GrayScale.shader" />
+    <None Include="Assets\Shaders\Outline.shader" />
     <None Include="Assets\Text\Forest Live\LiveCombat.txt" />
     <None Include="Assets\Text\Forest Live\LiveGreen.txt" />
     <None Include="Assets\Text\Forest Live\LiveJump.txt" />
