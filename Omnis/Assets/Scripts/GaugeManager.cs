@@ -4,6 +4,7 @@
  * Include Files
  */
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,9 @@ public class GaugeManager : MonoBehaviour
     public Slider RedSlider;
     public Slider YellowSlider;
     public Slider BlueSlider;
+    public Image RedFill;
+    public Image YellowFill;
+    public Image BlueFill;
 
     [Tooltip("For any attack, how much should the gauge deplete? [0, 1]")]
     public float Depletion = .2f;
@@ -37,7 +41,9 @@ public class GaugeManager : MonoBehaviour
     [Tooltip("How much faster should 0 to full gauge regenerate? [0, 1]")]
     public float RegenerationRate = 3f;
 
-    private const float MAX_VAL = 1f;
+    private const float MAX_GAUGE_VAL = 1f;
+    private const float FLASH_DURATION = 1.5f;
+    private const float FLASH_MULTIPLIER = 8f;
 
     private bool _redDisabled;
     private bool _yellowDisabled;
@@ -72,9 +78,9 @@ public class GaugeManager : MonoBehaviour
         _yellowDisabled = false;
         _blueDisabled = false;
 
-        RedSlider.value = MAX_VAL;
-        YellowSlider.value = MAX_VAL;
-        BlueSlider.value = MAX_VAL;
+        RedSlider.value = MAX_GAUGE_VAL;
+        YellowSlider.value = MAX_GAUGE_VAL;
+        BlueSlider.value = MAX_GAUGE_VAL;
     }
 
     void Update()
@@ -88,15 +94,24 @@ public class GaugeManager : MonoBehaviour
         {
             case GaugeColor.Red:
                 if (DepleteSlider(RedSlider))
+                {
                     _redDisabled = true;
+                    DimGauge(RedFill);
+                }
                 break;
             case GaugeColor.Yellow:
                 if (DepleteSlider(YellowSlider))
+                {
                     _yellowDisabled = true;
+                    DimGauge(YellowFill);
+                }
                 break;
             case GaugeColor.Blue:
                 if (DepleteSlider(BlueSlider))
+                {
                     _blueDisabled = true;
+                    DimGauge(BlueFill);
+                }
                 break;
             default:
                 Debug.LogError(g + " is not a valid gauge color!");
@@ -108,11 +123,29 @@ public class GaugeManager : MonoBehaviour
     {
         // TODO: Play sound/animation to show gauge is filled
         if (RegenerateSlider(RedSlider))
-            _redDisabled = false;
+        {
+            if (_redDisabled)
+            {
+                _redDisabled = false;
+                StartCoroutine(FlashGauge(RedFill));
+            }
+        }
         if (RegenerateSlider(YellowSlider))
-            _yellowDisabled = false;
+        {
+            if (_yellowDisabled)
+            {
+                _yellowDisabled = false;
+                StartCoroutine(FlashGauge(YellowFill));
+            }
+        }
         if (RegenerateSlider(BlueSlider))
-            _blueDisabled = false;
+        {
+            if (_blueDisabled)
+            {
+                _blueDisabled = false;
+                StartCoroutine(FlashGauge(BlueFill));
+            }
+        }
     }
 
     #region Accessors
@@ -150,9 +183,28 @@ public class GaugeManager : MonoBehaviour
     // Regenerates respective slider and returns if it was fully filled
     private bool RegenerateSlider(Slider s)
     {
-        s.value = Mathf.Min(MAX_VAL, s.value + Regeneration * RegenerationRate);
-        if (s.value >= MAX_VAL)
+        s.value = Mathf.Min(MAX_GAUGE_VAL, s.value + Regeneration * RegenerationRate);
+        if (s.value >= MAX_GAUGE_VAL)
             return true;
         return false;
+    }
+
+    private void DimGauge(Image fill)
+    {
+        fill.canvasRenderer.SetAlpha(.25f);
+    }
+
+    private IEnumerator FlashGauge(Image fill)
+    {
+        fill.canvasRenderer.SetAlpha(1f);
+        float start = Time.time;
+        while (Time.time - start < FLASH_DURATION)
+        {
+            fill.canvasRenderer.SetAlpha(Mathf.PingPong(Time.time * FLASH_MULTIPLIER, 1f));
+            yield return new WaitForEndOfFrame();
+        }
+
+        // Ping Pong may not end in alpha of 1
+        fill.canvasRenderer.SetAlpha(1f);
     }
 }
