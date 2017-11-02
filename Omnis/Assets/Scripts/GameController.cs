@@ -270,8 +270,11 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         // Visually indicate that level is actively loading
-        if (_loadScene)
-            _loadLevelText.canvasRenderer.SetAlpha(Mathf.PingPong(Time.time, 1f));
+		if (_loadScene) 
+		{
+			_audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
+			_loadLevelText.canvasRenderer.SetAlpha (Mathf.PingPong (Time.time, 1f));
+		}
 
         if (EndGame && _gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
         {

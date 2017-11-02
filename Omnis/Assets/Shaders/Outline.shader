@@ -139,8 +139,8 @@ Shader "Sprites/Outline"
                     if (pixelUpAlpha <= alphaThreshold) return 1;
 
                     float2 pixelDownTexCoord = texCoord - float2(0, i * _MainTex_TexelSize.y);
-                    fixed pixelDownAlpha = pixelDownTexCoord.y < 0.0 ? 0.0 : tex2D(_MainTex, pixelDownTexCoord).a;
-                    if (pixelDownAlpha <= alphaThreshold) return 1;
+                    float2 pixelDownAlpha = pixelDownTexCoord.y < 0.0 ? 0.0 : tex2D(_MainTex, pixelDownTexCoord).a;
+                    if ((fixed)pixelDownAlpha <= alphaThreshold) return 1;
 
                     float2 pixelRightTexCoord = texCoord + float2(i * _MainTex_TexelSize.x, 0);
                     fixed pixelRightAlpha = pixelRightTexCoord.x > 1.0 ? 0.0 : tex2D(_MainTex, pixelRightTexCoord).a;
@@ -172,8 +172,8 @@ Shader "Sprites/Outline"
                     if (pixelUpAlpha > alphaThreshold) return 1;
 
                     float2 pixelDownTexCoord = texCoord - float2(0, i * _MainTex_TexelSize.y);
-                    fixed pixelDownAlpha = tex2D(_MainTex, pixelDownTexCoord).a;
-                    if (pixelDownAlpha > alphaThreshold) return 1;
+                    float2 pixelDownAlpha = tex2D(_MainTex, pixelDownTexCoord).a;
+                    if ((fixed)pixelDownAlpha > alphaThreshold) return 1;
 
                     float2 pixelRightTexCoord = texCoord + float2(i * _MainTex_TexelSize.x, 0);
                     fixed pixelRightAlpha = tex2D(_MainTex, pixelRightTexCoord).a;
