@@ -323,6 +323,7 @@ public class GameController : MonoBehaviour
         lock (_hitLock)
         {
             ++_enemyHitCount;
+            ComboManager.Instance.IncrementComboCount();
         }
     }
 

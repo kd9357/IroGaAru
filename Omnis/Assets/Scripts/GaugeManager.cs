@@ -78,6 +78,10 @@ public class GaugeManager : MonoBehaviour
         _yellowDisabled = false;
         _blueDisabled = false;
 
+        RedFill.canvasRenderer.SetAlpha(1f);
+        YellowFill.canvasRenderer.SetAlpha(1f);
+        BlueFill.canvasRenderer.SetAlpha(1f);
+
         RedSlider.value = MAX_GAUGE_VAL;
         YellowSlider.value = MAX_GAUGE_VAL;
         BlueSlider.value = MAX_GAUGE_VAL;
@@ -183,7 +187,8 @@ public class GaugeManager : MonoBehaviour
     // Regenerates respective slider and returns if it was fully filled
     private bool RegenerateSlider(Slider s)
     {
-        s.value = Mathf.Min(MAX_GAUGE_VAL, s.value + Regeneration * RegenerationRate);
+        s.value = Mathf.Min(MAX_GAUGE_VAL, s.value + Regeneration * RegenerationRate *
+            ComboManager.Instance.RegenMultiplier());
         if (s.value >= MAX_GAUGE_VAL)
             return true;
         return false;
