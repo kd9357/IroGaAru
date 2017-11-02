@@ -417,6 +417,8 @@ public class Player : MonoBehaviour
             //For now, just half the transparency when hit + invincible
             _sprite.color = new Color(_sprite.color.r, _sprite.color.g, _sprite.color.b, 0.5f);
 
+            ComboManager.Instance.ResetComboCount();
+
             // Player hurt sound
             _audioSource.clip = PlayerSoundEffects[1];
             _audioSource.Play();
@@ -446,5 +448,4 @@ public class Player : MonoBehaviour
     #endregion
 
     #endregion
-
 }
