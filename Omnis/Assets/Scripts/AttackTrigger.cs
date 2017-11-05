@@ -49,6 +49,13 @@ public class AttackTrigger : MonoBehaviour {
                 if (ie != null)
                     ie.EnvironmentDamaged(GameController.Instance.GetColor(_color), direction);
                 break;
+            case "Projectile":
+                Projectile p = collision.gameObject.GetComponent<Projectile>();
+                if(p != null)
+                {
+                    p.ProjectileDamaged(_color);
+                }
+                break;
         }
     }
 
