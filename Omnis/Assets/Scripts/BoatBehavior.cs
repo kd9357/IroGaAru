@@ -8,10 +8,12 @@ namespace Assets.Scripts
     {
         private Rigidbody2D _rb;
         private Rigidbody2D _player;
+        private bool _onBoat;
 
         void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _onBoat = false;
 
             var p = GameObject.FindGameObjectWithTag("Player");
             if (p == null)
@@ -26,11 +28,11 @@ namespace Assets.Scripts
 
         void FixedUpdate()
         {
-            if ((_rb.velocity.x >= .05f || _rb.velocity.x <= -0.05f) && !_player.isKinematic)
+            if (_onBoat && Mathf.Abs(_rb.velocity.x) >= .05f)
             {
                 _player.isKinematic = true;
             }
-            else if ((_rb.velocity.x <= 0.05f || _rb.velocity.x >= -0.05f) && _player.isKinematic)
+            else if (_onBoat && (Mathf.Abs(_rb.velocity.x) <= 0.05f))
             {
                 _player.isKinematic = false;
             }
@@ -42,6 +44,7 @@ namespace Assets.Scripts
             {
                 collision.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
                 collision.gameObject.transform.parent = gameObject.transform;
+                _onBoat = true;
             }
         }
 
@@ -51,6 +54,7 @@ namespace Assets.Scripts
             {
                 collision.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
                 collision.gameObject.transform.parent = null;
+                _onBoat = false;
             }
         }
     }

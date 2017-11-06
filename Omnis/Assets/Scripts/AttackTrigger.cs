@@ -13,11 +13,14 @@ public class AttackTrigger : MonoBehaviour {
 
     public int Damage = 1;
 
+    private static int _enemyID;
+
     private WeaponColor _color;
     private Player _player;
 
     void Start()
     {
+        _enemyID = -1;
         _player = GetComponentInParent<Player>();    
     }
 
@@ -27,12 +30,12 @@ public class AttackTrigger : MonoBehaviour {
         switch(collision.tag)
         {
             case "Enemy":
-                //int direction = collision.transform.position.x < transform.parent.position.x ? -1 : 1;
                 int direction = _player.FacingRight() ? 1 : -1;
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-                if (enemy != null)
+                if (enemy != null && _enemyID != collision.transform.root.GetInstanceID())
                 {
-                    if(!enemy.EnemyDamaged(Damage, GameController.Instance.GetColor(_color), direction))
+                    _enemyID = collision.transform.root.GetInstanceID();
+                    if (!enemy.EnemyDamaged(Damage, GameController.Instance.GetColor(_color), direction))
                     {
                         //Enemy was protected, knockback player (or some alternative animation)
                         _player.Knockback(direction > 0);
@@ -46,7 +49,23 @@ public class AttackTrigger : MonoBehaviour {
                 if (ie != null)
                     ie.EnvironmentDamaged(GameController.Instance.GetColor(_color), direction);
                 break;
+            case "Projectile":
+                Projectile p = collision.gameObject.GetComponent<Projectile>();
+                if(p != null)
+                {
+                    p.ProjectileDamaged(_color);
+                }
+                break;
+        }
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        switch (collision.tag)
+        {
+            case "Enemy":
+                _enemyID = -1;
+                break;
         }
     }
 

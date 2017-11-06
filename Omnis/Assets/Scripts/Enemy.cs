@@ -365,6 +365,13 @@ public class Enemy : MonoBehaviour
                 float distance = Vector3.Distance(sc, cc);
                 if (i != 0)
                     threshold = 0.34f; //gack, change threshold for orange and green
+                //Double gack, Special case check actual green
+                if(i == 2)
+                {
+                    float temp = Vector3.Distance(new Vector3(0.5f, 1f, 0.5f), cc);
+                    if (temp < distance)
+                        distance = temp;
+                }
                 if (distance < threshold)
                     break;
             }

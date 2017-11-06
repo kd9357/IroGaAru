@@ -463,6 +463,10 @@ public class GameController : MonoBehaviour
                 e.GetComponent<Kappa>().Clear();
             else if (e.GetComponent<Spearfish>())
                 e.GetComponent<Spearfish>().Clear();
+            else if (e.GetComponent<Firebird>())
+                e.GetComponent<Firebird>().Clear();
+            else if (e.GetComponent<Kechibi>())
+                e.GetComponent<Kechibi>().Clear();
         }
 
         // Reset items
