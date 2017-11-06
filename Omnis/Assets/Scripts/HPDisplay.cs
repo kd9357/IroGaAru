@@ -4,22 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HPDisplay : MonoBehaviour {
-    //public int hp;
-    //public int max_hp;
-    public Player player;
+
+    
     public Image[] hp_array;
     public int danger_number;
 
+    private Player _player;
     private int previous_hp;
 
     void Start () {
-        GUIElement[] hp_array = new GUIElement[player.MaxHealth];
+        var p = GameObject.FindGameObjectWithTag("Player");
+        if (p == null)
+            Debug.LogError("HP Display couldn't find Player Object!");
+        else
+            _player = p.GetComponent<Player>();
+        GUIElement[] hp_array = new GUIElement[_player.MaxHealth];
         previous_hp = 8;
     }
 	
 	// OnGUI called to draw GUI objects.
 	void OnGUI () {
-	    int player_health = player.GetCurrentHealth();
+	    int player_health = _player.GetCurrentHealth();
         if(player_health < previous_hp)
         {
             
@@ -40,7 +45,7 @@ public class HPDisplay : MonoBehaviour {
             }
         }
         previous_hp = player_health;
-        for (int i = 0; i < player.MaxHealth; i++) {
+        for (int i = 0; i < _player.MaxHealth; i++) {
             if (i < player_health)
             {
                 if (player_health <= danger_number)
