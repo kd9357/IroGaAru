@@ -376,6 +376,7 @@ public class GameController : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         _loadScene = true;
+        _fadeMainMusic = true;
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
 
         _loadLevelCanvas.SetActive(true);
