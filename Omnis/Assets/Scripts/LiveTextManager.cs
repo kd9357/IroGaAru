@@ -12,7 +12,7 @@ public class LiveTextManager : MonoBehaviour {
     //Should also make these private down the line
     public TextAsset TextFile;
     public string[] TextLines;
-    public float maxTime;
+    public float maxTime = 3.0f;
 
     private int _currentLine;
     private bool _isActive;
@@ -21,7 +21,6 @@ public class LiveTextManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        maxTime = 3.0f;
         if (TextFile != null)
         {
             TextLines = (TextFile.text.Split('\n'));
@@ -51,14 +50,12 @@ public class LiveTextManager : MonoBehaviour {
     {
         TextBox.SetActive(true);
         _isActive = true;
-        //GameController.instance.PauseGame(true);
     }
 
     public void DisableTextBox()
     {
         TextBox.SetActive(false);
         _isActive = false;
-        //GameController.instance.PauseGame(false);
     }
 
     public void ReloadScript(TextAsset newText)

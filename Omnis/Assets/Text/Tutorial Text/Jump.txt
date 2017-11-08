@@ -1,0 +1,2 @@
+Press W or Space to jump
+Hold the key to jump higher

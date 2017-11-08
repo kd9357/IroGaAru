@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/forest_level.unity
+- path: Assets/Scenes/fire_level.unity
   isLoaded: 1
   isActive: 1

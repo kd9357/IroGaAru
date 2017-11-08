@@ -1,0 +1,2 @@
+Purple stuns enemies for a short time
+Enemies take more damage when Orange, Purple, or Green

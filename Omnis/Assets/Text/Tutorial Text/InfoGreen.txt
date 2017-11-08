@@ -1,0 +1,2 @@
+Green sends enemies and certain obstacles flying away
+Enemies take more damage when Orange, Purple, or Green

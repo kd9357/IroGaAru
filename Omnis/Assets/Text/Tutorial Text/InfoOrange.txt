@@ -1,0 +1,2 @@
+Orange burns enemies and obstacles over time
+Enemies take more damage when Orange, Purple, or Green

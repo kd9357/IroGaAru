@@ -33,6 +33,7 @@ public class GaugeManager : MonoBehaviour
     public Image RedFill;
     public Image YellowFill;
     public Image BlueFill;
+    public AudioClip[] AudioClips;
 
     [Tooltip("For any attack, how much should the gauge deplete? [0, 1]")]
     public float Depletion = .2f;
@@ -44,6 +45,8 @@ public class GaugeManager : MonoBehaviour
     private const float MAX_GAUGE_VAL = 1f;
     private const float FLASH_DURATION = 1.5f;
     private const float FLASH_MULTIPLIER = 8f;
+
+    private AudioSource _audioSource;
 
     private bool _redDisabled;
     private bool _yellowDisabled;
@@ -77,6 +80,8 @@ public class GaugeManager : MonoBehaviour
         _redDisabled = false;
         _yellowDisabled = false;
         _blueDisabled = false;
+
+        _audioSource = gameObject.GetComponent<AudioSource>();
 
         RedFill.canvasRenderer.SetAlpha(1f);
         YellowFill.canvasRenderer.SetAlpha(1f);
@@ -197,10 +202,15 @@ public class GaugeManager : MonoBehaviour
     private void DimGauge(Image fill)
     {
         fill.canvasRenderer.SetAlpha(.25f);
+        _audioSource.clip = AudioClips[1];
+        _audioSource.Play();
     }
 
     private IEnumerator FlashGauge(Image fill)
     {
+        _audioSource.clip = AudioClips[0];
+        _audioSource.Play();
+
         fill.canvasRenderer.SetAlpha(1f);
         float start = Time.time;
         while (Time.time - start < FLASH_DURATION)

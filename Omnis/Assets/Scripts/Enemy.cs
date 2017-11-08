@@ -45,6 +45,9 @@ public class Enemy : MonoBehaviour
     [Tooltip("Check to display enemy stats")]
     public bool DebugMode = false;
 
+    [Tooltip("The name of the enemy that will appear on the Enemy HP Bar.")]
+    public string EnemyName = "Enemy";
+
     [Tooltip("Check to have enemy begin facing right")]
     public bool FacingRight = false;
     [Tooltip("Select the AI of the enemy")]
@@ -312,7 +315,14 @@ public class Enemy : MonoBehaviour
 
         gameObject.SetActive(true);
     }
-
+    public virtual float EnemyHPPercent()
+    {
+        return _currentHealth / MaxHealth;
+    }
+    public virtual string GetName()
+    {
+        return EnemyName;
+    }
     // When the enemy gets hit by something
     public virtual bool EnemyDamaged(int damage, Color color, int direction,
                                      int additionalForce = 1)
@@ -547,6 +557,18 @@ public class Enemy : MonoBehaviour
         _rb.velocity = new Vector2(_xMov, _yMov);
     }
 
+    #endregion
+
+    #region Getters
+    public Color CurrentColor()
+    {
+        return _currentColor;
+    }
+
+    public ColorStatus CurrentColorStatus()
+    {
+        return _currentColorStatus;
+    }
     #endregion
 
     #endregion

@@ -391,6 +391,12 @@ public class Player : MonoBehaviour
         return _attacking;
     }
 
+    public void PlayBadHit()
+    {
+        _audioSource.clip = PlayerSoundEffects[2];
+        _audioSource.Play();
+    }
+
     #endregion
 
     #region Health

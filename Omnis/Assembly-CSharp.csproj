@@ -57,8 +57,10 @@
      <Compile Include="Assets\Scripts\ComboManager.cs" />
      <Compile Include="Assets\Scripts\DamageBlocks.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
+     <Compile Include="Assets\Scripts\EnemyHPBar.cs" />
      <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
      <Compile Include="Assets\Scripts\FightZone.cs" />
+     <Compile Include="Assets\Scripts\Firebird.cs" />
      <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\GaugeManager.cs" />
@@ -66,6 +68,7 @@
      <Compile Include="Assets\Scripts\InteractableEnvironment.cs" />
      <Compile Include="Assets\Scripts\Item.cs" />
      <Compile Include="Assets\Scripts\Kappa.cs" />
+     <Compile Include="Assets\Scripts\Kechibi.cs" />
      <Compile Include="Assets\Scripts\LevelComplete.cs" />
      <Compile Include="Assets\Scripts\LiveTextEnd.cs" />
      <Compile Include="Assets\Scripts\LiveTextManager.cs" />
@@ -73,6 +76,7 @@
      <Compile Include="Assets\Scripts\LiveTextStart.cs" />
      <Compile Include="Assets\Scripts\Parallaxing.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Projectile.cs" />
      <Compile Include="Assets\Scripts\Spearfish.cs" />
      <Compile Include="Assets\Scripts\SpriteGlow.cs" />
      <Compile Include="Assets\Scripts\SpriteGlowMaterial.cs" />

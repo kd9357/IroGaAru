@@ -1,0 +1,1 @@
+Some enemies will have a color aura, preventing them from being hurt by that color

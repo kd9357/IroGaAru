@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{311F5620-3B69-3A91-104B-31F92129A8C5}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -50,40 +50,40 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library\UnityAssemblies\UnityEngine.TestRunner.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
-      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
-      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\ComboManager.cs" />
     <Compile Include="Assets\Scripts\DamageBlocks.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\EnemyHPBar.cs" />
     <Compile Include="Assets\Scripts\EnvironmentalHazard.cs" />
     <Compile Include="Assets\Scripts\FightZone.cs" />
     <Compile Include="Assets\Scripts\Firebird.cs" />
@@ -120,9 +121,11 @@
     <Compile Include="Assets\Scripts\LiveTextManager.cs" />
     <Compile Include="Assets\Scripts\LiveTextOnDestroy.cs" />
     <Compile Include="Assets\Scripts\LiveTextStart.cs" />
+    <Compile Include="Assets\Scripts\LiveTextTutorial.cs" />
     <Compile Include="Assets\Scripts\Parallaxing.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
+    <Compile Include="Assets\Scripts\SceneAudioManager.cs" />
     <Compile Include="Assets\Scripts\Spearfish.cs" />
     <Compile Include="Assets\Scripts\SpriteGlow.cs" />
     <Compile Include="Assets\Scripts\SpriteGlowMaterial.cs" />
@@ -146,6 +149,19 @@
     <None Include="Assets\Text\Forest\Purple Color Combo.txt" />
     <None Include="Assets\Text\Forest\Text Navigation.txt" />
     <None Include="Assets\Text\Test.txt" />
+    <None Include="Assets\Text\Tutorial Text\BasicAttack.txt" />
+    <None Include="Assets\Text\Tutorial Text\Health.txt" />
+    <None Include="Assets\Text\Tutorial Text\InfoExtra.txt" />
+    <None Include="Assets\Text\Tutorial Text\InfoGreen.txt" />
+    <None Include="Assets\Text\Tutorial Text\InfoOrange.txt" />
+    <None Include="Assets\Text\Tutorial Text\InfoPurple.txt" />
+    <None Include="Assets\Text\Tutorial Text\Jump.txt" />
+    <None Include="Assets\Text\Tutorial Text\MixAttack.txt" />
+    <None Include="Assets\Text\Tutorial Text\MobileBasicAttack.txt" />
+    <None Include="Assets\Text\Tutorial Text\MobileJump.txt" />
+    <None Include="Assets\Text\Tutorial Text\MobileMixAttack.txt" />
+    <None Include="Assets\Text\Tutorial Text\MobileMovement.txt" />
+    <None Include="Assets\Text\Tutorial Text\Movement.txt" />
     <None Include="Assets\Text\ZoneTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

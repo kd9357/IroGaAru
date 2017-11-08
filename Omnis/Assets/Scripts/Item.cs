@@ -41,6 +41,8 @@ public class Item : MonoBehaviour
                     case Item_Type.Health:
                         player.RestoreHealth(Value);
                         _pickedUp = true;
+
+                        gameObject.GetComponent<AudioSource>().Play();
                         break;
                     default:
                         Debug.LogError("Invalid item type: " + ItemType);
@@ -48,7 +50,10 @@ public class Item : MonoBehaviour
                 }
 
                 if (_pickedUp)
-                    gameObject.SetActive(false);
+                {
+                    gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                    gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                }
             }
         }
     }

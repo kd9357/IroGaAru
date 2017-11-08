@@ -27,9 +27,12 @@ public class GameController : MonoBehaviour
     public string NextScene = "Start_Screen";
     public bool EndGame = false;
     public WeaponColor EquippedColor;
+    [Tooltip("The last enemy hit.")]
+    public Enemy LastEnemy;
     [Tooltip("The minimum number of enemies to be defeated before the environment is fully colored")]
     public int MinimumEnemies;
     public Material GrayscaleMaterial;
+    public AudioSource MainMusic;
 
     //Testing var
     public bool AltAttack = false;
@@ -57,8 +60,7 @@ public class GameController : MonoBehaviour
     private Text _loadLevelText;
 
     private Player _player;         //To pause the player's inputs
-    private AudioSource _audioSourceManager;
-    private AudioSource _gameOverAudio;
+    private SceneAudioManager _audioSourceManager;
 
     private Vector3 _lastCheckpointPos;
     private GameObject[] _enemyObjects;
@@ -69,6 +71,7 @@ public class GameController : MonoBehaviour
 
     private bool _paused;
     private bool _loadScene;
+    private bool _fadeMainMusic;
 
     // Critical Vars
     private int _enemyCount;
@@ -118,10 +121,7 @@ public class GameController : MonoBehaviour
         SetupPauseCanvas();
         SetupLoadLevelCanvas();
 
-        // NOTE: If parent has audiosource, will be counted
-        var audiosources = gameObject.GetComponentsInChildren<AudioSource>();
-        _gameOverAudio = audiosources[0];
-        _audioSourceManager = audiosources[1];   //Assuming music is first audio source in children
+        _audioSourceManager = gameObject.GetComponent<SceneAudioManager>();
 
         // TODO: Need to change for start screen, since there is no player
         //  kd: evidently start gets called each time a new scene is loaded
@@ -132,7 +132,10 @@ public class GameController : MonoBehaviour
             Debug.LogError("There is no Player in the scene!");
 
         //Color Transition setup
-        GrayscaleMaterial.SetFloat("_AmountColored", 0);
+        if (MinimumEnemies == 0)
+            GrayscaleMaterial.SetFloat("_AmountColored", 1);
+        else
+            GrayscaleMaterial.SetFloat("_AmountColored", 0);
 
         _lastCheckpointPos = _player.transform.position;
         _enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
@@ -143,6 +146,7 @@ public class GameController : MonoBehaviour
 
         _paused = false;
         _loadScene = false;
+        _fadeMainMusic = false;
 
         // Initialize critical section vars
         _enemyCount = 0;
@@ -270,19 +274,25 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         // Visually indicate that level is actively loading
-		if (_loadScene) 
+        if (_fadeMainMusic)
+        {
+            MainMusic.volume -= MainMusic.volume > 0f ? Time.deltaTime * 2 : 0f;
+        }
+
+        if (_loadScene) 
 		{
-			_audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
 			_loadLevelText.canvasRenderer.SetAlpha (Mathf.PingPong (Time.time, 1f));
 		}
 
         if (EndGame && _gameoverPanel.canvasRenderer.GetAlpha() >= .9f)
         {
-            _audioSourceManager.volume -= _audioSourceManager.volume > 0f ? Time.deltaTime * 2 : 0f;
+            MainMusic.volume -= MainMusic.volume > 0f ? Time.deltaTime * 2 : 0f;
 
             if (Input.anyKey)
             {
                 EndGame = false;
+                _audioSourceManager.PlayLevelSelect();
+
                 LoadCheckpoint();
             }
         }
@@ -302,6 +312,7 @@ public class GameController : MonoBehaviour
 
     public void IncrementEnemiesDefeated()
     {
+        _audioSourceManager.PlayEnemyDeath();
         lock (_enemyLock)
         {
             ++_enemyCount;
@@ -352,7 +363,7 @@ public class GameController : MonoBehaviour
         {
             _paused = !_paused;
             Time.timeScale = _paused ? 0 : 1;
-            _audioSourceManager.mute = _paused;
+            MainMusic.mute = _paused;
             if (_player != null)
                 _player.FreezeMovement(_paused);
             _pauseCanvas.SetActive(_paused);
@@ -397,6 +408,9 @@ public class GameController : MonoBehaviour
 
     public IEnumerator CompleteLevel()
     {
+        _fadeMainMusic = true;
+        _audioSourceManager.PlayLevelComplete();
+
         // Set level complete results
         foreach (var t in _levelCompleteTexts)
             switch (t.gameObject.name)
@@ -422,23 +436,22 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         for (var k = 1; k < _levelCompleteTexts.Count; ++k)
+        {
             _levelCompleteTexts[k].CrossFadeAlpha(2f, 1.5f, false);
-
+        }
         yield return new WaitForSeconds(3f);
 
         _levelCompletePanel.CrossFadeColor(Color.black, 1f, false, false, true);
         foreach (var t in _levelCompleteTexts)
             t.CrossFadeAlpha(0, .5f, false);
 
-        yield return new WaitForSeconds(2);
-
+        yield return new WaitForSeconds(4);
         LoadScene(NextScene);
     }
 
     public void GameOver()
     {
-        _gameOverAudio.volume = 1f;
-        _gameOverAudio.Play();
+        _audioSourceManager.PlayGameOver();
 
         _gameoverCanvas.SetActive(true);
 
@@ -510,8 +523,8 @@ public class GameController : MonoBehaviour
 
         _gameoverCanvas.SetActive(false);
 
-        _audioSourceManager.volume = 1f;
-        _audioSourceManager.Play();
+        MainMusic.volume = 1f;
+        MainMusic.Play();
     }
 
     public void QuitGame()

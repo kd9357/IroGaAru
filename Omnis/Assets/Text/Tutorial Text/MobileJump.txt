@@ -1,0 +1,2 @@
+Tap the right side of the screen to jump
+Press longer to jump higher

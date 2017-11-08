@@ -34,11 +34,13 @@ public class AttackTrigger : MonoBehaviour {
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null && _enemyID != collision.transform.root.GetInstanceID())
                 {
+                    GameController.Instance.LastEnemy = enemy;
                     _enemyID = collision.transform.root.GetInstanceID();
                     if (!enemy.EnemyDamaged(Damage, GameController.Instance.GetColor(_color), direction))
                     {
                         //Enemy was protected, knockback player (or some alternative animation)
                         _player.Knockback(direction > 0);
+                        _player.PlayBadHit();
                     }
                 }
                 break;
