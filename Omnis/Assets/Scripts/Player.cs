@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
 
     // Health
     private int _currentHealth;
+    private bool _isAlive;
 
     // Weapon components and private vars
     private PolygonCollider2D _weaponCollider;
@@ -112,6 +113,7 @@ public class Player : MonoBehaviour
         _invincibleTimer = 0f;
 
 	    _currentHealth = MaxHealth;
+        _isAlive = true;
 
         //Setup weapon stuff
         _trigg = Weapon.GetComponent<AttackTrigger>();
@@ -229,7 +231,7 @@ public class Player : MonoBehaviour
         _anim.SetBool("Attacking", _attacking);
 
         // HEALTH
-        if (_currentHealth <= 0)
+        if (_currentHealth <= 0 && _isAlive)
         {
             Die();
         }
@@ -263,7 +265,8 @@ public class Player : MonoBehaviour
                 _onWall = true;
                 break;
             case "Instant Death":
-                Die();
+                if (_isAlive)
+                    Die();
                 break;
             default:
                 break;
@@ -283,7 +286,8 @@ public class Player : MonoBehaviour
                 _onWall = true;
                 break;
             case "Instant Death":
-                Die();
+                if(_isAlive)
+                    Die();
                 break;
             default:
                 break;
@@ -303,7 +307,8 @@ public class Player : MonoBehaviour
                 _onWall = false;
                 break;
             case "Instant Death":
-                Die();
+                if(_isAlive)
+                    Die();
                 break;
             default:
                 break;
@@ -438,11 +443,21 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        _isAlive = false;
+        _anim.SetTrigger("Death");
+    }
+
+    void Restart()
+    {
         _currentHealth = MaxHealth;             // May want to save before death health
         GameController.Instance.GameOver();
         gameObject.SetActive(false);
     }
 
+    public void SetAlive(bool alive)
+    {
+        _isAlive = alive;
+    }
     #endregion
 
     #region Accessors

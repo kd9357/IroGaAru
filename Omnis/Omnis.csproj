@@ -151,6 +151,7 @@
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\Tutorial Text\BasicAttack.txt" />
     <None Include="Assets\Text\Tutorial Text\Health.txt" />
+    <None Include="Assets\Text\Tutorial Text\InfoCombo.txt" />
     <None Include="Assets\Text\Tutorial Text\InfoExtra.txt" />
     <None Include="Assets\Text\Tutorial Text\InfoGreen.txt" />
     <None Include="Assets\Text\Tutorial Text\InfoOrange.txt" />

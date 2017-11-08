@@ -124,12 +124,11 @@ public class Projectile : MonoBehaviour {
 
                 break;
             case "Enemy":
-                Debug.Log("Hit enemy");
                 int direction = _direction.x > 0 ? 1 : _direction.x < 0 ? -1 : 0;
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.EnemyDamaged(Damage, _currentColor, direction);
+                    enemy.EnemyDamaged(Damage * 5, Color.white, direction);
                 }
                 break;
             default:
@@ -164,7 +163,7 @@ public class Projectile : MonoBehaviour {
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.EnemyDamaged(Damage, _currentColor, direction);
+                    enemy.EnemyDamaged(Damage * 5, Color.white, direction);
                 }
                 break;
             default:

@@ -1,1 +1,1 @@
-Tea restores health. Some enemies will drop tea
+Tea restores health, shown on the upper left. Some enemies will drop tea

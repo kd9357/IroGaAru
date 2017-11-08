@@ -1,4 +1,4 @@
-Tap the bottom right buttons to attack with Red, Blue, or Yellow
 Each attack uses ink, shown on the bottom of the screen
 Once ink has been used up, you can't use the attack until it fully refills
-Try attacking the dummy with a color
+Tap the bottom right buttons to attack with Red, Blue, or Yellow
+Try defeating the dummy with a color

@@ -515,6 +515,7 @@ public class GameController : MonoBehaviour
     {
         _player.gameObject.SetActive(true);
         _player.TeleportToPosition(_lastCheckpointPos);
+        _player.SetAlive(true);
 
         _gameoverText.CrossFadeAlpha(0f, .5f, false);
         _gameoverPanel.CrossFadeAlpha(0f, 2f, false);

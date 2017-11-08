@@ -1,0 +1,2 @@
+Every consecutive attack without getting hurt increases your combo
+A higher combo decreases the time it takes for ink to refill
