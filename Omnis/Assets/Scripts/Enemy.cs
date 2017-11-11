@@ -677,4 +677,37 @@ public class Enemy : MonoBehaviour
         }
     }
     #endregion
+
+    #region Tutorial
+
+    public bool IsRed()
+    {
+        return _currentColor.r >= .9f && _currentColor.g <= .5f && 
+            _currentColor.b <= .5f && _currentColorStatus == ColorStatus.None;
+    }
+    public bool IsYellow()
+    {
+        return _currentColor.r >= .9f && _currentColor.g >= .9f &&
+            _currentColor.b <= .5f && _currentColorStatus == ColorStatus.None;
+    }
+    public bool IsBlue()
+    {
+        return _currentColor.b >= .9f && _currentColor.g <= .5f &&
+               _currentColor.r <= .5f && _currentColorStatus == ColorStatus.None;
+    }
+
+    public bool IsOrange()
+    {
+        return _currentColorStatus == ColorStatus.DamageOverTime;
+    }
+    public bool IsPurple()
+    {
+        return _currentColorStatus == ColorStatus.Stun;
+    }
+    public bool IsGreen()
+    {
+        return _currentColorStatus == ColorStatus.WindRecoil;
+    }
+
+    #endregion
 }

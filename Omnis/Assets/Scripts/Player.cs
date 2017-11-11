@@ -481,4 +481,23 @@ public class Player : MonoBehaviour
     #endregion
 
     #endregion
+
+    #region Tutorial
+
+    public bool IsMovingRight()
+    {
+        return _rb.velocity.x > 0;
+    }
+
+    public bool IsMovingLeft()
+    {
+        return _rb.velocity.x < 0;
+    }
+
+    public bool IsJumping()
+    {
+        return Mathf.Abs(_rb.velocity.y) > 2;
+    }
+
+    #endregion
 }
