@@ -128,6 +128,9 @@ public class Player : MonoBehaviour
     // Fixed Update runs once per physics tick
     void FixedUpdate()
     {
+        if (_paused)
+            return;
+
         // MOVEMENT
         // If knockback over, resume movement
         if(_knockbackTimer <= 0)
@@ -160,6 +163,8 @@ public class Player : MonoBehaviour
                     y_mov = _rb.velocity.y * 0.2f;
                 }
             }
+            x_mov = Mathf.Clamp(x_mov, -Speed * 3, Speed * 3);
+            y_mov = Mathf.Clamp(y_mov, -Speed * 3, Speed * 3);
 
             _rb.velocity = new Vector2(x_mov, y_mov);
             _anim.SetFloat("Y_Mov", y_mov);
@@ -444,14 +449,21 @@ public class Player : MonoBehaviour
     public void Die()
     {
         _isAlive = false;
+        FreezeMovement(true);
         _anim.SetTrigger("Death");
     }
 
-    void Restart()
+    void StartGameOver()
     {
-        _currentHealth = MaxHealth;             // May want to save before death health
         GameController.Instance.GameOver();
         gameObject.SetActive(false);
+    }
+
+    public void Clear()
+    {
+        SetAlive(true);
+        FreezeMovement(false);
+        _currentHealth = MaxHealth;
     }
 
     public void SetAlive(bool alive)

@@ -6,7 +6,7 @@ public class Spearfish : Enemy {
 
     public float AttackSpeed = 1f;
 
-    private Vector3 _initialPosition;
+    private Vector3 _chargePosition;
     private float _distanceToAttack;
 
     protected override void FixedUpdate()
@@ -31,7 +31,7 @@ public class Spearfish : Enemy {
         else if(FacingTarget())
         {
             //Set target location
-            _initialPosition = transform.position;
+            _chargePosition = transform.position;
             _distanceToAttack = Vector3.Distance(_target.position, transform.position);
             _actionTimer = 1;
             Attack();
@@ -45,7 +45,7 @@ public class Spearfish : Enemy {
 
     private void Charge()
     {
-        if (Mathf.Abs(transform.position.x - _initialPosition.x) >= _distanceToAttack)
+        if (Mathf.Abs(transform.position.x - _chargePosition.x) >= _distanceToAttack)
         {
             EndAttack();
             _anim.SetTrigger("EndAttack");

@@ -151,5 +151,72 @@ public class FlyingEnemy : Enemy {
         }
     }
 
+    //Special case for flying enemy, stop attacking if hit a wall
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        switch (collision.collider.tag)
+        {
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player == null)
+                    Debug.LogError("Player script doesn't exist!");
+                if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
+                    return;
+
+                player.PlayerDamaged(TouchDamage);
+                if (TouchDamage > 0)
+                    player.Knockback(collision.transform.position.x < transform.position.x);
+
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
+            case "Wall":
+                if (EnemyBehavior == Behavior.LeftRight)
+                {
+                    Flip();
+                }
+                _currentState = EnemyState.Waiting;
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            case "Spikes":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
+    //Special case for flying enemy, stop attacking if hit a wall
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        switch (collision.collider.tag)
+        {
+            case "Player":
+                var player = collision.gameObject.GetComponent<Player>();
+                if (player == null)
+                    Debug.LogError("Player script doesn't exist!");
+                if (player.IsInvincible() || _currentColorStatus == ColorStatus.Stun)
+                    return;
+
+                player.PlayerDamaged(TouchDamage);
+                if (TouchDamage > 0)
+                    player.Knockback(collision.transform.position.x < transform.position.x);
+
+                // Enemy hit sound
+                _audioSource.clip = EnemySoundEffects[0];
+                _audioSource.Play();
+                break;
+            case "Instant Death":
+                Die();
+                break;
+            case "Spikes":
+                Die();
+                break;
+            default:
+                break;
+        }
+    }
     #endregion
 }

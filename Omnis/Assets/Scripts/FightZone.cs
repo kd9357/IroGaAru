@@ -39,6 +39,9 @@ public class FightZone : MonoBehaviour {
     [Tooltip("The initial challenges that must be destroyed before the next wave triggers (If empty starts wave 0 immediately)")]
     public List<GameObject> ChallengeList;
 
+    private List<GameObject> _challengeList;
+    private List<GameObject> _spawnedList;
+
     private Transform _target;
     private Transform _player;
 
@@ -62,6 +65,8 @@ public class FightZone : MonoBehaviour {
             Debug.LogError("Player does not exist");
             return;
         }
+        _challengeList = ChallengeList;
+        _spawnedList = new List<GameObject>();
         _camScript = Camera.main.GetComponent<CameraFollow>();
 
     }
@@ -92,6 +97,7 @@ public class FightZone : MonoBehaviour {
             _waveCountdown -= Time.deltaTime;
     }
 
+    #region Wave Management
     //Check if all waves completed, otherwise clear list out and increment wave number
     void StartNewWave()
     {
@@ -105,7 +111,7 @@ public class FightZone : MonoBehaviour {
         else
         {
             _state = SpawnState.COUNTING;
-            ChallengeList.Clear();
+            _challengeList.Clear();
             _waveCountdown = TimeBetweenWaves;
             _nextWave++;
         }
@@ -114,7 +120,7 @@ public class FightZone : MonoBehaviour {
     //Check the list of challenges, if any are not null (still active) false
     bool WaveCompleted()
     {
-        foreach (GameObject challenge in ChallengeList)
+        foreach (GameObject challenge in _challengeList)
         {
             if (challenge.activeInHierarchy)
                 return false;
@@ -145,7 +151,25 @@ public class FightZone : MonoBehaviour {
         }
         //Default to center of trigger fight zone
         Transform spawnPosition = nextObject.SpawnPoint != null ? nextObject.SpawnPoint : transform;
-        ChallengeList.Add(Instantiate(nextObject.SpawnObject, spawnPosition.position, spawnPosition.rotation));
+        GameObject challenge = Instantiate(nextObject.SpawnObject, spawnPosition.position, spawnPosition.rotation);
+        _challengeList.Add(challenge);
+        _spawnedList.Add(challenge);
+        //add to spawned list
+    }
+
+    #endregion
+
+    public void Clear()
+    {
+        _challengeList.Clear();
+        _challengeList = ChallengeList;
+        for(int i = 0; i < _spawnedList.Count; i++)
+        {
+            //Destroy rather then set inactive to reduce clutter for spawned enemies
+            Destroy(_spawnedList[i]);
+        }
+        _spawnedList.Clear();
+        _state = SpawnState.INACTIVE;
     }
 
     //All waves completed, unlock camera and set inactive

@@ -8,6 +8,8 @@ public class Projectile : MonoBehaviour {
     public float Speed;
     public float Lifetime;
     public int Damage;
+    [Tooltip("The damage projectile gives to enemies when reflected")]
+    public int DamageMultipler;
     
     //Private components
     private Rigidbody2D _rb;
@@ -128,7 +130,8 @@ public class Projectile : MonoBehaviour {
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.EnemyDamaged(Damage * 5, Color.white, direction);
+                    GameController.Instance.LastEnemy = enemy;
+                    enemy.EnemyDamaged(Damage * DamageMultipler, Color.white, direction);
                 }
                 break;
             default:
@@ -163,6 +166,7 @@ public class Projectile : MonoBehaviour {
                 Enemy enemy = collision.gameObject.GetComponent<Enemy>();
                 if (enemy != null)
                 {
+                    GameController.Instance.LastEnemy = enemy;
                     enemy.EnemyDamaged(Damage * 5, Color.white, direction);
                 }
                 break;

@@ -127,6 +127,7 @@ public class Enemy : MonoBehaviour
     protected bool _usingGlow;
 
     // Movement and Orientation
+    protected Vector3 _initialPosition;
     protected Transform _target;
     protected float _currentSpeed;
     protected float _xMov;
@@ -164,6 +165,7 @@ public class Enemy : MonoBehaviour
             _usingGlow = true;
             _glowScript.GlowColor = GameController.Instance.GetColor(ColorOutline);
         }
+        _initialPosition = transform.position;
 
         Clear();
 
@@ -295,6 +297,7 @@ public class Enemy : MonoBehaviour
 
     public void Clear()
     {
+        transform.position = _initialPosition;
         _currentHealth = MaxHealth;
         _currentColor = DefaultColor;
         _currentColorStatus = ColorStatus.None;
@@ -315,14 +318,17 @@ public class Enemy : MonoBehaviour
 
         gameObject.SetActive(true);
     }
+
     public virtual float EnemyHPPercent()
     {
         return _currentHealth / MaxHealth;
     }
+
     public virtual string GetName()
     {
         return EnemyName;
     }
+
     // When the enemy gets hit by something
     public virtual bool EnemyDamaged(int damage, Color color, int direction,
                                      int additionalForce = 1)
@@ -456,6 +462,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die()
     {
+        _currentHealth = 0;
         _currentState = EnemyState.Dying;
         _anim.SetTrigger("Death");  //TODO: May instead trigger death animation, and on last frame call Die()
 

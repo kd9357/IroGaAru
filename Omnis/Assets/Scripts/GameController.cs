@@ -378,6 +378,7 @@ public class GameController : MonoBehaviour
         _loadScene = true;
         _fadeMainMusic = true;
         GrayscaleMaterial.SetFloat("_AmountColored", 0);
+        LastEnemy = null;
 
         _loadLevelCanvas.SetActive(true);
         _loadLevelPanel.CrossFadeAlpha(2f, 1.5f, false);
@@ -482,6 +483,7 @@ public class GameController : MonoBehaviour
             else if (e.GetComponent<Kechibi>())
                 e.GetComponent<Kechibi>().Clear();
         }
+        LastEnemy = null;
 
         // Reset items
         foreach (var i in _itemObjects)
@@ -506,8 +508,13 @@ public class GameController : MonoBehaviour
         Camera.main.GetComponent<CameraFollow>().SetTarget(_player.gameObject.transform, true);
         Camera.main.GetComponent<CameraFollow>().EnableWalls(false);
         foreach (var fz in _fightZoneObjects)
+        {
             if (fz.GetComponent<FightZone>())
+            {
+                fz.GetComponent<FightZone>().Clear();
                 fz.GetComponent<FightZone>().UnlockZone();
+            }
+        }
 
         StartCoroutine(FadeOutGameOver());
     }
@@ -516,7 +523,7 @@ public class GameController : MonoBehaviour
     {
         _player.gameObject.SetActive(true);
         _player.TeleportToPosition(_lastCheckpointPos);
-        _player.SetAlive(true);
+        _player.Clear();
 
         _gameoverText.CrossFadeAlpha(0f, .5f, false);
         _gameoverPanel.CrossFadeAlpha(0f, 2f, false);
