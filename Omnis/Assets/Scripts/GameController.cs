@@ -15,7 +15,14 @@ using UnityEngine.UI;
 /*
  * Typedefs
  */
-
+public enum levelName
+{
+    None,
+    Dojo,
+    Forest,
+    Ocean,
+    Volcano
+}
 public class GameController : MonoBehaviour
 {
     /*
@@ -23,7 +30,7 @@ public class GameController : MonoBehaviour
      */
 
     public static GameController Instance;
-
+    public levelName currentLevel;
     public string NextScene = "Start_Screen";
     public bool EndGame = false;
     public WeaponColor EquippedColor;
@@ -448,6 +455,29 @@ public class GameController : MonoBehaviour
             t.CrossFadeAlpha(0, .5f, false);
 
         yield return new WaitForSeconds(4);
+
+        //Send color data to LevelManager
+        switch(currentLevel)
+        {
+            case levelName.Dojo:
+                if (LevelManager.Instance.tutorialScore <= (float)_enemyCount / MinimumEnemies)
+                { LevelManager.Instance.tutorialScore = (float)_enemyCount / MinimumEnemies; }
+                break;
+            case levelName.Forest:
+                if (LevelManager.Instance.forestScore <= (float)_enemyCount / MinimumEnemies)
+                { LevelManager.Instance.forestScore = (float)_enemyCount / MinimumEnemies; }
+                break;
+            case levelName.Ocean:
+                if (LevelManager.Instance.oceanScore <= (float)_enemyCount / MinimumEnemies)
+                { LevelManager.Instance.oceanScore = (float)_enemyCount / MinimumEnemies; }
+                break;
+            case levelName.Volcano:
+                if (LevelManager.Instance.volcanoScore <= (float)_enemyCount / MinimumEnemies)
+                { LevelManager.Instance.volcanoScore = (float)_enemyCount / MinimumEnemies; }
+                break;
+        }
+        
+
         LoadScene(NextScene);
     }
 

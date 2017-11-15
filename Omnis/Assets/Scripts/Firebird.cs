@@ -13,7 +13,8 @@ public class Firebird : Enemy {
         base.Attack();
         Vector3 direction = _facingRight ? Vector2.right : Vector2.left;
         //Spawn projectile
-        GameObject projectile = Instantiate(Projectile, transform.position, transform.rotation);
+        Vector3 spawnPosition = transform.position + Vector3.up * 0.75f;
+        GameObject projectile = Instantiate(Projectile, spawnPosition, transform.rotation);
         Projectile projectileScript = projectile.GetComponent<Projectile>();
         if (projectileScript == null)
             Debug.LogError("Prefab does not have projectile script");

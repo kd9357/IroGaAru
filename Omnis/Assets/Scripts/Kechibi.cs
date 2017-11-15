@@ -37,7 +37,9 @@ public class Kechibi : Enemy
     protected override void TrackPlayer()
     {
         if (!FacingTarget())
+        {
             Flip();
+        }
         if (!InRange())
             MoveTowardsPlayer();
         _xMov = 0;
