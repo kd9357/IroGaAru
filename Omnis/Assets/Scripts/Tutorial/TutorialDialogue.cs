@@ -36,6 +36,7 @@ public class TutorialDialogue : MonoBehaviour
     private int _lineNumber;
     private bool _typing;
     private bool _continueTyping;
+    private bool _clicked;
 
     /*
      * Public (Unity) Method Declarations
@@ -47,6 +48,7 @@ public class TutorialDialogue : MonoBehaviour
         _lineNumber = 0;
         _typing = false;
         _continueTyping = false;
+        _clicked = false;
 
         _tutorialDialogue = GameObject.Find("Tutorial Dialogue");
         if (_tutorialDialogue == null)
@@ -63,7 +65,8 @@ public class TutorialDialogue : MonoBehaviour
     {
         if (_started)
         {
-            if (Input.anyKeyDown)
+            if (!_clicked && Input.anyKeyDown && !Input.GetMouseButtonDown(0) &&
+                !Input.GetMouseButton(1) && !Input.GetMouseButtonDown(2))
                 ContinueDialogue();
         }
     }

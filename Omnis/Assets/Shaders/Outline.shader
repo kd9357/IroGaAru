@@ -135,16 +135,16 @@ Shader "Sprites/Outline"
                 for (int i = 1; i <= SAMPLE_DEPTH_LIMIT; i++)
                 {
                     float2 pixelUpTexCoord = texCoord + float2(0, i * _MainTex_TexelSize.y);
-                    fixed pixelUpAlpha = pixelUpTexCoord.y > 1.0 ? 0.0 : tex2D(_MainTex, pixelUpTexCoord).a;
-                    if (pixelUpAlpha <= alphaThreshold) return 1;
+					float2 pixelUpAlpha = pixelUpTexCoord.y > 1.0 ? 0.0 : tex2D(_MainTex, pixelUpTexCoord).a;
+                    if ((fixed)pixelUpAlpha <= alphaThreshold) return 1;
 
                     float2 pixelDownTexCoord = texCoord - float2(0, i * _MainTex_TexelSize.y);
                     float2 pixelDownAlpha = pixelDownTexCoord.y < 0.0 ? 0.0 : tex2D(_MainTex, pixelDownTexCoord).a;
                     if ((fixed)pixelDownAlpha <= alphaThreshold) return 1;
 
                     float2 pixelRightTexCoord = texCoord + float2(i * _MainTex_TexelSize.x, 0);
-                    fixed pixelRightAlpha = pixelRightTexCoord.x > 1.0 ? 0.0 : tex2D(_MainTex, pixelRightTexCoord).a;
-                    if (pixelRightAlpha <= alphaThreshold) return 1;
+                    float2 pixelRightAlpha = pixelRightTexCoord.x > 1.0 ? 0.0 : tex2D(_MainTex, pixelRightTexCoord).a;
+                    if ((fixed)pixelRightAlpha <= alphaThreshold) return 1;
 
                     float2 pixelLeftTexCoord = texCoord - float2(i * _MainTex_TexelSize.x, 0);
                     fixed pixelLeftAlpha = pixelLeftTexCoord.x < 0.0 ? 0.0 : tex2D(_MainTex, pixelLeftTexCoord).a;
