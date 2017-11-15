@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     // Movement vars
     public float Speed; //originally was 20
     public float Jump;  //originally was 55 at 20 gravity
+    [Range(-1f, 0f)]
+    public float CrouchDeadzone = -0.5f;
 
     // Recoil vars
     [Tooltip("Force player experiences from enemy")]
@@ -67,6 +69,7 @@ public class Player : MonoBehaviour
     private bool _onGround;
     private bool _onWall;
     private bool _jumping;
+    private bool _crouching;
     private bool _tapJump;
     private bool _jumpCancel;
     private bool _facingRight;
@@ -133,7 +136,7 @@ public class Player : MonoBehaviour
 
         // MOVEMENT
         // If knockback over, resume movement
-        if(_knockbackTimer <= 0)
+        if(_knockbackTimer <= 0 && !_crouching)
         {
             float x_mov, y_mov;
 #if (UNITY_ANDROID || UNITY_IPHONE)
@@ -200,11 +203,20 @@ public class Player : MonoBehaviour
         bool doAttack = false;
 
 #if (UNITY_ANDROID || UNITY_IPHONE)
+        // MOBILE CROUCH
+        if(_onGround)
+        {
+            _crouching = CnInputManager.GetAxis("Vertical") < CrouchDeadzone;
+            _anim.SetBool("Crouch", _crouching);
+        }
+
+        // MOBILE ATTACK
         doAttack = (CnInputManager.GetButtonDown("Red") || 
                     CnInputManager.GetButtonDown("Yellow") ||
-                    CnInputManager.GetButtonDown("Blue")) && !_attacking;
+                    CnInputManager.GetButtonDown("Blue")) && !_attacking && !_crouching;
 
-        if (CnInputManager.GetButtonDown("Jump") && _onGround)
+        // MOBILE JUMPING
+        if (CnInputManager.GetButtonDown("Jump") && _onGround && !_crouching)
         {
             _jumping = true;
             _jumpCancel = false;
@@ -216,16 +228,24 @@ public class Player : MonoBehaviour
 #else
         // ATTACK
         doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || 
-                    Input.GetButtonDown("Blue")) && !_attacking;
+                    Input.GetButtonDown("Blue")) && !_attacking && !_crouching;
+
+        // CROUCH
+        if (_onGround)
+        {
+            _crouching = Input.GetButton("Crouch");
+            _anim.SetBool("Crouch", _crouching);
+        }
 
         // JUMPING
-        if (Input.GetButtonDown("Jump") && _onGround)
+        if (Input.GetButtonDown("Jump") && _onGround && !_crouching)
         {
             _jumping = true;
             _anim.SetTrigger("Jumping");
         }
 
         _jumpCancel = Input.GetButtonUp("Jump");
+
 #endif
 
         // ATTACK Continued

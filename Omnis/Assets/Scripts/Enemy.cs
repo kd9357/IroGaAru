@@ -106,6 +106,8 @@ public class Enemy : MonoBehaviour
     [Tooltip("Color the enemy's outline aura is (what color is this enemy immune to? Without SpriteGlow Script is normal enemy)")]
     public WeaponColor ColorOutline;
 
+    public bool DisableColorCombos = false;
+
     #endregion
 
     #region Protected Attributes
@@ -379,18 +381,21 @@ public class Enemy : MonoBehaviour
 
             int i;
             float threshold = 0.4f; //For purple
-            for (i = 0; i < SpecialColors.Count; i++)
+            if (!DisableColorCombos)
             {
-                sc.Set(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
-                float distance = Vector3.Distance(sc, cc);
-                if (i != 0)
-                    threshold = 0.34f; //gack, change threshold for orange and green
-                if (distance < threshold)
-                    break;
+                for (i = 0; i < SpecialColors.Count; i++)
+                {
+                    sc.Set(SpecialColors[i].r, SpecialColors[i].g, SpecialColors[i].b);
+                    float distance = Vector3.Distance(sc, cc);
+                    if (i != 0)
+                        threshold = 0.34f; //gack, change threshold for orange and green
+                    if (distance < threshold)
+                        break;
+                }
+                _currentColorStatus = (ColorStatus)(i);
+                if (_currentColorStatus != ColorStatus.None)
+                    ApplyAilment();
             }
-            _currentColorStatus = (ColorStatus)(i);
-            if (_currentColorStatus != ColorStatus.None)
-                ApplyAilment();
 
             _sprite.color = _currentColor;
         }
@@ -682,31 +687,31 @@ public class Enemy : MonoBehaviour
 
     public bool IsRed()
     {
-        return _currentColor.r >= .9f && _currentColor.g <= .5f && 
+        return !gameObject.activeInHierarchy || _currentColor.r >= .9f && _currentColor.g <= .5f && 
             _currentColor.b <= .5f && _currentColorStatus == ColorStatus.None;
     }
     public bool IsYellow()
     {
-        return _currentColor.r >= .9f && _currentColor.g >= .9f &&
+        return !gameObject.activeInHierarchy || _currentColor.r >= .9f && _currentColor.g >= .9f &&
             _currentColor.b <= .5f && _currentColorStatus == ColorStatus.None;
     }
     public bool IsBlue()
     {
-        return _currentColor.b >= .9f && _currentColor.g <= .5f &&
+        return !gameObject.activeInHierarchy || _currentColor.b >= .9f && _currentColor.g <= .5f &&
                _currentColor.r <= .5f && _currentColorStatus == ColorStatus.None;
     }
 
     public bool IsOrange()
     {
-        return _currentColorStatus == ColorStatus.DamageOverTime;
+        return !gameObject.activeInHierarchy || _currentColorStatus == ColorStatus.DamageOverTime;
     }
     public bool IsPurple()
     {
-        return _currentColorStatus == ColorStatus.Stun;
+        return !gameObject.activeInHierarchy || _currentColorStatus == ColorStatus.Stun;
     }
     public bool IsGreen()
     {
-        return _currentColorStatus == ColorStatus.WindRecoil;
+        return !gameObject.activeInHierarchy || _currentColorStatus == ColorStatus.WindRecoil;
     }
 
     #endregion
