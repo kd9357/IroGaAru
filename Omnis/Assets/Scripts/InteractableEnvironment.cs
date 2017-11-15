@@ -35,6 +35,7 @@ public class InteractableEnvironment : MonoBehaviour {
     //protected SpriteRenderer _sprite;
     protected SpriteRenderer[] _sprites;
     protected Rigidbody2D _rb;
+    protected Animator _anim;
     protected int _currentHealth;
     protected Color _currentColor;
     protected float _colorTimer;
@@ -52,6 +53,7 @@ public class InteractableEnvironment : MonoBehaviour {
         _currentHealth = MaxHealth;
         _sprites = GetComponentsInChildren<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
 
         _currentColor = DefaultColor;
         _colorTimer = 0;
@@ -187,12 +189,16 @@ public class InteractableEnvironment : MonoBehaviour {
     //Stop enemy's movement
     protected virtual void ApplyStun()
     {
+        if (_anim)
+            _anim.SetBool("Purple", true);
         return;
     }
 
     //Increase enemy's knockback
     protected virtual void ApplyWindRecoil()
     {
+        if (_anim)
+            _anim.SetBool("Green", true);
         _currentKnockbackForce = WindKnockbackForce;
         _currentColor = Color.green;
     }
@@ -200,6 +206,8 @@ public class InteractableEnvironment : MonoBehaviour {
     //Reduce the enemy's health by 10% of currentHealth every second (Maxhealth instead?)
     protected virtual IEnumerator ApplyDamageOverTime()
     {
+        if (_anim)
+            _anim.SetBool("Orange", true);
         while (_currentColorStatus == ColorStatus.DamageOverTime)
         {
             if (BurnDamage > 0)

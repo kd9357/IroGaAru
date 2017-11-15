@@ -85,6 +85,8 @@
      <Compile Include="Assets\Scripts\SpriteGlow.cs" />
      <Compile Include="Assets\Scripts\SpriteGlowMaterial.cs" />
      <Compile Include="Assets\Scripts\TextManager.cs" />
+     <Compile Include="Assets\Scripts\Tutorial\DialogueTextTrigger.cs" />
+     <Compile Include="Assets\Scripts\Tutorial\TutorialDialogue.cs" />
      <Compile Include="Assets\Scripts\Tutorial\TutorialFeedback.cs" />
      <None Include="Assets\Text\ZoneTest.txt" />
      <None Include="Assets\Text\Tutorial Text\MobileJump.txt" />

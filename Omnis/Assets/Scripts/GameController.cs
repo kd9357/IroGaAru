@@ -414,7 +414,16 @@ public class GameController : MonoBehaviour
         StartCoroutine(LoadLevelInBackground("Start_Screen"));
 
     }
+    public void ReturnToMap()
+    {
+        TogglePause();  //Turn off pause screen before returning to start
 
+        _loadLevelCanvas.SetActive(true);
+        _loadLevelPanel.CrossFadeAlpha(2f, 1.5f, false);
+
+        StartCoroutine(LoadLevelInBackground("level_select"));
+
+    }
     public IEnumerator CompleteLevel()
     {
         _fadeMainMusic = true;
