@@ -93,6 +93,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\LevelDescription.cs" />
     <Compile Include="Assets\RainMaker\Prefab\BaseRainScript.cs" />
     <Compile Include="Assets\RainMaker\Prefab\RainCollision.cs" />
     <Compile Include="Assets\RainMaker\Prefab\RainScript.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Assets\Scripts\FightZone.cs" />
     <Compile Include="Assets\Scripts\Firebird.cs" />
     <Compile Include="Assets\Scripts\FlyingEnemy.cs" />
+    <Compile Include="Assets\Scripts\Fountain.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GaugeManager.cs" />
     <Compile Include="Assets\Scripts\HPDisplay.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\Kappa.cs" />
     <Compile Include="Assets\Scripts\Kechibi.cs" />
+    <Compile Include="Assets\Scripts\LavaBehavior.cs" />
     <Compile Include="Assets\Scripts\LevelComplete.cs" />
     <Compile Include="Assets\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Scripts\LevelSelect.cs" />
@@ -159,6 +162,15 @@
     <None Include="Assets\Text\Forest\Orange Color Combo.txt" />
     <None Include="Assets\Text\Forest\Purple Color Combo.txt" />
     <None Include="Assets\Text\Forest\Text Navigation.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\attack_simple.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\jump.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\left_right.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\attack_simple.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\combos.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\gauges_health.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\jump.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\left_right.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\outlines.txt" />
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\Tutorial Text\BasicAttack.txt" />
     <None Include="Assets\Text\Tutorial Text\Health.txt" />

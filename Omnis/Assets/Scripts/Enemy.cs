@@ -364,12 +364,15 @@ public class Enemy : MonoBehaviour
     }
 
     //Combine colors and determine if status changed
-    protected virtual void SetColor(Color color)
+    public virtual void SetColor(Color color, bool autoSet = false)
     {
         //Only allow color mixing when NOT under some ailment
         if (_currentColorStatus == ColorStatus.None)
         {
-            _currentColor = (_currentColor + color) / 2;
+            if (autoSet)
+                _currentColor = color;
+            else
+                _currentColor = (_currentColor + color) / 2;
 
             // Now determine other special effects
             Vector3 cc = new Vector3(_currentColor.r, _currentColor.g, _currentColor.b);

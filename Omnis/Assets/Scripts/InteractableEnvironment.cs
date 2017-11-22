@@ -109,11 +109,13 @@ public class InteractableEnvironment : MonoBehaviour {
     {
         transform.position = _initialPos;
         transform.rotation = _initialRot;
+        gameObject.SetActive(true);
     }
 
     protected virtual void Die()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
     #endregion
 

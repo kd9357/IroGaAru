@@ -534,6 +534,9 @@ public class GameController : MonoBehaviour
         {
             if (i != null && i.GetComponent<InteractableEnvironment>()) //This doesn't reset burned trees!
                 i.GetComponent<InteractableEnvironment>().ResetObject();
+            else if (i != null && i.GetComponent<LavaBehavior>())
+                i.GetComponent<LavaBehavior>().ResetObject();
+            //TODO: to reset burnable objects, must not destroy (just set them inactive instead)
         }
 
         //Reset level clear parameters

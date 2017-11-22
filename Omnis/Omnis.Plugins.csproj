@@ -118,6 +118,15 @@
     <None Include="Assets\Text\Forest\Orange Color Combo.txt" />
     <None Include="Assets\Text\Forest\Purple Color Combo.txt" />
     <None Include="Assets\Text\Forest\Text Navigation.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\attack_simple.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\jump.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\Phone\left_right.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\attack_simple.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\combos.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\gauges_health.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\jump.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\left_right.txt" />
+    <None Include="Assets\Text\Persia_Tutorial\outlines.txt" />
     <None Include="Assets\Text\Test.txt" />
     <None Include="Assets\Text\Tutorial Text\BasicAttack.txt" />
     <None Include="Assets\Text\Tutorial Text\Health.txt" />

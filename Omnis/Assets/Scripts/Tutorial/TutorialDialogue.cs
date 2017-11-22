@@ -36,7 +36,6 @@ public class TutorialDialogue : MonoBehaviour
     private int _lineNumber;
     private bool _typing;
     private bool _continueTyping;
-    private bool _clicked;
 
     /*
      * Public (Unity) Method Declarations
@@ -48,7 +47,6 @@ public class TutorialDialogue : MonoBehaviour
         _lineNumber = 0;
         _typing = false;
         _continueTyping = false;
-        _clicked = false;
 
         _tutorialDialogue = GameObject.Find("Tutorial Dialogue");
         if (_tutorialDialogue == null)
@@ -65,9 +63,12 @@ public class TutorialDialogue : MonoBehaviour
     {
         if (_started)
         {
-            if (!_clicked && Input.anyKeyDown && !Input.GetMouseButtonDown(0) &&
-                !Input.GetMouseButton(1) && !Input.GetMouseButtonDown(2))
+#if !UNITY_ANDROID && !UNITY_IPHONE
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
                 ContinueDialogue();
+            }
+#endif
         }
     }
 
@@ -81,7 +82,7 @@ public class TutorialDialogue : MonoBehaviour
         {
             ShowFullText();
         }
-        else
+        else 
         {
             ++_lineNumber;
             StartCoroutine("TypingText");

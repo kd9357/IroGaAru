@@ -1,0 +1,1 @@
+Outlined enemies can't be hurt by the color they're outlined!

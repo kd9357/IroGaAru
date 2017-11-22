@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
 
+    #region Public Variables
     [Tooltip("Distance in the player can move right before the camera follows")]
     public float PositiveXMargin = 1f;
     [Tooltip("Distance in the player can move left before the camera follows")]
@@ -28,6 +29,7 @@ public class CameraFollow : MonoBehaviour {
     public Vector2 MinXY;
     [Tooltip("The maximum x and y coordinates the camera can have")]
     public Vector2 MaxXY;
+    #endregion
 
     private Transform _target;
 

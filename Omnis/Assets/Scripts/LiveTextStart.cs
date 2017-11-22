@@ -20,7 +20,6 @@ public class LiveTextStart : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Start");
             _textManager.ReloadScript(TextToDisplay);
             _textManager.EnableTextBox();
             Destroy(gameObject);
