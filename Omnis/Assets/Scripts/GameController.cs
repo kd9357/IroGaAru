@@ -52,6 +52,7 @@ public class GameController : MonoBehaviour
     private GameObject _gameoverCanvas;
     private Image _gameoverPanel;
     private Text _gameoverText;
+    private Text _gameoverContinueText;
 
     // Pause Canvas
     private GameObject _pauseCanvas; //May just reuse gameoverCanvas instead
@@ -183,18 +184,25 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        var text = panel.transform.Find("Text");
+        var text = panel.transform.Find("Game Over Text");
         if (text == null)
         {
             Debug.LogError("Cannot find game over text");
             return;
         }
-
+        var text2 = panel.transform.Find("Continue Text");
+        if(text2 == null)
+        {
+            Debug.LogError("Cannot find continue text");
+            return;
+        }
         _gameoverPanel = panel.gameObject.GetComponent<Image>();
         _gameoverText = text.gameObject.GetComponent<Text>();
+        _gameoverContinueText = text2.gameObject.GetComponent<Text>();
 
         _gameoverPanel.canvasRenderer.SetAlpha(0f);
         _gameoverText.canvasRenderer.SetAlpha(0f);
+        _gameoverContinueText.canvasRenderer.SetAlpha(0f);
 
         _gameoverCanvas.SetActive(false);
 
@@ -498,8 +506,10 @@ public class GameController : MonoBehaviour
 
         _gameoverPanel.canvasRenderer.SetAlpha(0f);
         _gameoverText.canvasRenderer.SetAlpha(0f);
+        _gameoverContinueText.canvasRenderer.SetAlpha(0f);
         _gameoverPanel.CrossFadeAlpha(2f, 1.5f, false);
         _gameoverText.CrossFadeAlpha(2f, 1.5f, false);
+        _gameoverContinueText.CrossFadeAlpha(2f, 1.5f, false);
 
         EndGame = true;   
     }
@@ -568,6 +578,7 @@ public class GameController : MonoBehaviour
         _player.Clear();
 
         _gameoverText.CrossFadeAlpha(0f, .5f, false);
+        _gameoverContinueText.CrossFadeAlpha(0f, .5f, false);
         _gameoverPanel.CrossFadeAlpha(0f, 2f, false);
         while (_gameoverPanel.canvasRenderer.GetAlpha() >= .01f)
             yield return null;

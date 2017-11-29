@@ -41,7 +41,7 @@ public class LavaBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!_active)
+        if (!_active || Time.timeScale == 0)
             return;
         if (_distanceTraveled < MaxDistance)
         {

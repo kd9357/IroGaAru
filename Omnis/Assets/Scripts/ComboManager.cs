@@ -21,6 +21,7 @@ public class ComboManager : MonoBehaviour
     public static ComboManager Instance;
 
     public float PercentIncreasePerHit = .001f;
+    public float TimeOut = 4f;
 
     /*
      * Private Member Variables
@@ -32,6 +33,7 @@ public class ComboManager : MonoBehaviour
 
     private int _comboCount;
     private float _regenMultiplier;
+    private float _timer;
 
     // Components
     private Text _comboText;
@@ -54,6 +56,19 @@ public class ComboManager : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if(_comboCount > 0)
+        {
+            _timer += Time.deltaTime;
+            if(_timer > TimeOut)
+            {
+                _timer = 0;
+                ResetComboCount();
+            }
+        }
+    }
+
     void Start()
     {
         _comboCount = 0;
@@ -65,6 +80,7 @@ public class ComboManager : MonoBehaviour
 
     public void IncrementComboCount()
     {
+        _timer = 0;
         ++_comboCount;
         UpdateComboCount(_comboCount);
     }

@@ -665,6 +665,9 @@ public class Enemy : MonoBehaviour
                     Flip();
                 }
                 break;
+            case "Instant Death":
+                Die();
+                break;
         }
     }
 
@@ -681,6 +684,9 @@ public class Enemy : MonoBehaviour
                     _xMov += Mathf.Lerp(dir.x, 0, dist / AvoidanceDistance);    //Stronger affect closer the enemy
                     _yMov += Mathf.Lerp(dir.y, 0, dist / AvoidanceDistance);
                 }
+                break;
+            case "Instant Death":
+                Die();
                 break;
         }
     }

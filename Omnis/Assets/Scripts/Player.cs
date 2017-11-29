@@ -340,6 +340,34 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Instant Death"))
+        {
+            if (_isAlive)
+                Die();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Instant Death"))
+        {
+            if (_isAlive)
+                Die();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Instant Death"))
+        {
+            if (_isAlive)
+                Die();
+        }
+    }
+
+
     #endregion
 
     #region Helper Methods

@@ -34,8 +34,11 @@ public class EnvironmentalHazard : MonoBehaviour {
                 player.Knockback(collision.transform.position.x < transform.position.x);
 
                 // Hit sound
-                _audioSource.clip = HazardSoundEffects[0];
-                _audioSource.Play();
+                if (HazardSoundEffects.Length > 0)
+                {
+                    _audioSource.clip = HazardSoundEffects[0];
+                    _audioSource.Play();
+                }
                 break;
             case "Enemy":
                 if (HurtEnemies)
@@ -73,8 +76,12 @@ public class EnvironmentalHazard : MonoBehaviour {
                 player.PlayerDamaged(TouchDamage);
                 player.Knockback(collision.transform.position.x < transform.position.x);
 
-                _audioSource.clip = HazardSoundEffects[0];
-                _audioSource.Play();
+                // Hit sound
+                if (HazardSoundEffects.Length > 0)
+                {
+                    _audioSource.clip = HazardSoundEffects[0];
+                    _audioSource.Play();
+                }
                 break;
             case "Enemy":
                 if (HurtEnemies)
