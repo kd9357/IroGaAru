@@ -42,7 +42,7 @@ public class Kappa : Enemy {
         float vel = Mathf.Sqrt(dist * (Physics.gravity.magnitude * _rb.gravityScale) / Mathf.Sin(2 * a));
         if (float.IsNaN(vel))
             vel = 0;
-        return vel * dir.normalized;
+        return vel * dir.normalized * 1.4f;
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
