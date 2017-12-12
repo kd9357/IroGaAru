@@ -313,6 +313,7 @@ public class Enemy : MonoBehaviour
         _actionTimer = 0;
         if (_facingRight != FacingRight)
             Flip();
+        ResetColorStatus();
 
         // For enemies with weapons (i.e. Oni)
         if (GetComponentInChildren<PolygonCollider2D>())
