@@ -26,6 +26,8 @@ public class ColorDisplay : MonoBehaviour {
     public Image BlueImage;
     public Image Ring;
 
+    private WeaponColor currentColor;
+
     /*
      * Public Method Declarations
      */
@@ -35,46 +37,53 @@ public class ColorDisplay : MonoBehaviour {
         if(GameController.Instance.EquippedColor == RedColor)
         {
             CycleColors(0);
+            currentColor = RedColor;
         }
         if (GameController.Instance.EquippedColor == YellowColor)
         {
             CycleColors(1);
+            currentColor = YellowColor;
         }
         if (GameController.Instance.EquippedColor == BlueColor)
         {
             CycleColors(2);
+            currentColor = BlueColor;
         }
     }
 
     void Update()
     {
-#if (UNITY_ANDROID || UNITY_IPHONE)
-        if (CnInputManager.GetButtonDown("Red"))
+        if(currentColor != GameController.Instance.EquippedColor)
         {
-            CycleColors(0);
+            CycleColors((int)GameController.Instance.EquippedColor);
         }
-        if (CnInputManager.GetButtonDown("Yellow"))
-        {
-            CycleColors(1);
-        }
-        if (CnInputManager.GetButtonDown("Blue"))
-        {
-            CycleColors(2);
-        }
-#else
-        if (Input.GetButtonDown("Red"))
-        {
-            CycleColors(0);
-        }
-        if (Input.GetButtonDown("Yellow"))
-        {
-            CycleColors(1);
-        }
-        if (Input.GetButtonDown("Blue"))
-        {
-            CycleColors(2);
-        }
-#endif
+//#if (UNITY_ANDROID || UNITY_IPHONE)
+//        if (CnInputManager.GetButtonDown("Red"))
+//        {
+//            CycleColors(0);
+//        }
+//        if (CnInputManager.GetButtonDown("Yellow"))
+//        {
+//            CycleColors(1);
+//        }
+//        if (CnInputManager.GetButtonDown("Blue"))
+//        {
+//            CycleColors(2);
+//        }
+//#else
+//        if (Input.GetButtonDown("Red"))
+//        {
+//            CycleColors(0);
+//        }
+//        if (Input.GetButtonDown("Yellow"))
+//        {
+//            CycleColors(1);
+//        }
+//        if (Input.GetButtonDown("Blue"))
+//        {
+//            CycleColors(2);
+//        }
+//#endif
     }
 
     public void CycleColors(int direction)

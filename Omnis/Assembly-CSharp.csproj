@@ -92,6 +92,7 @@
      <Compile Include="Assets\Scripts\SpriteGlow.cs" />
      <Compile Include="Assets\Scripts\SpriteGlowMaterial.cs" />
      <Compile Include="Assets\Scripts\TextManager.cs" />
+     <Compile Include="Assets\Scripts\TitleScreen\Carousel.cs" />
      <Compile Include="Assets\Scripts\Tutorial\DialogueTextTrigger.cs" />
      <Compile Include="Assets\Scripts\Tutorial\TutorialDialogue.cs" />
      <Compile Include="Assets\Scripts\Tutorial\TutorialFeedback.cs" />

@@ -211,9 +211,24 @@ public class Player : MonoBehaviour
         }
 
         // MOBILE ATTACK
-        doAttack = (CnInputManager.GetButtonDown("Red") || 
-                    CnInputManager.GetButtonDown("Yellow") ||
-                    CnInputManager.GetButtonDown("Blue")) && !_attacking && !_crouching;
+        if(!_crouching && !_attacking)
+        {
+            if(CnInputManager.GetButtonDown("Red"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Red;
+                doAttack = true;
+            }
+            else if(CnInputManager.GetButtonDown("Yellow"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Yellow;
+                doAttack = true;
+            }
+            else if(CnInputManager.GetButtonDown("Blue"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Blue;
+                doAttack = true;
+            }
+        }
 
         // MOBILE JUMPING
         if (CnInputManager.GetButtonDown("Jump") && _onGround && !_crouching)
@@ -227,8 +242,24 @@ public class Player : MonoBehaviour
         _jumpCancel = CnInputManager.GetButtonUp("Jump");
 #else
         // ATTACK
-        doAttack = (Input.GetButtonDown("Red") || Input.GetButtonDown("Yellow") || 
-                    Input.GetButtonDown("Blue")) && !_attacking && !_crouching;
+        if (!_crouching && !_attacking)
+        {
+            if(Input.GetButtonDown("Red"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Red;
+                doAttack = true;
+            }
+            else if(Input.GetButtonDown("Yellow"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Yellow;
+                doAttack = true;
+            }
+            else if(Input.GetButtonDown("Blue"))
+            {
+                GameController.Instance.EquippedColor = WeaponColor.Blue;
+                doAttack = true;
+            }
+        }
 
         // CROUCH
         if (_onGround)
@@ -497,6 +528,7 @@ public class Player : MonoBehaviour
     public void Die()
     {
         _isAlive = false;
+        _anim.SetBool("Dying", !_isAlive);
         FreezeMovement(true);
         _anim.SetTrigger("Death");
     }
@@ -517,6 +549,7 @@ public class Player : MonoBehaviour
     public void SetAlive(bool alive)
     {
         _isAlive = alive;
+        _anim.SetBool("Dying", !_isAlive);
     }
     #endregion
 
